@@ -70,30 +70,14 @@
                             </tr>
                             </thead>
                             <tbody>
-                            <tr>
-                                <td>01</td>
-                                <td>John Doe</td>
-                                <td>john.doe@gmail.com</td>
-                                <td><a href="view-customer-profile.html" class="btn btn-info btn-offer">View</a></td>
-                            </tr>
-                            <tr>
-                                <td>02</td>
-                                <td>John Doe</td>
-                                <td>john.doe@gmail.com</td>
-                                <td><a href="view-customer-profile.html" class="btn btn-info btn-offer">View</a></td>
-                            </tr>
-                            <tr>
-                                <td>03</td>
-                                <td>John Doe</td>
-                                <td>john.doe@gmail.com</td>
-                                <td><a href="view-customer-profile.html" class="btn btn-info btn-offer">View</a></td>
-                            </tr>
-                            <tr>
-                                <td>04</td>
-                                <td>John Doe</td>
-                                <td>john.doe@gmail.com</td>
-                                <td><a href="view-customer-profile.html" class="btn btn-info btn-offer">View</a></td>
-                            </tr>
+                            @for($i = 1; $i < 6; $i++)
+                                <tr>
+                                    <td>{{ $i }}</td>
+                                    <td>John Doe</td>
+                                    <td>john.doe@gmail.com</td>
+                                    <td><a href="{{ url('/admin/customers/view/'.$i) }}" class="btn btn-info btn-offer">View</a></td>
+                                </tr>
+                            @endfor
                             </tbody>
                         </table>
                     </div>

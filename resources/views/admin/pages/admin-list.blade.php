@@ -10,7 +10,18 @@
             </div>
         </div><!--/.row-->
 
-
+        <div class="row">
+            <div class="col-lg-12">
+                @include('admin.includes.messages')
+                @if($errors->any())
+                    @foreach($errors->all() as $error)
+                        <p class="alert alert-danger">
+                            {{ $error }}
+                        </p>
+                    @endforeach
+                @endif
+            </div>
+        </div><!--/.row-->
 
         <div class="row">
             <div class="col-xs-12 col-md-12">
@@ -26,30 +37,19 @@
                             </tr>
                             </thead>
                             <tbody>
+                            <?php $i = 0; ?>
+                            @foreach($users as $user)
+                                <?php $i++; ?>
                             <tr>
-                                <td>01</td>
-                                <td>John Doe</td>
-                                <td>john.doe@gmail.com</td>
-                                <td><span class="btn btn-info btn-offer" data-toggle="modal" data-target="#myModalps">Edit</span></td>
+                                <td>{{ $i }}</td>
+                                <td>{{ $user->name }}</td>
+                                <td>{{ $user->email }}</td>
+                                <td>
+                                    <span class="btn btn-info btn-offer" data-toggle="modal" data-target="#myModalps{{ $i }}">Edit</span>
+                                    <span class="btn btn-info btn-offer" data-toggle="modal" data-target="#myModalD{{ $i }}">Delete</span>
+                                </td>
                             </tr>
-                            <tr>
-                                <td>02</td>
-                                <td>John Doe</td>
-                                <td>john.doe@gmail.com</td>
-                                <td><span class="btn btn-info btn-offer" data-toggle="modal" data-target="#myModalps">Edit</span></td>
-                            </tr>
-                            <tr>
-                                <td>03</td>
-                                <td>John Doe</td>
-                                <td>john.doe@gmail.com</td>
-                                <td><span class="btn btn-info btn-offer" data-toggle="modal" data-target="#myModalps">Edit</span></td>
-                            </tr>
-                            <tr>
-                                <td>04</td>
-                                <td>John Doe</td>
-                                <td>john.doe@gmail.com</td>
-                                <td><span class="btn btn-info btn-offer" data-toggle="modal" data-target="#myModalps">Edit</span></td>
-                            </tr>
+                            @endforeach
                             </tbody>
                         </table>
                     </div>

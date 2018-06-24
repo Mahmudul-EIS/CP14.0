@@ -70,30 +70,14 @@
                             </tr>
                             </thead>
                             <tbody>
+                            @for($i = 1; $i < 6; $i++)
                             <tr>
-                                <td>01</td>
+                                <td>{{ $i }}</td>
                                 <td>John Doe</td>
                                 <td>john.doe@gmail.com</td>
-                                <td><a href="view-ridemate-profile.html" class="btn btn-info btn-offer">View</a></td>
+                                <td><a href="{{ url('/admin/drivers/view/'.$i) }}" class="btn btn-info btn-offer">View</a></td>
                             </tr>
-                            <tr>
-                                <td>02</td>
-                                <td>John Doe</td>
-                                <td>john.doe@gmail.com</td>
-                                <td><a href="view-ridemate-profile.html" class="btn btn-info btn-offer">View</a></td>
-                            </tr>
-                            <tr>
-                                <td>03</td>
-                                <td>John Doe</td>
-                                <td>john.doe@gmail.com</td>
-                                <td><a href="view-ridemate-profile.html" class="btn btn-info btn-offer">View</a></td>
-                            </tr>
-                            <tr>
-                                <td>04</td>
-                                <td>John Doe</td>
-                                <td>john.doe@gmail.com</td>
-                                <td><a href="view-ridemate-profile.html" class="btn btn-info btn-offer">View</a></td>
-                            </tr>
+                            @endfor
                             </tbody>
                         </table>
                     </div>

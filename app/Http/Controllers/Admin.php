@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\User;
 
 class Admin extends Controller
 {
@@ -21,10 +22,37 @@ class Admin extends Controller
      * Create Admin function - create admin users for the system
      */
     public function createAdmin(Request $request){
+        $data = null;
+        if($request->isMethod('post')){
+            $data = $request->all();
+            if($request->password !== $request->repass){
+                return redirect()
+                    ->to('/admin/create-admin')
+                    ->with('error', 'Passwords didn\'t match!! Please try again!!')
+                    ->withInput();
+            }
+            $user = new User();
+            if($user->validate($request->all())){
+                $user->name = $request->name;
+                $user->email = $request->email;
+                $user->password = bcrypt($request->password);
+                $user->role = 'super-admin';
+                $user->save();
+                return redirect()
+                    ->to('/admin/create-admin')
+                    ->with('success', 'The user is created successfully!!');
+            }else{
+                return redirect()
+                    ->to('/admin/create-admin')
+                    ->withErrors($user->errors())
+                    ->withInput();
+            }
+        }
         $slug = 'addmin';
         return view('admin.pages.create-admins', [
             'slug' => $slug,
-            'modals' => 'admin.pages.modals.create-admin-modals'
+            'modals' => 'admin.pages.modals.create-admin-modals',
+            'data' => $data
         ]);
     }
 
@@ -32,11 +60,43 @@ class Admin extends Controller
      * Admin List - shows all the admins
      */
     public function adminList(Request $request){
+        if($request->isMethod('post')){
+            if($request->password !== $request->repass){
+                return redirect()
+                    ->to('/admin/list')
+                    ->with('error', 'Password didn\'t match!! Please try again!!');
+            }
+            $user = User::find($request->user_id);
+            $user->name = $request->name;
+            $user->password = bcrypt($request->password);
+            $user->save();
+            return redirect()
+                ->to('/admin/list')
+                ->with('success', 'User info edited successfully!!');
+        }
+        $users = User::all();
         $slug = 'list';
         return view('admin.pages.admin-list', [
             'slug' => $slug,
-            'modals' => 'admin.pages.modals.admin-list-modals'
+            'modals' => 'admin.pages.modals.admin-list-modals',
+            'users' => $users
         ]);
+    }
+
+    /**
+     * Delete users - delete function for a particular user
+    */
+    public function deleteUser(Request $request, $id){
+        if($request->isMethod('post')){
+            User::destroy($id);
+            return redirect()
+                ->to('/admin/list')
+                ->with('success', 'User deleted successfully!!');
+        }else{
+            return redirect()
+                ->to('/admin/list')
+                ->with('error', 'Method not allowed!!');
+        }
     }
 
     /**
