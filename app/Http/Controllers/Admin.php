@@ -102,10 +102,49 @@ class Admin extends Controller
     /**
      * Driver List - shows all the drivers registered on the system
      */
-    public function driverList(Request $request){
-        $slug = 'drivers';
-        return view('admin.pages.driver-list', [
-            'slug' => $slug
+    public function createDriver(Request $request){
+        $data = null;
+        if($request->isMethod('post')){
+            $data = $request->all();
+            if($request->password !== $request->repass){
+                return redirect()
+                    ->to('/admin/create-admin')
+                    ->with('error', 'Passwords didn\'t match!! Please try again!!')
+                    ->withInput();
+            }
+            $user = new User();
+            if($user->validate($request->all())){
+                $user->name = $request->name;
+                $user->email = $request->email;
+                $user->password = bcrypt($request->password);
+                $user->role = 'driver';
+                $user->save();
+                $last_id = User::latest()->first();
+                $usd = new User_data();
+                $usd->user_id = $last_id->id;
+                $usd->last_name = $request->last_name;
+                $usd->dob = $request->dob;
+                $usd->gender = $request->gender;
+                $usd->address = $request->address;
+                $usd->picture = $request->picture;
+                $usd->id_card = $request->id_card;
+                $usd->status = $request->status;
+                $usd->save();
+                return redirect()
+                    ->to('/admin/create-driver')
+                    ->with('success', 'The Driver is created successfully!!');
+            }else{
+                return redirect()
+                    ->to('/admin/create-driver')
+                    ->withErrors($user->errors())
+                    ->withInput();
+            }
+        }
+        $slug = 'driver';
+        return view('admin.pages.create-drivers', [
+            'slug' => $slug,
+            'modals' => 'admin.pages.modals.create-admin-modals',
+            'data' => $data
         ]);
     }
 

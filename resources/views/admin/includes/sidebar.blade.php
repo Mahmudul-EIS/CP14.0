@@ -18,14 +18,45 @@
             <ul class="children collapse" id="sub-item-1">
                 <li @if(isset($slug) && $slug == 'addmin')class="active"@endif><a class="" href="{{ url('/admin/create-admin') }}">
                         <span class="fa fa-arrow-right">&nbsp;</span> Create User
-                    </a></li>
-                <li @if(isset($slug) && $slug == 'list')class="active"@endif><a class="" href="{{ url('/admin/list') }}">
+                    </a>
+                </li>
+                <li @if(isset($slug) && $slug == 'list')class="active"@endif>
+                    <a class="" href="{{ url('/admin/list') }}">
                         <span class="fa fa-arrow-right">&nbsp;</span>User Lists
-                    </a></li>
+                    </a>
+                </li>
             </ul>
         </li>
-        <li @if(isset($slug) && $slug == 'customers')class="active"@endif><a href="{{ url('/admin/customers') }}"><em class="fa fa-users">&nbsp;</em> Riders List (Customer)</a></li>
-        <li @if(isset($slug) && $slug == 'drivers')class="active"@endif><a href="{{ url('/admin/drivers') }}"><em class="fa fa-user">&nbsp;</em> Ridemates List (Driver)</a></li>
+        <li class="parent @if(isset($slug) && $slug == 'addmin' || $slug == 'list'){{'active'}}@endif"><a data-toggle="collapse" href="#sub-item-2">
+                <em class="fa fa-user">&nbsp;</em> Riders (Customer) <span data-toggle="collapse" href="#sub-item-1" class="icon pull-right"><em class="fa fa-plus"></em></span>
+            </a>
+            <ul class="children collapse" id="sub-item-2">
+                <li @if(isset($slug) && $slug == 'addmin')class="active"@endif><a class="" href="{{ url('/admin/create-rider') }}">
+                        <span class="fa fa-arrow-right">&nbsp;</span> Create Rider
+                    </a>
+                </li>
+                <li @if(isset($slug) && $slug == 'list')class="active"@endif>
+                    <a class="" href="{{ url('/rider/list') }}">
+                        <span class="fa fa-arrow-right">&nbsp;</span> Rider List
+                    </a>
+                </li>
+            </ul>
+        </li>
+        <li class="parent @if(isset($slug) && $slug == 'driver' || $slug == 'list'){{'active'}}@endif"><a data-toggle="collapse" href="#sub-item-3">
+                <em class="fa fa-user">&nbsp;</em> Ridemates (Driver) <span data-toggle="collapse" href="#sub-item-1" class="icon pull-right"><em class="fa fa-plus"></em></span>
+            </a>
+            <ul class="children collapse" id="sub-item-3">
+                <li @if(isset($slug) && $slug == 'driver')class="active"@endif><a class="" href="{{ url('/admin/create-driver') }}">
+                        <span class="fa fa-arrow-right">&nbsp;</span> Create Ridemates
+                    </a>
+                </li>
+                <li @if(isset($slug) && $slug == 'list')class="active"@endif>
+                    <a class="" href="{{ url('/ridemates/list') }}">
+                        <span class="fa fa-arrow-right">&nbsp;</span> Ridemates List
+                    </a>
+                </li>
+            </ul>
+        </li>
         <li @if(isset($slug) && $slug == 'rides')class="active"@endif><a href="{{ url('/admin/rides') }}"><em class="fa fa-info-circle">&nbsp;</em>Rides Details</a></li>
     </ul>
 </div><!--/.sidebar-->

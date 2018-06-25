@@ -32,6 +32,8 @@ Route::get('/admin/list', 'Admin@adminList');
 Route::post('/admin/list', 'Admin@adminList');
 Route::post('/admin/user/delete/{id}', 'Admin@deleteUser');
 Route::get('/admin/drivers', 'Admin@driverList');
+Route::get('/admin/create-driver', 'Admin@createDriver');
+Route::post('/admin/create-driver', 'Admin@createDriver');
 Route::get('/admin/customers', 'Admin@customerList');
 Route::get('/admin/rides', 'Admin@rideDetails');
 Route::get('/admin/customers/view/{id}', 'Admin@viewCustomer');
