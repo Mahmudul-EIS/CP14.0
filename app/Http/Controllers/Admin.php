@@ -129,9 +129,9 @@ class Admin extends Controller
                 $user->password = bcrypt($request->password);
                 $user->role = 'driver';
                 $user->save();
-                $last_id = User::find('id')->latest();
+                $last_id = User::orderBy('id', 'desc')->first();;
                 $usd = new User_data();
-                $usd->user_id = $last_id;
+                $usd->user_id = $last_id->id;
                 $usd->last_name = $request->last_name;
                 $usd->dob = $request->dob;
                 $usd->gender = $request->gender;
