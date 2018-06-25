@@ -13,7 +13,10 @@ class Change1UsersDataTable extends Migration
      */
     public function up()
     {
-        //
+        Schema::table('users_data', function(Blueprint $table)
+        {
+            $table->dateTime('dob')->change();
+        });
     }
 
     /**
@@ -23,6 +26,9 @@ class Change1UsersDataTable extends Migration
      */
     public function down()
     {
-        //
+        Schema::table('users_data', function(Blueprint $table)
+        {
+            $table->string('dob')->change();
+        });
     }
 }

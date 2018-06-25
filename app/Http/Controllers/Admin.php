@@ -120,9 +120,9 @@ class Admin extends Controller
                 $user->password = bcrypt($request->password);
                 $user->role = 'driver';
                 $user->save();
-                $last_id = User::latest();
+                $last_id = User::find('id')->latest();
                 $usd = new User_data();
-                $usd->user_id = $last_id->id;
+                $usd->user_id = $last_id;
                 $usd->last_name = $request->last_name;
                 $usd->dob = $request->dob;
                 $usd->gender = $request->gender;
@@ -167,9 +167,9 @@ class Admin extends Controller
                 $user->name = $request->name;
                 $user->email = $request->email;
                 $user->password = bcrypt($request->password);
-                $user->role = 'driver';
+                $user->role = 'customer';
                 $user->save();
-                $last_id = User::latest();
+                $last_id = User::orderBy('id', 'desc')->first();
                 $usd = new User_data();
                 $usd->user_id = $last_id->id;
                 $usd->last_name = $request->last_name;
@@ -182,7 +182,7 @@ class Admin extends Controller
                 $usd->save();
                 return redirect()
                     ->to('/admin/create-customers')
-                    ->with('success', 'The Driver is created successfully!!');
+                    ->with('success', 'The Customer is created successfully!!');
             }else{
                 return redirect()
                     ->to('/admin/create-customers')
