@@ -31,10 +31,10 @@
                             <fieldset>
                                 {{ csrf_field() }}
                                 <div class="form-group">
-                                    <input class="form-control" placeholder="Enter User Name" name="name" type="text" autofocus="" required="" value="">
+                                    <input class="form-control" placeholder="Enter User Name" name="name" type="text" required="" value="">
                                 </div>
                                 <div class="form-group">
-                                    <input class="form-control" placeholder="Enter Last Name" name="last_name" type="password" value="">
+                                    <input class="form-control" placeholder="Enter Last Name" name="last_name" value="">
                                 </div>
                                 <div class="form-group">
                                     <input class="form-control" placeholder="Enter Your Email" name="email" type="email" autofocus="" required="" value="">

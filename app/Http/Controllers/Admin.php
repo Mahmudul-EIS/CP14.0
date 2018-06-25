@@ -119,7 +119,7 @@ class Admin extends Controller
                 $user->password = bcrypt($request->password);
                 $user->role = 'driver';
                 $user->save();
-                $last_id = User::latest()->first();
+                $last_id = User::latest();
                 $usd = new User_data();
                 $usd->user_id = $last_id->id;
                 $usd->last_name = $request->last_name;
@@ -168,7 +168,7 @@ class Admin extends Controller
                 $user->password = bcrypt($request->password);
                 $user->role = 'driver';
                 $user->save();
-                $last_id = User::latest()->first();
+                $last_id = User::latest();
                 $usd = new User_data();
                 $usd->user_id = $last_id->id;
                 $usd->last_name = $request->last_name;
