@@ -180,17 +180,17 @@ class Admin extends Controller
                 $usd->status = $request->status;
                 $usd->save();
                 return redirect()
-                    ->to('/admin/create-customer')
+                    ->to('/admin/create-customers')
                     ->with('success', 'The Driver is created successfully!!');
             }else{
                 return redirect()
-                    ->to('/admin/create-customer')
+                    ->to('/admin/create-customers')
                     ->withErrors($user->errors())
                     ->withInput();
             }
         }
         $slug = 'customer';
-        return view('admin.pages.create-customer', [
+        return view('admin.pages.create-customers', [
             'slug' => $slug,
             'modals' => 'admin.pages.modals.create-admin-modals',
             'data' => $data

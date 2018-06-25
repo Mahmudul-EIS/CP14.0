@@ -31,7 +31,7 @@
                 <em class="fa fa-user">&nbsp;</em> Riders (Customer) <span data-toggle="collapse" href="#sub-item-1" class="icon pull-right"><em class="fa fa-plus"></em></span>
             </a>
             <ul class="children collapse" id="sub-item-2">
-                <li @if(isset($slug) && $slug == 'customer')class="active"@endif><a class="" href="{{ url('/admin/create-customer') }}">
+                <li @if(isset($slug) && $slug == 'customer')class="active"@endif><a class="" href="{{ url('/admin/create-customers') }}">
                         <span class="fa fa-arrow-right">&nbsp;</span> Create Rider
                     </a>
                 </li>
