@@ -27,15 +27,15 @@
                 </li>
             </ul>
         </li>
-        <li class="parent @if(isset($slug) && $slug == 'addmin' || $slug == 'list'){{'active'}}@endif"><a data-toggle="collapse" href="#sub-item-2">
+        <li class="parent @if(isset($slug) && $slug == 'customer' || $slug == 'list'){{'active'}}@endif"><a data-toggle="collapse" href="#sub-item-2">
                 <em class="fa fa-user">&nbsp;</em> Riders (Customer) <span data-toggle="collapse" href="#sub-item-1" class="icon pull-right"><em class="fa fa-plus"></em></span>
             </a>
             <ul class="children collapse" id="sub-item-2">
-                <li @if(isset($slug) && $slug == 'addmin')class="active"@endif><a class="" href="{{ url('/admin/create-rider') }}">
+                <li @if(isset($slug) && $slug == 'customer')class="active"@endif><a class="" href="{{ url('/admin/create-customer') }}">
                         <span class="fa fa-arrow-right">&nbsp;</span> Create Rider
                     </a>
                 </li>
-                <li @if(isset($slug) && $slug == 'list')class="active"@endif>
+                <li @if(isset($slug) && $slug == 'customer')class="active"@endif>
                     <a class="" href="{{ url('/rider/list') }}">
                         <span class="fa fa-arrow-right">&nbsp;</span> Rider List
                     </a>

@@ -30,17 +30,6 @@
 <script src="{{ asset('public/assets/admin/js/bootstrap-select.js') }}"></script>
 <script src="{{ asset('public/assets/admin/js/bootstrap-datepicker.js') }}"></script>
 <script src="{{ asset('public/assets/admin/js/custom.js') }}"></script>
-<script>
-    window.onload = function () {
-        var chart1 = document.getElementById("line-chart").getContext("2d");
-        window.myLine = new Chart(chart1).Line(lineChartData, {
-            responsive: true,
-            scaleLineColor: "rgba(0,0,0,.2)",
-            scaleGridLineColor: "rgba(0,0,0,.05)",
-            scaleFontColor: "#c5c7cc"
-        });
-    };
-</script>
 
 @if(isset($footer_js))
     @include($footer_js)

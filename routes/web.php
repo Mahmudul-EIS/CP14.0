@@ -35,6 +35,8 @@ Route::get('/admin/drivers', 'Admin@driverList');
 Route::get('/admin/create-driver', 'Admin@createDriver');
 Route::post('/admin/create-driver', 'Admin@createDriver');
 Route::get('/admin/customers', 'Admin@customerList');
+Route::get('/admin/create-customers', 'Admin@createCustomer');
+Route::post('/admin/create-customers', 'Admin@createCustomer');
 Route::get('/admin/rides', 'Admin@rideDetails');
 Route::get('/admin/customers/view/{id}', 'Admin@viewCustomer');
 Route::get('/admin/drivers/view/{id}', 'Admin@viewDriver');

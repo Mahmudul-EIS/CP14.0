@@ -151,10 +151,49 @@ class Admin extends Controller
     /**
      * Customer List - shows all the customers connected with the system
      */
-    public function customerList(Request $request){
-        $slug = 'customers';
-        return view('admin.pages.customer-list', [
-            'slug' => $slug
+    public function createCustomer(Request $request){
+        $data = null;
+        if($request->isMethod('post')){
+            $data = $request->all();
+            if($request->password !== $request->repass){
+                return redirect()
+                    ->to('/admin/create-admin')
+                    ->with('error', 'Passwords didn\'t match!! Please try again!!')
+                    ->withInput();
+            }
+            $user = new User();
+            if($user->validate($request->all())){
+                $user->name = $request->name;
+                $user->email = $request->email;
+                $user->password = bcrypt($request->password);
+                $user->role = 'driver';
+                $user->save();
+                $last_id = User::latest()->first();
+                $usd = new User_data();
+                $usd->user_id = $last_id->id;
+                $usd->last_name = $request->last_name;
+                $usd->dob = $request->dob;
+                $usd->gender = $request->gender;
+                $usd->address = $request->address;
+                $usd->picture = $request->picture;
+                $usd->id_card = $request->id_card;
+                $usd->status = $request->status;
+                $usd->save();
+                return redirect()
+                    ->to('/admin/create-customer')
+                    ->with('success', 'The Driver is created successfully!!');
+            }else{
+                return redirect()
+                    ->to('/admin/create-customer')
+                    ->withErrors($user->errors())
+                    ->withInput();
+            }
+        }
+        $slug = 'customer';
+        return view('admin.pages.create-customer', [
+            'slug' => $slug,
+            'modals' => 'admin.pages.modals.create-admin-modals',
+            'data' => $data
         ]);
     }
 
