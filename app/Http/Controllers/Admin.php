@@ -103,6 +103,15 @@ class Admin extends Controller
     /**
      * Driver List - shows all the drivers registered on the system
      */
+
+    public function driverList(Request $request){
+        $slug = 'drivers';
+        return view('admin.pages.driver-list', [
+            'slug' => $slug
+        ]);
+    }
+
+
     public function createDriver(Request $request){
         $data = null;
         if($request->isMethod('post')){
@@ -152,6 +161,20 @@ class Admin extends Controller
     /**
      * Customer List - shows all the customers connected with the system
      */
+
+    public function customerList(Request $request){
+        $cus = User::where('role','customer')->paginate(1);
+        foreach ($cus as $c){
+            $usd = User_data::where('user_id',$c->id);
+            $c->usd = $usd;
+        }
+        $slug = 'customers';
+        return view('admin.pages.customer-list', [
+            'slug' => $slug,
+            'data' => $cus
+        ]);
+    }
+
     public function createCustomer(Request $request){
         $data = null;
         if($request->isMethod('post')){
@@ -213,8 +236,14 @@ class Admin extends Controller
      */
     public function viewCustomer(Request $request){
         $slug = '';
+        $id = $request->route('id');
+        $user = User::find($id);
+        $user_details = User_data::where('user_id',$id)->first();
+
         return view('admin.pages.view-customer', [
             'slug' => $slug,
+            'data' => $user,
+            'details' => $user_details,
             'modals' => 'admin.pages.modals.view-customer-modals'
         ]);
     }

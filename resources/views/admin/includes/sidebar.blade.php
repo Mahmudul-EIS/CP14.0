@@ -36,7 +36,7 @@
                     </a>
                 </li>
                 <li @if(isset($slug) && $slug == 'customer')class="active"@endif>
-                    <a class="" href="{{ url('/rider/list') }}">
+                    <a class="" href="{{ url('/admin/customers') }}">
                         <span class="fa fa-arrow-right">&nbsp;</span> Rider List
                     </a>
                 </li>
@@ -51,7 +51,7 @@
                     </a>
                 </li>
                 <li @if(isset($slug) && $slug == 'list')class="active"@endif>
-                    <a class="" href="{{ url('/ridemates/list') }}">
+                    <a class="" href="{{ url('/admin/drivers') }}">
                         <span class="fa fa-arrow-right">&nbsp;</span> Ridemates List
                     </a>
                 </li>

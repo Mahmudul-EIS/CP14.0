@@ -70,14 +70,16 @@
                             </tr>
                             </thead>
                             <tbody>
-                            @for($i = 1; $i < 6; $i++)
+                            @php $count = 0 @endphp
+                            @foreach($data as $d)
+                                @php $count ++ @endphp
                                 <tr>
-                                    <td>{{ $i }}</td>
-                                    <td>John Doe</td>
-                                    <td>john.doe@gmail.com</td>
-                                    <td><a href="{{ url('/admin/customers/view/'.$i) }}" class="btn btn-info btn-offer">View</a></td>
+                                    <td>{{ $count }}</td>
+                                    <td>{{ $d->name }}</td>
+                                    <td>{{ $d->email }}</td>
+                                    <td><a href="{{ url('/admin/customers/view/'.$d->id) }}" class="btn btn-info btn-offer">View</a></td>
                                 </tr>
-                            @endfor
+                            @endforeach
                             </tbody>
                         </table>
                     </div>
@@ -88,13 +90,7 @@
         <div class="row">
             <div class="col-sm-12">
                 <nav aria-label="Page navigation example" class="admin-pagination">
-                    <ul class="pagination">
-                        <li class="page-item"><a class="page-link" href="#"><i class="fa fa-angle-left"></i></a></li>
-                        <li class="page-item"><a class="page-link" href="#">1</a></li>
-                        <li class="page-item"><a class="page-link" href="#">2</a></li>
-                        <li class="page-item"><a class="page-link" href="#">3</a></li>
-                        <li class="page-item"><a class="page-link" href="#"><i class="fa fa-angle-right"></i></a></li>
-                    </ul>
+                    {{ $data->links() }}
                 </nav>
             </div>
         </div>

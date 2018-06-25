@@ -26,19 +26,19 @@
                         <div class="col-sm-6 col-xs-12">
                             <div class="name-text">
                                 <span class="name-text-user">Name</span>
-                                <span class="name-text-name">Jhon Doe</span>
+                                <span class="name-text-name">{{ $data->name }}</span>
                             </div>
                             <div class="name-text">
                                 <span class="name-text-user">Email Address</span>
-                                <span class="name-text-name">simple@gmail.com</span>
+                                <span class="name-text-name">{{ $data->email }}</span>
                             </div>
                             <div class="name-text">
                                 <span class="name-text-user">Date Of birth</span>
-                                <span class="name-text-name">11-01-1991</span>
+                                <span class="name-text-name">{{ date('Y-m-d',strtotime($details->dob)) }}</span>
                             </div>
                             <div class="name-text">
                                 <span class="name-text-user">Gender</span>
-                                <span class="name-text-name">Male</span>
+                                <span class="name-text-name">{{ $details->gender }}</span>
                             </div>
                         </div>
                     </div>
