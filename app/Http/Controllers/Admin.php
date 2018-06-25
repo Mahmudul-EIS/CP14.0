@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\User;
+use App\User_data;
 
 class Admin extends Controller
 {
@@ -119,9 +120,9 @@ class Admin extends Controller
                 $user->password = bcrypt($request->password);
                 $user->role = 'driver';
                 $user->save();
-                $last_id = User::latest()->first();
+                $last_id = User::find('id')->latest();
                 $usd = new User_data();
-                $usd->user_id = $last_id->id;
+                $usd->user_id = $last_id;
                 $usd->last_name = $request->last_name;
                 $usd->dob = $request->dob;
                 $usd->gender = $request->gender;
@@ -151,10 +152,49 @@ class Admin extends Controller
     /**
      * Customer List - shows all the customers connected with the system
      */
-    public function customerList(Request $request){
-        $slug = 'customers';
-        return view('admin.pages.customer-list', [
-            'slug' => $slug
+    public function createCustomer(Request $request){
+        $data = null;
+        if($request->isMethod('post')){
+            $data = $request->all();
+            if($request->password !== $request->repass){
+                return redirect()
+                    ->to('/admin/create-admin')
+                    ->with('error', 'Passwords didn\'t match!! Please try again!!')
+                    ->withInput();
+            }
+            $user = new User();
+            if($user->validate($request->all())){
+                $user->name = $request->name;
+                $user->email = $request->email;
+                $user->password = bcrypt($request->password);
+                $user->role = 'customer';
+                $user->save();
+                $last_id = User::orderBy('id', 'desc')->first();
+                $usd = new User_data();
+                $usd->user_id = $last_id->id;
+                $usd->last_name = $request->last_name;
+                $usd->dob = $request->dob;
+                $usd->gender = $request->gender;
+                $usd->address = $request->address;
+                $usd->picture = $request->picture;
+                $usd->id_card = $request->id_card;
+                $usd->status = $request->status;
+                $usd->save();
+                return redirect()
+                    ->to('/admin/create-customers')
+                    ->with('success', 'The Customer is created successfully!!');
+            }else{
+                return redirect()
+                    ->to('/admin/create-customers')
+                    ->withErrors($user->errors())
+                    ->withInput();
+            }
+        }
+        $slug = 'customer';
+        return view('admin.pages.create-customers', [
+            'slug' => $slug,
+            'modals' => 'admin.pages.modals.create-admin-modals',
+            'data' => $data
         ]);
     }
 

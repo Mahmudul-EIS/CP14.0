@@ -6,7 +6,7 @@
 
         <div class="row">
             <div class="col-lg-12">
-                <h1 class="page-header">Create Driver</h1>
+                <h1 class="page-header">Create Customer</h1>
             </div>
         </div><!--/.row-->
 
@@ -27,7 +27,7 @@
             <div class="col-xs-12 col-md-8 col-md-offset-2">
                 <div class="panel panel-default">
                     <div class="panel-body">
-                        <form method="post" action="{{ url('/admin/create-driver') }}" role="form">
+                        <form method="post" action="{{ url('/admin/create-customers') }}" role="form">
                             <fieldset>
                                 {{ csrf_field() }}
                                 <div class="form-group">
