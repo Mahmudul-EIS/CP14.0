@@ -10,7 +10,8 @@ class DriverData extends Model
 
     protected $rules = array(
         'car_reg'  => 'required',
-        'driving_license'  => 'required'
+        'driving_license'  => 'required',
+        'expiry' => 'required'
     );
 
     protected $errors;

@@ -26,31 +26,31 @@
                         <div class="col-sm-6 col-xs-12">
                             <div class="name-text">
                                 <span class="name-text-user">Name</span>
-                                <span class="name-text-name">Jhon Doe</span>
+                                <span class="name-text-name">{{ $data->name }} @if(isset($details->last_name)){{ $details->last_name }}@endif</span>
                             </div>
                             <div class="name-text">
                                 <span class="name-text-user">Email Address</span>
-                                <span class="name-text-name">simple@gmail.com</span>
+                                <span class="name-text-name">{{ $data->email }}</span>
                             </div>
                             <div class="name-text">
                                 <span class="name-text-user">Date Of birth</span>
-                                <span class="name-text-name">11-01-1991</span>
+                                <span class="name-text-name">{{ date('Y-m-d',strtotime($details->dob)) }}</span>
                             </div>
                             <div class="name-text">
                                 <span class="name-text-user">Gender</span>
-                                <span class="name-text-name">Male</span>
+                                <span class="name-text-name">{{ $details->gender }}</span>
                             </div>
                             <div class="name-text">
                                 <span class="name-text-user">Contact Number</span>
-                                <span class="name-text-name">01234565</span>
+                                <span class="name-text-name">{{ $details->contact }}</span>
                             </div>
                             <div class="name-text">
                                 <span class="name-text-user">Driving Licence Number & expiry Date</span>
-                                <span class="name-text-name">MY12345 <p>01/19</p></span>
+                                <span class="name-text-name">{{ $dd->driving_license }} <p>{{ date('Y-m',strtotime($dd->expiry)) }}</p></span>
                             </div>
                             <div class="name-text">
                                 <span class="name-text-user">Identification  Card Number</span>
-                                <span class="name-text-name">XXXXXXX</span>
+                                <span class="name-text-name">{{ $details->id_card }}</span>
                             </div>
                         </div>
                     </div>

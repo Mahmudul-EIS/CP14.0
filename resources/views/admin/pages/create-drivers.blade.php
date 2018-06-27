@@ -74,6 +74,9 @@
                                     <input type="text" class="form-control" placeholder="Enter Driving License No" name="driving_license" value="{{ old('driving_license') }}">
                                 </div>
                                 <div class="form-group">
+                                    <input type="text" class="form-control" placeholder="Enter Expiration Date" name="expiry" value="{{ old('expiry') }}">
+                                </div>
+                                <div class="form-group">
                                     <label for="upload-driving-licence">Upload Driving License</label>
                                     <div class="file">
                                         <input type="file" class="" name="uploads">

@@ -106,9 +106,9 @@ class Admin extends Controller
      */
 
     public function driverList(Request $request){
-        $dr = User::where('role','customer')->paginate(1);
+        $dr = User::where('role', 'driver')->paginate(1);
         foreach ($dr as $c){
-            $usd = User_data::where('user_id',$c->id);
+            $usd = User_data::where('user_id', $c->id);
             $c->usd = $usd;
         }
         $slug = 'drivers';
@@ -151,6 +151,7 @@ class Admin extends Controller
                 $dd->user_id = $last_id->id;
                 $dd->car_reg = $request->car_reg;
                 $dd->driving_license = $request->driving_license;
+                $dd->expiry = $request->expiry;
                 $dd->uploads = $request->uploads;
                 $dd->save();
                 return redirect()
@@ -176,9 +177,9 @@ class Admin extends Controller
      */
 
     public function customerList(Request $request){
-        $cus = User::where('role','customer')->paginate(1);
+        $cus = User::where('role', 'customer')->paginate(1);
         foreach ($cus as $c){
-            $usd = User_data::where('user_id',$c->id);
+            $usd = User_data::where('user_id', $c->id);
             $c->usd = $usd;
         }
         $slug = 'customers';
@@ -251,7 +252,7 @@ class Admin extends Controller
         $slug = '';
         $id = $request->route('id');
         $user = User::find($id);
-        $user_details = User_data::where('user_id',$id)->first();
+        $user_details = User_data::where('user_id', $id)->first();
 
         return view('admin.pages.view-customer', [
             'slug' => $slug,
@@ -266,8 +267,16 @@ class Admin extends Controller
      */
     public function viewDriver(Request $request){
         $slug = '';
+        $id = $request->route('id');
+        $user = User::find($id);
+        $user_details = User_data::where('user_id', $id)->first();
+        $dd = DriverData::where('user_id', $id)->first();
+
         return view('admin.pages.view-driver', [
             'slug' => $slug,
+            'data' => $user,
+            'details' => $user_details,
+            'dd' => $dd,
             'modals' => 'admin.pages.modals.view-driver-modals'
         ]);
     }
