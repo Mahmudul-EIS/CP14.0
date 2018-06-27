@@ -3,9 +3,17 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Validator;
 
 class User_data extends Model
 {
+
+    protected $rules = array(
+        'dob'  => 'required',
+        'address'  => 'required',
+        'gender' => 'required'
+    );
+
     protected $errors;
 
     protected $table = 'users_data';
@@ -25,4 +33,5 @@ class User_data extends Model
     {
         return $this->errors;
     }
+
 }

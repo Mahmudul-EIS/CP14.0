@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\User;
 use App\User_data;
+use App\DriverData;
 
 class Admin extends Controller
 {
@@ -105,9 +106,15 @@ class Admin extends Controller
      */
 
     public function driverList(Request $request){
+        $dr = User::where('role','customer')->paginate(1);
+        foreach ($dr as $c){
+            $usd = User_data::where('user_id',$c->id);
+            $c->usd = $usd;
+        }
         $slug = 'drivers';
         return view('admin.pages.driver-list', [
-            'slug' => $slug
+            'slug' => $slug,
+            'data' => $dr
         ]);
     }
 
@@ -123,14 +130,15 @@ class Admin extends Controller
                     ->withInput();
             }
             $user = new User();
-            if($user->validate($request->all())){
+            $usd = new User_data();
+            $dd = new DriverData();
+            if($user->validate($request->all()) && $usd->validate($request->all()) && $dd->validate($request->all())){
                 $user->name = $request->name;
                 $user->email = $request->email;
                 $user->password = bcrypt($request->password);
                 $user->role = 'driver';
                 $user->save();
                 $last_id = User::orderBy('id', 'desc')->first();;
-                $usd = new User_data();
                 $usd->user_id = $last_id->id;
                 $usd->last_name = $request->last_name;
                 $usd->dob = $request->dob;
@@ -140,6 +148,11 @@ class Admin extends Controller
                 $usd->id_card = $request->id_card;
                 $usd->status = $request->status;
                 $usd->save();
+                $dd->user_id = $last_id->id;
+                $dd->car_reg = $request->car_reg;
+                $dd->driving_license = $request->driving_license;
+                $dd->uploads = $request->uploads;
+                $dd->save();
                 return redirect()
                     ->to('/admin/create-driver')
                     ->with('success', 'The Driver is created successfully!!');
@@ -186,14 +199,14 @@ class Admin extends Controller
                     ->withInput();
             }
             $user = new User();
-            if($user->validate($request->all())){
+            $usd = new User_data();
+            if($user->validate($request->all()) && $usd->validate($request->all())){
                 $user->name = $request->name;
                 $user->email = $request->email;
                 $user->password = bcrypt($request->password);
                 $user->role = 'customer';
                 $user->save();
                 $last_id = User::orderBy('id', 'desc')->first();
-                $usd = new User_data();
                 $usd->user_id = $last_id->id;
                 $usd->last_name = $request->last_name;
                 $usd->dob = $request->dob;
@@ -209,7 +222,7 @@ class Admin extends Controller
             }else{
                 return redirect()
                     ->to('/admin/create-customers')
-                    ->withErrors($user->errors())
+                    ->withErrors($usd->errors())
                     ->withInput();
             }
         }
