@@ -16,8 +16,11 @@
 */
 Route::get('/', 'Frontend@home');
 Route::get('/join', 'Authenticate@join');
+Route::get('/sign-up/success', 'Authenticate@success');
 Route::get('/sign-up/driver', 'Authenticate@registerDriver');
+Route::post('/sign-up/driver', 'Authenticate@registerDriver');
 Route::get('/sign-up/customer', 'Authenticate@registerCustomer');
+Route::post('/sign-up/customer', 'Authenticate@registerCustomer');
 
 /* ------------------------------------------------------ */
 

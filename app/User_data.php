@@ -9,7 +9,6 @@ class User_data extends Model
 {
 
     protected $rules = array(
-        'dob'  => 'required',
         'address'  => 'required',
         'gender' => 'required'
     );
