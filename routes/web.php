@@ -45,3 +45,14 @@ Route::get('/admin/customers/view/{id}', 'Admin@viewCustomer');
 Route::get('/admin/drivers/view/{id}', 'Admin@viewDriver');
 
 /* ------------------------------------------------------ */
+
+
+/**
+ * Customer area
+ */
+Route::get('c/profile', 'Customer@viewProfile');
+
+/**
+ * Driver area
+ */
+Route::get('d/profile', 'Driver@viewProfile');
