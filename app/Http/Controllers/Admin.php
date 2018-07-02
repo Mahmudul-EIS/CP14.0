@@ -25,16 +25,22 @@ class Admin extends Controller
      */
     public function createAdmin(Request $request){
         $data = null;
+        $errors = array();
         if($request->isMethod('post')){
             $data = $request->all();
             if($request->password !== $request->repass){
-                return redirect()
-                    ->to('/admin/create-admin')
-                    ->with('error', 'Passwords didn\'t match!! Please try again!!')
-                    ->withInput();
+                $errors[] = 'Passwords didn\'t match !!';
             }
             $user = new User();
-            if($user->validate($request->all())){
+            if(!$user->validate($data)){
+                $user_e = $user->errors();
+                foreach ($user_e->messages() as $k => $v){
+                    foreach ($v as $e){
+                        $errors[] = $e;
+                    }
+                }
+            }
+            if(empty($errors)){
                 $user->name = $request->name;
                 $user->email = $request->email;
                 $user->password = bcrypt($request->password);
@@ -46,7 +52,7 @@ class Admin extends Controller
             }else{
                 return redirect()
                     ->to('/admin/create-admin')
-                    ->withErrors($user->errors())
+                    ->with('errors',$errors)
                     ->withInput();
             }
         }
@@ -121,18 +127,40 @@ class Admin extends Controller
 
     public function createDriver(Request $request){
         $data = null;
+        $errors = array();
         if($request->isMethod('post')){
             $data = $request->all();
             if($request->password !== $request->repass){
-                return redirect()
-                    ->to('/admin/create-admin')
-                    ->with('error', 'Passwords didn\'t match!! Please try again!!')
-                    ->withInput();
+                $errors[] = 'Passwords didn\'t match !!';
             }
             $user = new User();
             $usd = new User_data();
             $dd = new DriverData();
-            if($user->validate($request->all()) && $usd->validate($request->all()) && $dd->validate($request->all())){
+            if(!$user->validate($data)){
+                $user_e = $user->errors();
+                foreach ($user_e->messages() as $k => $v){
+                    foreach ($v as $e){
+                        $errors[] = $e;
+                    }
+                }
+            }
+            if(!$usd->validate($data)){
+                $usd_e = $usd->errors();
+                foreach ($usd_e->messages() as $k => $v){
+                    foreach ($v as $e){
+                        $errors[] = $e;
+                    }
+                }
+            }
+            if(!$dd->validate($data)){
+                $dd_e = $dd->errors();
+                foreach ($dd_e->messages() as $k => $v){
+                    foreach ($v as $e){
+                        $errors[] = $e;
+                    }
+                }
+            }
+            if(empty($errors)){
                 $user->name = $request->name;
                 $user->email = $request->email;
                 $user->password = bcrypt($request->password);
@@ -160,7 +188,7 @@ class Admin extends Controller
             }else{
                 return redirect()
                     ->to('/admin/create-driver')
-                    ->withErrors($user->errors())
+                    ->with('errors',$errors)
                     ->withInput();
             }
         }
@@ -191,17 +219,31 @@ class Admin extends Controller
 
     public function createCustomer(Request $request){
         $data = null;
+        $errors = array();
         if($request->isMethod('post')){
             $data = $request->all();
             if($request->password !== $request->repass){
-                return redirect()
-                    ->to('/admin/create-admin')
-                    ->with('error', 'Passwords didn\'t match!! Please try again!!')
-                    ->withInput();
+                $errors[] = 'Passwords didn\'t match !!';
             }
             $user = new User();
             $usd = new User_data();
-            if($user->validate($request->all()) && $usd->validate($request->all())){
+            if(!$user->validate($data)){
+                $user_e = $user->errors();
+                foreach ($user_e->messages() as $k => $v){
+                    foreach ($v as $e){
+                        $errors[] = $e;
+                    }
+                }
+            }
+            if(!$usd->validate($data)){
+                $usd_e = $usd->errors();
+                foreach ($usd_e->messages() as $k => $v){
+                    foreach ($v as $e){
+                        $errors[] = $e;
+                    }
+                }
+            }
+            if(empty($errors)){
                 $user->name = $request->name;
                 $user->email = $request->email;
                 $user->password = bcrypt($request->password);
@@ -223,7 +265,7 @@ class Admin extends Controller
             }else{
                 return redirect()
                     ->to('/admin/create-customers')
-                    ->withErrors($usd->errors())
+                    ->with('errors',$errors)
                     ->withInput();
             }
         }

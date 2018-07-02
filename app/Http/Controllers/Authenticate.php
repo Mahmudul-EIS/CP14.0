@@ -15,28 +15,46 @@ class Authenticate extends Controller
     }
 
     public function registerDriver(Request $request){
+        $errors = array();
         if($request->isMethod('post')){
             if($request->password !== $request->repass){
-                return redirect()
-                    ->to('/sign-up/driver')
-                    ->with('error', 'Passwords didn\'t match!! Please try again!!')
-                    ->withInput();
-            }elseif ($request->email !== $request->reemail){
-                return redirect()
-                    ->to('/sign-up/driver')
-                    ->with('error', 'Email didn\'t match!! Please try again!!')
-                    ->withInput();
+                $errors[] = 'Passwords didn\'t match !!';
             }
-            elseif (!isset($request->checkbox)){
-                return redirect()
-                    ->to('/sign-up/driver')
-                    ->with('error', 'Please Agree to the Privacy Agreement & Terms of Conditions. !!')
-                    ->withInput();
+            if ($request->email !== $request->reemail){
+                $errors[] = 'Email didn\'t match !!';
+            }
+            if (!isset($request->checkbox)){
+                $errors[] = 'Please Agree to the Privacy Agreement & Terms of Conditions. !!';
             }
             $user = new User();
             $usd = new User_data();
             $dd = new DriverData();
-            if($user->validate($request->all()) && $usd->validate($request->all()) && $dd->validate($request->all())){
+            $data = $request->all();
+            if(!$user->validate($data)){
+                $user_e = $user->errors();
+                foreach ($user_e->messages() as $k => $v){
+                    foreach ($v as $e){
+                        $errors[] = $e;
+                    }
+                }
+            }
+            if(!$usd->validate($data)){
+                $usd_e = $usd->errors();
+                foreach ($usd_e->messages() as $k => $v){
+                    foreach ($v as $e){
+                        $errors[] = $e;
+                    }
+                }
+            }
+            if(!$dd->validate($data)){
+                $dd_e = $dd->errors();
+                foreach ($dd_e->messages() as $k => $v){
+                    foreach ($v as $e){
+                        $errors[] = $e;
+                    }
+                }
+            }
+            if(empty($errors)){
                 $user->name = $request->name;
                 $user->email = $request->email;
                 $user->password = bcrypt($request->password);
@@ -63,8 +81,8 @@ class Authenticate extends Controller
                     ->with('success', 'The Driver is created successfully!!');
             }else{
                 return redirect()
-                    ->to('/admin/create-driver')
-                    ->withErrors($user->errors())
+                    ->to('/sign-up/driver')
+                    ->with('errors',$errors)
                     ->withInput();
             }
         }
@@ -72,27 +90,37 @@ class Authenticate extends Controller
     }
 
     public function registerCustomer(Request $request){
+        $errors = array();
         if($request->isMethod('post')){
             if($request->password !== $request->repass){
-                return redirect()
-                    ->to('/sign-up/customer')
-                    ->with('error', 'Passwords didn\'t match!! Please try again!!')
-                    ->withInput();
-            }elseif ($request->email !== $request->reemail){
-                return redirect()
-                    ->to('/sign-up/customer')
-                    ->with('error', 'Email didn\'t match!! Please try again!!')
-                    ->withInput();
+                $errors[] = 'Passwords didn\'t match !!';
             }
-            elseif (!isset($request->checkbox)){
-                return redirect()
-                    ->to('/sign-up/customer')
-                    ->with('error', 'Please Agree to the Privacy Agreement & Terms of Conditions. !!')
-                    ->withInput();
+            if ($request->email !== $request->reemail){
+                $errors[] = 'Email didn\'t match !!';
+            }
+            if (!isset($request->checkbox)){
+                $errors[] = 'Please Agree to the Privacy Agreement & Terms of Conditions. !!';
             }
             $user = new User();
             $usd = new User_data();
-            if($user->validate($request->all()) && $usd->validate($request->all())){
+            $data = $request->all();
+            if(!$user->validate($data)){
+                $user_e = $user->errors();
+              foreach ($user_e->messages() as $k => $v){
+                  foreach ($v as $e){
+                      $errors[] = $e;
+                  }
+              }
+            }
+            if(!$usd->validate($data)){
+                $usd_e = $usd->errors();
+                foreach ($usd_e->messages() as $k => $v){
+                    foreach ($v as $e){
+                        $errors[] = $e;
+                    }
+                }
+            }
+            if(empty($errors)){
                 $user->name = $request->name;
                 $user->email = $request->email;
                 $user->password = bcrypt($request->password);
@@ -112,7 +140,7 @@ class Authenticate extends Controller
             }else{
                 return redirect()
                     ->to('/sign-up/customer')
-                    ->withErrors($usd->errors())
+                    ->with('errors',$errors)
                     ->withInput();
             }
         }

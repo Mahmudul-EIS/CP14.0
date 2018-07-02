@@ -8,8 +8,8 @@
                 <div class="col-sm-12 sign-in-get-ad padding-left-o padding-right-o">
                     <h3 class="get-popular-list">Join</h3>
                     <h3 class="highlight">With Us Today!</h3>
-                    @if($errors->any())
-                        @foreach($errors->usd->all() as $error)
+                    @if(isset($errors))
+                        @foreach($errors as $error)
                             <p class="alert alert-danger">
                                 {{ $error }}
                             </p>

@@ -9,8 +9,9 @@
                     <h3 class="get-popular-list">Rider</h3>
                     <h3 class="highlight">Register!!</h3>
                 </div>
-                @if($errors->any())
-                    @foreach($errors->usd->all() as $error)
+                <div class="clearfix"></div>
+                @if(isset($errors))
+                    @foreach($errors as $error)
                         <p class="alert alert-danger">
                             {{ $error }}
                         </p>
@@ -66,7 +67,7 @@
                         </div>
                         <div class="form-group get-sign-up-mate">
                             <label for="gender">Gender</label>
-                            <select name="gender" class="get-select-picker" title="Gender" required>
+                            <select name="gender" class="get-select-picker" title="Gender">
                                 <option value="male">Male</option>
                                 <option value="female">Female</option>
                             </select>

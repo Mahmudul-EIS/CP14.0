@@ -13,8 +13,8 @@
         <div class="row">
             <div class="col-lg-12">
                 @include('admin.includes.messages')
-                @if($errors->any())
-                    @foreach($errors->all() as $error)
+                @if(isset($errors))
+                    @foreach($errors as $error)
                         <p class="alert alert-danger">
                             {{ $error }}
                         </p>
