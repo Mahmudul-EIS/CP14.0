@@ -63,7 +63,7 @@ class Authenticate extends Controller
                 $last_id = User::orderBy('id', 'desc')->first();;
                 $usd->user_id = $last_id->id;
                 $usd->last_name = $request->last_name;
-                $usd->dob = $request->dob;
+                $usd->dob = $request->year.'-'.$request->month.'-'.$request->day;
                 $usd->gender = $request->gender;
                 $usd->address = $request->address;
                 $usd->picture = $request->picture;

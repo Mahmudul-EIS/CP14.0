@@ -51,8 +51,14 @@ Route::get('/admin/drivers/view/{id}', 'Admin@viewDriver');
  * Customer area
  */
 Route::get('c/profile', 'Customer@viewProfile');
+Route::get('c/profile/edit/{id}', 'Customer@editProfile');
+Route::post('c/profile/edit/{id}', 'Customer@editProfile');
+Route::post('c/profile/edit/password/{id}', 'Customer@editPassword');
 
 /**
  * Driver area
  */
 Route::get('d/profile', 'Driver@viewProfile');
+Route::get('d/profile/edit/{id}', 'Driver@editProfile');
+Route::post('d/profile/edit/{id}', 'Driver@editProfile');
+Route::post('d/profile/edit/password/{id}', 'Driver@editPassword');

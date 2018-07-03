@@ -16,6 +16,11 @@
                     </div>
                 </div>
                 <div class="clearfix"></div>
+                @if(session()->has('success'))
+                    <div class="alert alert-success">
+                        {{ session()->get('success') }}
+                    </div>
+                @endif
                 <div class="col-md-9 col-lg-8 col-sm-12 col-xs-12 ride--profile padding-left-o">
                     <form action="#">
                         <h3 class="get-popular-list">Riders Profile</h3>

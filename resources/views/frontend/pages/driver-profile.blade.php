@@ -12,6 +12,11 @@
                 <div class="highlight-get-popular clearfix">
                     <div class="col-sm-12 col-md-8 col-xs-12 padding-left-o">
                         <h3 class="get-popular-list">Ridemate Profile</h3>
+                        @if(session()->has('success'))
+                            <div class="alert alert-success">
+                                {{ session()->get('success') }}
+                            </div>
+                        @endif
                         <div class="get-ridemate-user clearfix">
                             <div class="user-icon">
                                 <img src="{{ url('/') }}/public/assets/frontend/img/user/user-1.jpg" alt="">
