@@ -10,8 +10,13 @@ use Illuminate\Support\Facades\Hash;
 
 class Driver extends Controller
 {
-    public function viewProfile(){
-        return view('frontend.pages.driver-profile');
+    public function viewProfile($id){
+        $user = User::find($id);
+        $usd = User_data::where('user_id',$id)->first();
+        return view('frontend.pages.driver-profile',[
+            'usd' => $usd,
+            'user' => $user
+        ]);
     }
 
     public function editProfile(Request $request,$id){
@@ -19,9 +24,6 @@ class Driver extends Controller
         $usd = User_data::where('user_id',$id)->first();
         $dd = DriverData::where('user_id',$id)->first();
         if($request->isMethod('post')){
-            echo "<pre>";
-            print_r($request->all());
-            echo "</pre>";
             $user->name = $request->name;
             $user->email = $request->email;
             $user->save();
@@ -36,7 +38,7 @@ class Driver extends Controller
             $dd->expiry = $request->expiry;
             $dd->save();
             return redirect()
-                ->to('/d/profile')
+                ->to('/d/profile/'.$id)
                 ->with('success', 'Your Profile Updated Successfully!!');
         }
         return view('frontend.pages.driver-profile-edit',[
@@ -45,6 +47,27 @@ class Driver extends Controller
             'dd' => $dd
         ]);
     }
+
+
+    public function imageUpload(Request $request,$id){
+        $usd = User_data::where('user_id',$id)->first();
+        if($request->isMethod('post')){
+            if($request->hasFile('picture')) {
+                $image = $request->file('picture');
+                $name = str_slug($id).'.'.$image->getClientOriginalExtension();
+                $destinationPath = public_path('/uploads/drivers');
+                $imagePath = $destinationPath. "/".  $name;
+                $image->move($destinationPath, $name);
+                $usd->picture = $name;
+                $usd->save();
+                return redirect()
+                    ->to('/d/profile/'.$id)
+                    ->with('success', 'Your Profile Picture Updated Successfully !!');
+            }
+        }
+    }
+
+
     public function editPassword(Request $request,$id){
         $user = User::find($id);
         if($request->isMethod('post')){

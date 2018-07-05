@@ -29,14 +29,14 @@
                         {{ session()->get('success') }}
                     </div>
                 @endif
-                <form action="{{ url('c/profile/edit/8') }}" method="post" enctype="multipart/form-data">
+                <form action="{{ url('c/profile/edit/8') }}" method="post">
                     {{ csrf_field() }}
                     <div class="clearfix">
                     <!-- end edit ridemate profile -->
                     <div class="col-sm-8 col-xs-12 ride--profile padding-left-o">
                         <div class="get-ridemate-user ">
                             <div class="user-edit-picture img-result user-icon" data-toggle="modal" data-target="#myModalimg">
-                                <img class="image-upload-hide" src="img/user/user-1.jpg" alt="">
+                                <img class="image-upload-hide" src="" alt="">
                                 <img class="cropped" src="" alt="">
                                 <div class="image-hover open-popup-image">
                                     <i class="fa fa-upload" aria-hidden="true"></i>
@@ -102,6 +102,7 @@
                 </div>
                 <!-- ride description -->
                 <div class="ridemate-option-get text-center sign-in-option-get clearfix">
+                    <input type="hidden" name="cus_id" value="{{ $user->id }}">
                     <button type="submit" class="btn btn-info btn-offer">Save</button>
                     <button type="button" class="btn btn-info btn-offer join-us-sign-in">Cancel</button>
                 </div>
@@ -156,24 +157,18 @@
                     <h4 class="modal-title" id="myModalLabel">Upload Your Profile Picture</h4>
                 </div>
                 <div class="modal-body">
-                    <form id="image_form" method="post" action="#" enctype="multipart/form-data">
+                    <form id="image_form" method="post" action="{{ url('c/profile/edit/image/8') }}" enctype="multipart/form-data">
                         <!-- input file -->
+                        {{ csrf_field() }}
                         <div class="box">
-                            <input type="file" id="file-input" name="profile_img">
+                            <input type="file" id="file-input" name="picture">
                         </div>
                         <!-- leftbox -->
-                        <div class="box-2">
-                            <div class="result"></div>
-                        </div>
-                        <!-- input file -->
-                        <div class="box3">
-                            <div class="options hide-x">
-                                <label for="width">Width</label>
-                                <input id="width" type="number" class="img-w" value="300" min="100" max="1200" />
-                            </div>
                             <!-- save btn -->
-                            <button onclick="form_submit()" name="userImg" class="btn save hide-x btn-info btn-offer" data-dismiss="modal" aria-label="Close">Save</button>
-                        </div>
+                            <div class="modal-footer login-modal-footer">
+                                <button type="submit" class="btn btn-info btn-offer">Confirm</button>
+                                <button type="button" class="btn btn-info btn-offer" data-dismiss="modal" aria-label="Close">Cancel</button>
+                            </div>
                     </form>
                 </div>
                 <div class="modal-footer income-modal-footer clearfix">

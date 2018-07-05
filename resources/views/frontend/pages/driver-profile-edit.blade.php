@@ -265,23 +265,16 @@
                     <h4 class="modal-title" id="myModalLabel">Upload Your Profile Picture</h4>
                 </div>
                 <div class="modal-body">
-                    <form id="image_form" method="post" action="#" enctype="multipart/form-data">
+                    <form action="{{ url('d/profile/edit/image/12') }}" method="post" enctype="multipart/form-data">
+                    {{csrf_field()}}
                         <!-- input file -->
                         <div class="box">
-                            <input type="file" id="file-input" name="profile_img">
+                            <input type="file" id="file-input" name="picture">
                         </div>
                         <!-- leftbox -->
-                        <div class="box-2">
-                            <div class="result"></div>
-                        </div>
-                        <!-- input file -->
-                        <div class="box3">
-                            <div class="options hide-x">
-                                <label for="width">Width</label>
-                                <input id="width" type="number" class="img-w" value="300" min="100" max="1200" />
-                            </div>
-                            <!-- save btn -->
-                            <button onclick="form_submit()" name="userImg" class="btn save hide-x btn-info btn-offer" data-dismiss="modal" aria-label="Close">Save</button>
+                        <div class="modal-footer login-modal-footer">
+                            <button type="submit" class="btn btn-info btn-offer">Confirm</button>
+                            <button type="button" class="btn btn-info btn-offer" data-dismiss="modal" aria-label="Close">Cancel</button>
                         </div>
                     </form>
                 </div>

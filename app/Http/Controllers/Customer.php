@@ -6,11 +6,16 @@ use App\User_data;
 use App\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Storage;
 
 class Customer extends Controller
 {
-    public function viewProfile(){
-        return view('frontend.pages.customer-profile');
+    public function viewProfile($id){
+        $usd = User_data::where('user_id',$id)->first();
+        return view('frontend.pages.customer-profile',[
+            'usd' => $usd
+        ]);
     }
 
     public function editProfile(Request $request,$id){
@@ -26,7 +31,7 @@ class Customer extends Controller
                 $usd->id_card = $request->id_card;
                 $usd->save();
                 return redirect()
-                    ->to('/c/profile')
+                    ->to('/c/profile/'.$id)
                     ->with('success', 'Your Account Updated Successfully !!');
             }
         return view('frontend.pages.customer-profile-edit', [
@@ -35,6 +40,23 @@ class Customer extends Controller
             ]);
     }
 
+    public function imageUpload(Request $request,$id){
+        $usd = User_data::where('user_id',$id)->first();
+        if($request->isMethod('post')){
+            if($request->hasFile('picture')) {
+                $image = $request->file('picture');
+                $name = str_slug($id).'.'.$image->getClientOriginalExtension();
+                $destinationPath = public_path('/uploads/customers');
+                $imagePath = $destinationPath. "/".  $name;
+                $image->move($destinationPath, $name);
+                $usd->picture = $name;
+                $usd->save();
+                return redirect()
+                    ->to('/c/profile/'.$id)
+                    ->with('success', 'Your Profile Picture Updated Successfully !!');
+            }
+        }
+    }
     public function editPassword(Request $request,$id){
         $user = User::find($id);
         if($request->isMethod('post')){

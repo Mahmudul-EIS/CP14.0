@@ -19,20 +19,20 @@
                         @endif
                         <div class="get-ridemate-user clearfix">
                             <div class="user-icon">
-                                <img src="{{ url('/') }}/public/assets/frontend/img/user/user-1.jpg" alt="">
+                                <img src="<?php if(isset($usd->picture)){echo asset('public/uploads/drivers/'.$usd->picture);}?>" alt="">
                             </div>
                             <div class="user-details">
                                 <h3 class="get-ride-user">Franklin Martin</h3>
                                 <div class="user-get-emails">
                                     <ul>
                                         <li><p>Email<span class="ride-button">:</span></p>
-                                            <span>simple@gmail.com</span>
+                                            <span>{{ $user->email }}</span>
                                         </li>
                                         <li><p>Age<span class="ride-button">:</span></p>
-                                            <span>31</span>
+                                            <span>{{ date('Y') - date('Y',strtotime($usd->dob)) }}</span>
                                         </li>
                                         <li><p>Gender<span class="ride-button">:</span></p>
-                                            <span>Male</span>
+                                            <span>{{ $usd->gender }}</span>
                                         </li>
                                     </ul>
                                 </div>

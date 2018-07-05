@@ -26,7 +26,7 @@
                         <h3 class="get-popular-list">Riders Profile</h3>
                         <div class="get-ridemate-user ">
                             <div class="user-icon">
-                                <img src="{{ url('/') }}/public/assets/frontend/img/user/user-1.jpg" alt="">
+                                <img src="<?php if(isset($usd->picture)){echo asset('public/uploads/customers/'.$usd->picture);}?>" alt="">
                             </div>
                             <div class="user-details">
                                 <div class="form-group">

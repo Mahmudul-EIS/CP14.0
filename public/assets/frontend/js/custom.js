@@ -171,17 +171,17 @@ image upload js call
   });
 
   // save on click
-  save.addEventListener('click', function (e) {
-    e.preventDefault();
+  //save.addEventListener('click', function (e) {
+    //e.preventDefault();
     // get result to data uri
-    var imgSrc = cropper.getCroppedCanvas({
-      width: img_w.value // input value
-    }).toDataURL();
+    //var imgSrc = cropper.getCroppedCanvas({
+      //width: img_w.value // input value
+    //}).toDataURL();
     // remove hide class of img
-    cropped.classList.remove('hide-x');
-    img_result.classList.remove('hide-x');
+    //cropped.classList.remove('hide-x');
+    //img_result.classList.remove('hide-x');
     // show image cropped
-    cropped.src = imgSrc;
-    dwn.download = 'imagename.png';
-    dwn.setAttribute('href', imgSrc);
-  });
+    //cropped.src = imgSrc;
+    //dwn.download = 'imagename.png';
+    //dwn.setAttribute('href', imgSrc);
+  //});
