@@ -84,4 +84,9 @@ class Customer extends Controller
             }
         }
     }
+
+    public function rideDetails(Request $request){
+        return view('frontend.pages.ride-details');
+    }
+
 }

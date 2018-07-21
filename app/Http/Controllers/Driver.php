@@ -95,4 +95,11 @@ class Driver extends Controller
             }
         }
     }
+
+    public function offerRide(Request $request){
+        return view('frontend.pages.offer-ride', [
+            'js' => 'frontend.pages.js.offer-ride-js'
+        ]);
+    }
+
 }

@@ -55,6 +55,7 @@ Route::get('c/profile/edit/{id}', 'Customer@editProfile');
 Route::post('c/profile/edit/{id}', 'Customer@editProfile');
 Route::post('c/profile/edit/password/{id}', 'Customer@editPassword');
 Route::post('c/profile/edit/image/{id}', 'Customer@imageUpload');
+Route::get('c/ride-details/{id}', 'Customer@rideDetails');
 
 /**
  * Driver area
@@ -64,3 +65,4 @@ Route::get('d/profile/edit/{id}', 'Driver@editProfile');
 Route::post('d/profile/edit/{id}', 'Driver@editProfile');
 Route::post('d/profile/edit/password/{id}', 'Driver@editPassword');
 Route::post('d/profile/edit/image/{id}', 'Driver@imageUpload');
+Route::get('d/offer-ride', 'Driver@offerRide');
