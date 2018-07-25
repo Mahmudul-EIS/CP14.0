@@ -56,6 +56,8 @@ Route::post('c/profile/edit/{id}', 'Customer@editProfile');
 Route::post('c/profile/edit/password/{id}', 'Customer@editPassword');
 Route::post('c/profile/edit/image/{id}', 'Customer@imageUpload');
 Route::get('c/ride-details/{id}', 'Customer@rideDetails');
+Route::get('c/rider-index/{id}', 'Customer@riderRequest');
+Route::post('c/rider-index/{id}', ['as' => 'request_ride', 'uses' => 'Customer@riderRequest']);
 
 /**
  * Driver area

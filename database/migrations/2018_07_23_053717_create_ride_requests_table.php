@@ -18,7 +18,9 @@ class CreateRideRequestsTable extends Migration
             $table->integer('user_id');
             $table->string('from');
             $table->string('to');
-            $table->string('req_departure');
+            $table->date('departure_date');
+            $table->string('seat_required');
+
             $table->timestamps();
         });
     }

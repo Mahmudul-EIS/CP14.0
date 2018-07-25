@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use DB;
 use App\User_data;
 use App\User;
+use App\Ride_request;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\File;
@@ -87,6 +89,26 @@ class Customer extends Controller
 
     public function rideDetails(Request $request){
         return view('frontend.pages.ride-details');
+    }
+
+    public function riderRequest(Request $request, $id){
+        $user = User::find($id);
+        $ride_request = new Ride_request();
+
+        if($request->isMethod('post')){
+            $ride_request->user_id = $user->id;
+            $ride_request->from = $request->from;
+            $ride_request->to = $request->to;
+            $ride_request->departure_date = $request->departure_date;
+            $ride_request->seat_required = $request->seat_required;
+            /*echo $ride_request;
+            exit();*/
+            $ride_request->save();
+            return view('frontend.pages.rider-index')->with('user_id', $user->id );
+            // echo $user->id;
+        }else {
+        return view('frontend.pages.rider-index')->with('user_id', $user->id );
+    }
     }
 
 }
