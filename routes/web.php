@@ -21,6 +21,8 @@ Route::get('/sign-up/driver', 'Authenticate@registerDriver');
 Route::post('/sign-up/driver', 'Authenticate@registerDriver');
 Route::get('/sign-up/customer', 'Authenticate@registerCustomer');
 Route::post('/sign-up/customer', 'Authenticate@registerCustomer');
+Route::get('/popular', 'Frontend@popular');
+Route::get('/ride-details/{id}', 'Frontend@rideDetails');
 
 /* ------------------------------------------------------ */
 
@@ -66,3 +68,4 @@ Route::post('d/profile/edit/{id}', 'Driver@editProfile');
 Route::post('d/profile/edit/password/{id}', 'Driver@editPassword');
 Route::post('d/profile/edit/image/{id}', 'Driver@imageUpload');
 Route::get('d/offer-ride', 'Driver@offerRide');
+Route::post('d/offer-ride', 'Driver@offerRide');

@@ -39,10 +39,59 @@
                 </div>
                 <div class="col-sm-2 col-xs-4 padding-right-0">
                     <div class="get-offer-button">
-                        <button class="btn btn-info btn-offer" type="button" class="btn btn-info btn-offer" data-toggle="modal" data-target="#myModal2"><span>Offer a ride</span> <i class="fas fa-car"></i></button>
+                        <button class="btn btn-info btn-offer" type="button" class="btn btn-info btn-offer" data-toggle="modal" data-target="#myModalx2"><span>Find A Ride</span> <i class="fas fa-car"></i></button>
                     </div>
                 </div>
             </div>
         </div>
     </div>
     <!-- end header area -->
+    <!--Find a ride popup -->
+
+    <div class="modal fade" id="myModalx2" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog add-modal-item add-modal-item-get-ride" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="myModalLabel">Find A Ride</h4>
+                </div>
+                <div class="modal-body">
+                    <form action="#">
+                        <div class="col-sm-3">
+                            <div class="form-group">
+                                <select name="" id="" class="get-select-picker" title="Form">
+                                    <option value="dhaka">Dhaka</option>
+                                    <option value="Kualalampur">Kualalampur</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-sm-3">
+                            <div class="form-group">
+                                <select name="" id="" class="get-select-picker" title="To">
+                                    <option value="dhaka">Dhaka</option>
+                                    <option value="Kualalampur">Kualalampur</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-sm-3">
+                            <div class="form-group">
+                                <input type="text" class="form-control datepicker-f" placeholder="When">
+                            </div>
+                        </div>
+                        <div class="col-sm-3">
+                            <div class="form-group">
+                                <select name="" id="" class="get-select-picker" title="Seats">
+                                    <option value="1_seats">1 seats</option>
+                                    <option value="2_seats">2 seats</option>
+                                    <option value="3_seats">3 seats</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="get-search-control clearfix">
+                            <button class="btn btn-info btn-offer">Search</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
