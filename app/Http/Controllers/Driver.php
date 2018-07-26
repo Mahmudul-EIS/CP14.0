@@ -14,6 +14,12 @@ use Illuminate\Support\Facades\Hash;
 
 class Driver extends Controller
 {
+
+    public function __construct(){
+        $this->middleware('auth');
+        $this->middleware('Driver');
+    }
+
     public function viewProfile($id){
         $user = User::find($id);
         $usd = User_data::where('user_id',$id)->first();

@@ -16,13 +16,14 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'name', 'email', 'password',
+        'name', 'email', 'password', 'role',
     ];
 
     protected $rules = array(
         'name'  => 'required',
         'email'  => 'required|email|unique:users',
-        'password' => 'required|min:6|max:100'
+        'password' => 'required|min:6|max:100',
+        'role' => 'required|in:guest,super-admin,driver,customer',
     );
     protected $errors;
 

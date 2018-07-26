@@ -13,6 +13,12 @@ use Illuminate\Support\Facades\Storage;
 
 class Customer extends Controller
 {
+
+    public function __construct(){
+        $this->middleware('auth');
+        $this->middleware('Customer');
+    }
+
     public function viewProfile($id){
         $usd = User_data::where('user_id',$id)->first();
         return view('frontend.pages.customer-profile',[

@@ -10,6 +10,11 @@ use App\DriverData;
 class Admin extends Controller
 {
 
+    public function __construct(){
+        $this->middleware('auth');
+        $this->middleware('Admin');
+    }
+
     /**
      * Admin dashboard - overall reviews of the system
     */
