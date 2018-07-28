@@ -4,21 +4,19 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
-class RideOffers extends Model
+class RideComp extends Model
 {
+    protected $fillable = [
+        'ride_id', 'start_time', 'end_time', 'total_fair',
+    ];
 
     protected $rules = array(
-        'origin'  => 'required',
-        'destination'  => 'required',
-        'arrival_time' => 'required',
-        'departure_time' => 'required',
-        'price_per_seat' => 'required',
-        'total_seats' => 'required'
+        'ride_id'  => 'required',
+        'start_time'  => 'required',
+        'end_time' => 'required',
+        'total_fair' => 'required'
     );
-
     protected $errors;
-
-    protected $table = 'ride_offers';
 
     public function validate($data)
     {

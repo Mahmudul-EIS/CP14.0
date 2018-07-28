@@ -4,7 +4,13 @@
     <div class="get-offer-ride">
         <div class="container">
             <div class="row">
+               
                 <h3 class="get-popular-list list-option-ride">Ride Details</h3>
+                
+                <div class="get-form-control-button">
+                    <button type="button" class="btn btn-info btn-offer" data-toggle="modal" data-target="#startRide">Ride Start</button>
+                </div>
+
                 <div class="col-sm-12 get-join-as">
                     <div class="col-sm-5">
                         <div class="form-ride-details">
@@ -189,11 +195,11 @@
                     </div>
                     <button class="btn btn-info btn-offer ride-final-ride-button" type="button" data-toggle="modal" data-target="#myModalx">Ridemate Details</button>
                 </div>
+                
             </div>
         </div>
     </div>
     <!-- end offer a ride -->
-
     @endsection
 
 <!--Riders details -->
@@ -228,7 +234,7 @@
                         Gender <span class="ridemate-right">:</span>
                     </div>
                     <div class="ridemate-name-xs">
-                        <span>{{ $data->usd->gender }}</span>
+                        <span>{{ $data->user->gender }}</span>
                     </div>
                 </div>
                 <div class="ridemate-name-area">
@@ -259,6 +265,29 @@
             <div class="modal-footer login-modal-footer">
                 <button class="btn btn-info btn-offer ">Login</button>
                 <button class="btn btn-info btn-offer" data-dismiss="modal" aria-label="Close">Cancel</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- request to book -->
+<div class="modal fade" id="startRide" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="myModalLabel">Require Log In</h4>
+            </div>
+            <div class="modal-body table-responsive">
+                <p>Please log in first!!!</p>
+            </div>
+            <div class="modal-footer login-modal-footer">
+                 <form method="post" action="{{ route('ride_details', $ride_id) }}">
+                     {{ csrf_field() }}
+                <button type="submit" class="btn btn-success btn-offer" name="start_ride">Yes</button>
+            
+                <button class="btn btn-danger btn-offer" data-dismiss="modal" aria-label="Close">Cancel</button>
+                </form>
             </div>
         </div>
     </div>

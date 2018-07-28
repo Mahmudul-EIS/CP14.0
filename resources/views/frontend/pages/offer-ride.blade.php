@@ -2,7 +2,7 @@
 @section('content')
 
     <!-- offer a ride -->
-    <form action="{{ url('d/offer-ride') }}" method="post">
+   <form action="{{ url('d/offer-ride') }}" method="post">
             {{csrf_field()}}
         <div class="get-offer-ride">
             <div class="container">
@@ -44,7 +44,7 @@
                             <div class="form-group pick-get-time">
                                 <label for="departure-time">Departure Time</label>
                                 <div class="col-sm-6 padding-left-o">
-                                    <input name="d_date" type="text" class="form-control datepicker-f" placeholder="Pick a Date" required="required">
+                                    <input name="d_date" type="date" class="form-control" placeholder="Pick a Date" required="required">
                                 </div>
                                 <div class="col-sm-3">
                                     <input name="d_hour" type="text" class="form-control timepicker-hh" placeholder="Hrs:HH" required="required">
@@ -56,7 +56,7 @@
                             <div class="form-group pick-get-time">
                                 <label for="departure-time">Arrival Time(Optional)</label>
                                 <div class="col-sm-6 padding-left-o">
-                                    <input name="a_date" type="text" class="form-control datepicker-f" placeholder="Pick a Date">
+                                    <input name="a_date" type="date" class="form-control" placeholder="Pick a Date">
                                 </div>
                                 <div class="col-sm-3">
                                     <input name="a_hour" type="text" class="form-control timepicker-hh" placeholder="Hrs:HH">

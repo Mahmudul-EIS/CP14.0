@@ -6,6 +6,9 @@ use DB;
 use App\User_data;
 use App\User;
 use App\Ride_request;
+use App\RideOffers;
+use App\RideDescriptions;
+use App\VehiclesData;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\File;
@@ -87,8 +90,20 @@ class Customer extends Controller
         }
     }
 
-    public function rideDetails(Request $request){
-        return view('frontend.pages.ride-details');
+    public function rideDetails(Request $request,$id){
+        $ro = RideOffers::find($id);
+        $rd = RideDescriptions::where('ride_offer_id',$id)->get();
+        $ro->rd = $rd;
+        $vd = VehiclesData::where('ride_offer_id',$id)->first();
+        $ro->vd = $vd;
+        $user = User::where('id',$ro->offer_by)->first();
+        $ro->user = $user;
+        $usd = User_data::where('user_id',$ro->offer_by)->first();
+        $ro->usd = $usd;
+        return view('frontend.pages.ride-details',[
+            'data' => $ro,
+            'js' => 'frontend.pages.js.ride-details-js'
+        ]);
     }
 
     public function riderRequest(Request $request, $id){
