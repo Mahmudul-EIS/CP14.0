@@ -177,27 +177,23 @@
                 <h2 class="get-section-header">Where to?</h2>
                 <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor inc ididunt ut labore et dolore magna aliqua.</p>
                 <div class="get-a-ride">
-                    <form action="#">
+                    <form method="post" action="{{ url('/c/request-ride') }}">
+                        {{ csrf_field() }}
                         <div class="col-sm-3 col-xs-12 padding-left-o">
-                            <select name="" id="" class="get-select-picker" title="From">
-                                <option value="dhaka">Dhaka</option>
-                                <option value="Kualalampur">Kualalampur</option>
-                            </select>
+                            <input type="text" name="from" id="" class="get-select-picker placepicker form-control" placeholder="From">
                         </div>
                         <div class="col-sm-3 col-xs-12 padding-left-o">
-                            <select name="" id="" class="get-select-picker" title="To">
-                                <option value="dhaka">Dhaka</option>
-                                <option value="Kualalampur">Kualalampur</option>
-                            </select>
+                            <input type="text" name="to" id="" class="get-select-picker placepicker form-control" placeholder="To">
                         </div>
                         <div class="col-sm-3 col-xs-12 padding-left-o">
-                            <input type="text" placeholder="When" class="form-control datepicker-f">
+                            <input type="text" name="departure_date" placeholder="When" class="form-control datepicker-f">
                         </div>
                         <div class="col-sm-3 col-xs-12 padding-left-o">
-                            <button class="btn btn-info btn-offer"><span>Get a ride </span><i class="fas fa-car"></i></button>
+                            <button type="submit" class="btn btn-info btn-offer"><span>Get a ride </span><i class="fas fa-car"></i></button>
                         </div>
                     </form>
                 </div>
+                @include('frontend.includes.messages')
             </div>
         </div>
     </div>

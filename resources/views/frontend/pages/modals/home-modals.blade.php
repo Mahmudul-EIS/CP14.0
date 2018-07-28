@@ -10,16 +10,10 @@
                 <form action="#">
                     <div class="get-a-ride">
                         <div class="get-form-control">
-                            <select name="" id="" class="get-select-picker" title="From">
-                                <option value="dhaka">Dhaka</option>
-                                <option value="Kualalampur">Kualalampur</option>
-                            </select>
+                            <input type="text" name="from" id="" class="get-select-picker placepicker" title="From">
                         </div>
                         <div class="get-form-control">
-                            <select name="" id="" class="get-select-picker" title="To">
-                                <option value="dhaka">Dhaka</option>
-                                <option value="Kualalampur">Kualalampur</option>
-                            </select>
+                            <input type="text" name="to" id="" class="get-select-picker placepicker" title="To">
                         </div>
                         <div class="get-form-control">
                             <input type="text" placeholder="Pick a date" class="form-control datepicker-f">
