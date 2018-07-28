@@ -14,7 +14,7 @@
 /**
  * Frontend area
 */
-Route::get('/', 'Frontend@home');
+Route::get('/', 'Frontend@home')->name('home');
 Route::get('/join', 'Authenticate@join');
 Route::get('/sign-up/success', 'Authenticate@success');
 Route::get('/sign-up/driver', 'Authenticate@registerDriver');
@@ -82,5 +82,3 @@ Route::prefix('d')->group(function(){
  * Auth routes
 */
 Auth::routes();
-
-Route::get('/home', 'HomeController@index')->name('home');
