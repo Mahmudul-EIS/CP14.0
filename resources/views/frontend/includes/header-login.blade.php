@@ -97,7 +97,7 @@
                             <div class="login-icon">
                                 <img src="{{ asset('public/assets/frontend/img/user/user-1.jpg') }}" alt="">
                             </div>
-                            <span class="get-loged-user">Jhonaton</span>
+                            <span class="get-loged-user"><form method="post" action="{{ url('/logout') }}">{{ csrf_field() }}<input type="submit" style="color: inherit; border: none; background: none; padding: 0;font: inherit;cursor: pointer;outline: inherit;" value="{{ Auth::user()->name }}"></form></span>
                         </div>
                     </div>
                 </div>
