@@ -8,12 +8,21 @@ use App\DriverData;
 use App\RideOffers;
 use App\RideDescriptions;
 use App\VehiclesData;
+use App\RideComp;
 use DateTime;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Input;
+use Carbon\Carbon;
 
 class Driver extends Controller
 {
+
+    public function __construct(){
+        $this->middleware('auth');
+        $this->middleware('Driver');
+    }
+
     public function viewProfile($id){
         $user = User::find($id);
         $usd = User_data::where('user_id',$id)->first();
@@ -111,9 +120,11 @@ class Driver extends Controller
             $ride_offer->total_seats = $request->total_seats;
             $ride_offer->total_seats = $request->total_seats;
             $d_f_date = $request->d_date .' '. $request->d_hour.':'.$request->d_minute;
+            //$d_date = new DateTime($d_f_date);
             $d_date = DateTime::createFromFormat('Y-m-d H:i \P\M', $d_f_date);
             $ride_offer->departure_time = $d_date;
             $a_f_date = $request->a_date .' '. $request->a_hour.':'.$request->a_minute;
+            //$a_date = new DateTime($a_f_date);
             $a_date = DateTime::createFromFormat('Y-m-d H:i \P\M', $a_f_date);
             $ride_offer->arrival_time = $a_date;
             $ride_offer->save();
@@ -153,7 +164,7 @@ class Driver extends Controller
                 $ride_desc->value = $request->back_seat;
                 $ride_desc->save();
             }
-
+            
             return redirect()
                 ->to('d/offer-ride')
                 ->with('success', 'Ride Created Successfully !!');
@@ -161,6 +172,41 @@ class Driver extends Controller
         return view('frontend.pages.offer-ride', [
             'js' => 'frontend.pages.js.offer-ride-js'
         ]);
+    }
+
+
+    public function rideDetails(Request $request,$id){
+        $user = User::find($id);
+        $ro = RideOffers::find($id);
+        $rideStart = new RideComp();
+        $rd = RideDescriptions::where('ride_offer_id',$id)->get();
+        $ro->rd = $rd;
+        $vd = VehiclesData::where('ride_offer_id',$id)->first();
+        $ro->vd = $vd;
+        $user = User::where('id',$ro->offer_by)->first();
+        $ro->user = $user;
+        $usd = User_data::where('user_id',$ro->offer_by)->first();
+        $ro->usd = $usd;
+        if($request->isMethod('post')){
+            if (Input::has('start_ride'))
+                {
+                    $rideStart->ride_id = $ro->id;
+                    $rideStart->start_time = Carbon::now();
+                    $rideStart->end_time = '0';
+                    $rideStart->total_fair = '200';
+                    $rideStart->save();
+                    return view('frontend.pages.ride-details',[
+                        'data' => $ro,
+                        'js' => 'frontend.pages.js.ride-details-js'
+                    ])->with('ride_id', $ro->id);
+                }
+            return view('frontend.pages.ride-details')->with('ride_id', $ro->id);
+        }
+        
+        return view('frontend.pages.ride-details',[
+            'data' => $ro,
+            'js' => 'frontend.pages.js.ride-details-js'
+        ])->with('ride_id', $ro->id);
     }
 
 }
