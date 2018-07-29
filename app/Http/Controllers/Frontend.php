@@ -19,7 +19,8 @@ class Frontend extends Controller
     public function home(Request $request){
         return view('frontend.pages.home', [
             'slug' => 'home',
-            'modals' => 'frontend.pages.modals.home-modals'
+            'modals' => 'frontend.pages.modals.home-modals',
+            'js' => 'frontend.pages.js.home-js'
         ]);
     }
 
