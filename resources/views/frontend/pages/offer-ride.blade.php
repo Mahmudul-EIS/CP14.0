@@ -1,9 +1,5 @@
 @extends('frontend.layout')
 @section('content')
-
-    <div class="clearfix">
-        <?php echo '<pre>'; print_r($data); echo '</pre>'; ?>
-    </div>
     <!-- offer a ride -->
    <form action="{{ url('d/offer-ride') }}" method="post">
             {{csrf_field()}}
@@ -20,11 +16,11 @@
                         <div class="col-sm-6 padding-left-o price-seat">
                             <div class="form-group">
                                 <label for="pickup-point">Pickup Point</label>
-                                <input name="origin" type="text" id="origin-input" placeholder="Enter a departure location" class="form-control" required="required" @if(isset($data)) value="{{ $data->from }}" @endif>
+                                <input name="origin" type="text" id="origin-input" placeholder="Enter a departure location" class="form-control" required="required" @if(isset($data->from)) value="{{ $data->from }}" readonly @endif>
                             </div>
                             <div class="form-group">
                                 <label for="pickup-point">Destination</label>
-                                <input name="destination" type="text" id="destination-input" placeholder="Enter a destination location" class="form-control" required="required" @if(isset($data)) value="{{ $data->to }}" @endif>
+                                <input name="destination" type="text" id="destination-input" placeholder="Enter a destination location" class="form-control" required="required" @if(isset($data->to)) value="{{ $data->to }}" readonly @endif>
                             </div>
                             <div class="col-sm-6 padding-left-o">
                                 <div class="form-group">
@@ -35,10 +31,12 @@
                             <div class="col-sm-6">
                                 <div class="form-group">
                                     <label for="number-of-seat">Number Of Seats</label>
-                                    <select name="total_seats" id="" class="get-select-picker" title="Seats" required>
-                                        <option value="3">3 Seats</option>
-                                        <option value="4">4 Seats</option>
-                                        <option value="5">5 Seats</option>
+                                    <select name="total_seats" id="" class="get-select-picker" title="Seats" required @if(isset($data->seat_required)) disabled @endif>
+                                        <option value="1" @if(isset($data->seat_required) && $data->seat_required == '1') selected @endif>1 Seat</option>
+                                        <option value="2" @if(isset($data->seat_required) && $data->seat_required == '2') selected @endif>2 Seats</option>
+                                        <option value="3" @if(isset($data->seat_required) && $data->seat_required == '3') selected @endif>3 Seats</option>
+                                        <option value="4" @if(isset($data->seat_required) && $data->seat_required == '4') selected @endif>4 Seats</option>
+                                        <option value="5" @if(isset($data->seat_required) && $data->seat_required == '5') selected @endif>5 Seats</option>
                                     </select>
                                 </div>
                             </div>

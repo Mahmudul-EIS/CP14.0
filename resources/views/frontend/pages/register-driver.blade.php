@@ -118,6 +118,7 @@
                             <button class="btn btn-info btn-offer">Sign Up</button>
                         </div>
                     </div>
+                    <input type="hidden" name="role" value="driver">
                 </form>
             </div>
         </div>

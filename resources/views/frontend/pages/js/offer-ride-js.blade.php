@@ -2,7 +2,32 @@
     // This example requires the Places library. Include the libraries=places
     // parameter when you first load the API. For example:
     // <script src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&libraries=places">
+@if(isset($data->from))
+    function initMap(){
+        var directionsService = new google.maps.DirectionsService();
+        var directionsDisplay = new google.maps.DirectionsRenderer();
 
+        var myOptions = {
+            zoom:7,
+            mapTypeId: google.maps.MapTypeId.ROADMAP
+        }
+
+        var map = new google.maps.Map(document.getElementById("googleMap"), myOptions);
+        directionsDisplay.setMap(map);
+        var request = {
+            origin: document.getElementById('origin-input').value,
+            destination: document.getElementById('destination-input').value,
+            travelMode: google.maps.DirectionsTravelMode.DRIVING
+        };
+
+        directionsService.route(request, function(response, status) {
+            if (status == google.maps.DirectionsStatus.OK) {
+
+                directionsDisplay.setDirections(response);
+            }
+        });
+    }
+    @else
     function initMap() {
         var map = new google.maps.Map(document.getElementById('googleMap'), {
             mapTypeControl: false,
@@ -84,6 +109,7 @@
             }
         });
     };
+
     $('#checkbox1').on('click',function (e) {
         e.preventDefault();
         $('#own-vehicle-green').addClass('add-green-color');
@@ -146,7 +172,7 @@
         $('#back-red').removeClass('add-radio-color');
         $('#back').val('yes');
     });
-
+@endif
 </script>
 <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDSDYEWgbPh1YBGNEZoMye44-F9ugukmRo&libraries=places&callback=initMap"
         async defer></script>
