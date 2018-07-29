@@ -13,6 +13,9 @@
                     <div class="get-ridemate-single">
                         <h3 class="check-total-fare text-center">Requests of Rides</h3>
 
+                        @if(isset($reqs))
+                            @foreach($reqs as $req)
+
                         <!-- single request area -->
 
                         <div class="col-sm-12 col-md-10 col-md-offset-1 col-lg-8  col-lg-offset-2 col-xs-12 ridemate-details-offer padding-left-o">
@@ -23,7 +26,7 @@
                                         <span class="ride-label">Form<span class="right-into">:</span></span>
                                     </div>
                                     <div class="col-sm-6">
-                                        <span class="ride-label-badge"></span>
+                                        <span class="ride-label-badge">{{ $req->from }}</span>
                                     </div>
                                 </div>
                                 <div class="get-car-details-area clearfix">
@@ -31,7 +34,7 @@
                                         <span class="ride-label">To<span class="right-into">:</span></span>
                                     </div>
                                     <div class="col-sm-6">
-                                        <span class="ride-label-badge"></span>
+                                        <span class="ride-label-badge">{{ $req->to }}</span>
                                     </div>
                                 </div>
                                 <div class="get-car-details-area clearfix">
@@ -39,10 +42,10 @@
                                         <span class="ride-label">Requested Seats <span class="right-into">:</span></span>
                                     </div>
                                     <div class="col-sm-6">
-                                        <span class="ride-label-badge"></span>
+                                        <span class="ride-label-badge">{{ $req->required_seat }}</span>
                                     </div>
                                 </div>
-                                <button class="btn btn-info btn-offer ride-final-ride-button" type="button" data-toggle="modal" data-target="#myModalx">Riders Details</button>
+                                <button class="btn btn-info btn-offer ride-final-ride-button" type="button" data-toggle="modal" data-target="#myModalx{{ $req->id }}">Riders Details</button>
                             </div>
                             <div class="col-sm-4 col-xs-12 ride-details-feature">
                                 <div class="get-car-details-area clearfix">
@@ -50,103 +53,16 @@
                                         <span class="ride-label">Date <span class="right-into">:</span></span>
                                     </div>
                                     <div class="col-sm-6">
-                                        <span class="ride-label-badge">10-05-2016</span>
+                                        <span class="ride-label-badge">{{ $req->departure_date }}</span>
                                     </div>
                                 </div>
-                                <button class="btn btn-info btn-offer offer-ride-ridemate-home">Offer Ride</button>
+                                <button class="btn btn-info btn-offer offer-ride-ridemate-home"><a style="color: purple;" href="{{ url('/d/offer-ride?req='.$req->id) }}">Offer Ride</a></button>
                             </div>
                         </div>
                         <!-- end single ridemate area -->
 
-                        <!-- single request area -->
-
-                        <div class="col-sm-12 col-md-10 col-md-offset-1 col-lg-offset-2  col-lg-8 col-xs-12 ridemate-details-offer padding-left-o">
-                            <h4 class="ridemate-home-h3">Ride Details</h4>
-                            <div class="col-sm-8 col-xs-12 padding-left-o">
-                                <div class="get-car-details-area clearfix">
-                                    <div class="col-sm-5">
-                                        <span class="ride-label">Form<span class="right-into">:</span></span>
-                                    </div>
-                                    <div class="col-sm-6">
-                                        <span class="ride-label-badge"></span>
-                                    </div>
-                                </div>
-                                <div class="get-car-details-area clearfix">
-                                    <div class="col-sm-5">
-                                        <span class="ride-label">To<span class="right-into">:</span></span>
-                                    </div>
-                                    <div class="col-sm-6">
-                                        <span class="ride-label-badge"></span>
-                                    </div>
-                                </div>
-                                <div class="get-car-details-area clearfix">
-                                    <div class="col-sm-5">
-                                        <span class="ride-label">Requested Seats <span class="right-into">:</span></span>
-                                    </div>
-                                    <div class="col-sm-6">
-                                        <span class="ride-label-badge"></span>
-                                    </div>
-                                </div>
-                                <button class="btn btn-info btn-offer ride-final-ride-button" type="button" data-toggle="modal" data-target="#myModalx">Riders Details</button>
-                            </div>
-                            <div class="col-sm-4 col-xs-12 ride-details-feature">
-                                <div class="get-car-details-area clearfix">
-                                    <div class="col-sm-5">
-                                        <span class="ride-label">Date <span class="right-into">:</span></span>
-                                    </div>
-                                    <div class="col-sm-6">
-                                        <span class="ride-label-badge">10-05-2016</span>
-                                    </div>
-                                </div>
-                                <button class="btn btn-info btn-offer offer-ride-ridemate-home">Offer Ride</button>
-                            </div>
-                        </div>
-                        <!-- end single ridemate area -->
-
-                        <!-- single request area -->
-
-                        <div class="col-sm-12 col-md-10 col-md-offset-1 col-lg-offset-2  col-lg-8 col-xs-12 ridemate-details-offer padding-left-o">
-                            <h4 class="ridemate-home-h3">Ride Details</h4>
-                            <div class="col-sm-8 col-xs-12 padding-left-o">
-                                <div class="get-car-details-area clearfix">
-                                    <div class="col-sm-5">
-                                        <span class="ride-label">Form<span class="right-into">:</span></span>
-                                    </div>
-                                    <div class="col-sm-6">
-                                        <span class="ride-label-badge"></span>
-                                    </div>
-                                </div>
-                                <div class="get-car-details-area clearfix">
-                                    <div class="col-sm-5">
-                                        <span class="ride-label">To<span class="right-into">:</span></span>
-                                    </div>
-                                    <div class="col-sm-6">
-                                        <span class="ride-label-badge"></span>
-                                    </div>
-                                </div>
-                                <div class="get-car-details-area clearfix">
-                                    <div class="col-sm-5">
-                                        <span class="ride-label">Requested Seats <span class="right-into">:</span></span>
-                                    </div>
-                                    <div class="col-sm-6">
-                                        <span class="ride-label-badge"></span>
-                                    </div>
-                                </div>
-                                <button class="btn btn-info btn-offer ride-final-ride-button" type="button" data-toggle="modal" data-target="#myModalx">Riders Details</button>
-                            </div>
-                            <div class="col-sm-4 col-xs-12 ride-details-feature">
-                                <div class="get-car-details-area clearfix">
-                                    <div class="col-sm-5">
-                                        <span class="ride-label">Date <span class="right-into">:</span></span>
-                                    </div>
-                                    <div class="col-sm-6">
-                                        <span class="ride-label-badge">10-05-2016</span>
-                                    </div>
-                                </div>
-                                <button class="btn btn-info btn-offer offer-ride-ridemate-home">Offer Ride</button>
-                            </div>
-                        </div>
-                        <!-- end single ridemate area -->
+                            @endforeach
+                                    @endif
 
 
                     </div>

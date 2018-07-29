@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Ride_request;
 use App\User_data;
 use App\User;
 use App\DriverData;
@@ -110,6 +111,13 @@ class Driver extends Controller
     }
 
     public function offerRide(Request $request){
+        $req_id = $req_details = '';
+        if(isset($request->req) && $request->req != null){
+            $req_id = $request->req;
+        }
+        if($req_id != ''){
+            $req_details = Ride_request::find($req_id);
+        }
         $ride_offer = new RideOffers();
         if($request->isMethod('post')){
             $ride_offer->request_id = 1;
@@ -170,6 +178,7 @@ class Driver extends Controller
                 ->with('success', 'Ride Created Successfully !!');
         }
         return view('frontend.pages.offer-ride', [
+            'data' => $req_details,
             'js' => 'frontend.pages.js.offer-ride-js'
         ]);
     }

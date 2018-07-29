@@ -1,6 +1,9 @@
 @extends('frontend.layout')
 @section('content')
 
+    <div class="clearfix">
+        <?php echo '<pre>'; print_r($data); echo '</pre>'; ?>
+    </div>
     <!-- offer a ride -->
    <form action="{{ url('d/offer-ride') }}" method="post">
             {{csrf_field()}}
@@ -17,11 +20,11 @@
                         <div class="col-sm-6 padding-left-o price-seat">
                             <div class="form-group">
                                 <label for="pickup-point">Pickup Point</label>
-                                <input name="origin" type="text" id="origin-input" placeholder="Enter a departure location" class="form-control" required="required">
+                                <input name="origin" type="text" id="origin-input" placeholder="Enter a departure location" class="form-control" required="required" @if(isset($data)) value="{{ $data->from }}" @endif>
                             </div>
                             <div class="form-group">
                                 <label for="pickup-point">Destination</label>
-                                <input name="destination" type="text" id="destination-input" placeholder="Enter a destination location" class="form-control" required="required">
+                                <input name="destination" type="text" id="destination-input" placeholder="Enter a destination location" class="form-control" required="required" @if(isset($data)) value="{{ $data->to }}" @endif>
                             </div>
                             <div class="col-sm-6 padding-left-o">
                                 <div class="form-group">

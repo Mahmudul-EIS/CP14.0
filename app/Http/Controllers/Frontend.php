@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Ride_request;
 use App\RideDescriptions;
 use App\VehiclesData;
 use Illuminate\Http\Request;
@@ -17,7 +18,15 @@ class Frontend extends Controller
      * Home - homepage of the system
     */
     public function home(Request $request){
+        $reqs = Ride_request::all()->sortByDesc('departure_date');
+        foreach($reqs as $req){
+            $user = User::find($req->user_id);
+            $user_data = User_data::where(['user_id' => $req->user_id])->first();
+            $req->user_details = $user;
+            $req->user_data = $user_data;
+        }
         return view('frontend.pages.home', [
+            'reqs' => $reqs,
             'slug' => 'home',
             'modals' => 'frontend.pages.modals.home-modals',
             'js' => 'frontend.pages.js.home-js'

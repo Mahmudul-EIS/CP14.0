@@ -56,8 +56,10 @@
 </div>
 <!-- end change password popup -->
 
+@if(isset($reqs))
+    @foreach($reqs as $req)
 <!--Ridemate details -->
-<div class="modal fade" id="myModalx" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+<div class="modal fade" id="myModalx{{ $req->id }}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
@@ -70,7 +72,7 @@
                         Name <span class="ridemate-right">:</span>
                     </div>
                     <div class="ridemate-name-xs">
-                        <span>Frank Martin</span>
+                        <span>{{ $req->user_details->name }}</span>
                     </div>
                 </div>
                 <div class="ridemate-name-area">
@@ -78,7 +80,7 @@
                         Email <span class="ridemate-right">:</span>
                     </div>
                     <div class="ridemate-name-xs">
-                        <span>Simple@gmail.com</span>
+                        <span>{{ $req->user_details->email }}</span>
                     </div>
                 </div>
                 <div class="ridemate-name-area">
@@ -94,10 +96,12 @@
                         Gender <span class="ridemate-right">:</span>
                     </div>
                     <div class="ridemate-name-xs">
-                        <span>Male</span>
+                        <span>{{ $req->user_data->gender }}</span>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 </div>
+        @endforeach
+    @endif
