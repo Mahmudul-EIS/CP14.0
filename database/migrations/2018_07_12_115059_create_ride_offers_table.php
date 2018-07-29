@@ -14,16 +14,16 @@ class CreateRideOffersTable extends Migration
     public function up()
     {
         Schema::create('ride_offers', function (Blueprint $table) {
-            $table->increments('id');
-            $table->integer('offer_by');
-            $table->string('origin');
-            $table->string('destination');
-            $table->dateTime('arrival_time');
-            $table->dateTime('departure_time');
-            $table->string('price_per_seat');
-            $table->integer('total_seats');
-            $table->timestamps();
-        });
+        $table->increments('id');
+        $table->integer('offer_by');
+        $table->string('origin');
+        $table->string('destination');
+        $table->dateTime('arrival_time');
+        $table->dateTime('departure_time');
+        $table->string('price_per_seat');
+        $table->integer('total_seats');
+        $table->timestamps();
+    });
     }
 
     /**
