@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Ride_request;
+use App\RideBookings;
 use App\User_data;
 use App\User;
 use App\DriverData;
@@ -199,7 +200,15 @@ class Driver extends Controller
                 $ride_desc->value = $request->back_seat;
                 $ride_desc->save();
             }
-            
+
+            if($request->req_id != ''){
+                $ride_book = new RideBookings();
+                $ride_book->user_id = $request->req_user_id;
+                $ride_book->ride_id = $ride_offer_id;
+                $ride_book->status = 'booked';
+                $ride_book->save();
+            }
+
             return redirect()
                 ->to('d/offer-ride')
                 ->with('success', 'Ride Created Successfully !!');

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\RideBookings;
 use DB;
 use App\User_data;
 use App\User;
@@ -97,7 +98,26 @@ class Customer extends Controller
         }
     }
 
-    public function rideDetails(Request $request,$id){
+    /**
+     * Bookings - shows the customer ride bookings
+    */
+    public function bookings(Request $request){
+        $bookings = RideBookings::where(['user_id' => Auth::id()])->where(['status' => 'booked'])->get();
+        foreach($bookings as $book){
+            $ride_details = RideOffers::find($book->ride_id);
+            $book->ride_details = $ride_details;
+            $ride_desc = RideDescriptions::where(['ride_offer_id' => $book->ride_id])
+                ->where(['key' => 'vehicle_id'])
+                ->first();
+            $vd = VehiclesData::find($ride_desc->value);
+            $book->vd = $vd;
+        }
+        return view('frontend.pages.bookings', [
+            'data' => $bookings
+        ]);
+    }
+
+    public function rideDetails(Request $request, $id){
         $ro = RideOffers::find($id);
         $rd = RideDescriptions::where('ride_offer_id',$id)->get();
         $ro->rd = $rd;

@@ -176,7 +176,7 @@
                 </div>
             </div>
         </div>
-       @if($req_id != '')<input type="hidden" name="req_id" value="{{ $req_id }}">@endif
+       @if($req_id != '')<input type="hidden" name="req_id" value="{{ $req_id }}"><input type="hidden" name="req_user_id" value="{{ $data->user_id }}">@endif
     </form>
     <!-- end offer a ride -->
 
