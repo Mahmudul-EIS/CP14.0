@@ -109,18 +109,34 @@
             }
         });
     };
-
+@endif
+var car_type = car_reg = luggage_limit = '';
+@if(isset($vd))
+    car_type = '{{ $vd->car_type }}';
+    car_reg = '{{ $vd->car_plate_no }}';
+    luggage_limit = '{{ $vd->luggage_limit }}';
+    @endif
     $('#checkbox1').on('click',function (e) {
-        e.preventDefault();
-        $('#own-vehicle-green').addClass('add-green-color');
-        $('#own-vehicle-red').removeClass('add-radio-color');
-        $('#own-vehicle').val('yes');
-    });
+            e.preventDefault();
+            $('#own-vehicle-green').addClass('add-green-color');
+            $('#own-vehicle-red').removeClass('add-radio-color');
+            $('#own-vehicle').val('yes');
+                $('#car-type').val(car_type);
+                $('#car-plate').val(car_reg);
+                $('#car-plate').attr('readonly', true);
+                $('#car-luggage').val(luggage_limit);
+                $('#vd_action').val('edit');
+        });
     $('#checkbox2').on('click',function (e) {
         e.preventDefault();
         $('#own-vehicle-red').addClass('add-radio-color');
         $('#own-vehicle-green').removeClass('add-green-color');
         $('#own-vehicle').val('no');
+        $('#car-type').val('');
+        $('#car-plate').val('');
+        $('#car-plate').attr('readonly', false);
+        $('#car-luggage').val('');
+        $('#vd_action').val('add');
     });
     $('#checkbox3').on('click',function (e) {
         e.preventDefault();
@@ -172,7 +188,6 @@
         $('#back-red').removeClass('add-radio-color');
         $('#back').val('yes');
     });
-@endif
 </script>
 <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDSDYEWgbPh1YBGNEZoMye44-F9ugukmRo&libraries=places&callback=initMap"
         async defer></script>

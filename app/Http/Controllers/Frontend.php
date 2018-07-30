@@ -10,6 +10,7 @@ use App\User;
 use App\User_data;
 use App\RideOffers;
 use App\DriverData;
+use Auth;
 
 class Frontend extends Controller
 {
@@ -24,6 +25,13 @@ class Frontend extends Controller
             $user_data = User_data::where(['user_id' => $req->user_id])->first();
             $req->user_details = $user;
             $req->user_data = $user_data;
+            if(Auth::check()){
+                $ex_offers = RideOffers::where(['request_id' => $req->id])
+                    ->where(['offer_by' => Auth::id()])->first();
+                if($ex_offers){
+                    $req->exx = 'yes';
+                }
+            }
         }
         return view('frontend.pages.home', [
             'reqs' => $reqs,

@@ -48,8 +48,11 @@
                 <p class="text-center">Confirm the Logging Out form GETWOBO ?</p>
             </div>
             <div class="modal-footer login-modal-footer">
-                <button class="btn btn-info btn-offer">Yes</button>
-                <button class="btn btn-info btn-offer" data-dismiss="modal" aria-label="Close">No</button>
+                <form method="post" action="{{ url('/logout') }}">
+                    {{ csrf_field() }}
+                <button type="submit" class="btn btn-info btn-offer">Yes</button>
+                <button type="button" class="btn btn-info btn-offer" data-dismiss="modal" aria-label="Close">No</button>
+                </form>
             </div>
         </div>
     </div>
@@ -72,7 +75,7 @@
                         Name <span class="ridemate-right">:</span>
                     </div>
                     <div class="ridemate-name-xs">
-                        <span>{{ $req->user_details->name }}</span>
+                        <span>{{ $req->user_details->name }} {{ $req->user_data->last_name }}</span>
                     </div>
                 </div>
                 <div class="ridemate-name-area">
@@ -88,7 +91,7 @@
                         Age <span class="ridemate-right">:</span>
                     </div>
                     <div class="ridemate-name-xs">
-                        <span>25</span>
+                        <span>{{ date_diff(date_create($req->user_data->dob), date_create('today'))->y }}</span>
                     </div>
                 </div>
                 <div class="ridemate-name-area">

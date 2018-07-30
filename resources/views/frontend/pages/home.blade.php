@@ -15,6 +15,7 @@
 
                         @if(isset($reqs))
                             @foreach($reqs as $req)
+                                @if(!isset($req->exx))
 
                         <!-- single request area -->
 
@@ -61,6 +62,7 @@
                         </div>
                         <!-- end single ridemate area -->
 
+                                @endif
                             @endforeach
                                     @endif
 

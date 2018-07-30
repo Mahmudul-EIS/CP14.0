@@ -15,11 +15,11 @@ class CreateVehiclesDataTable extends Migration
     {
         Schema::create('vehicles_data', function (Blueprint $table) {
             $table->increments('id');
-            $table->integer('ride_offer_id');
-            $table->string('own_vehicle');
-            $table->string('car_type');
+            $table->integer('user_id');
+            $table->enum('own_vehicle', ['0', '1'])->nullable();
+            $table->string('car_type')->nullable();
             $table->string('car_plate_no');
-            $table->string('luggage_no');
+            $table->string('luggage_limit')->nullable();
             $table->timestamps();
         });
     }

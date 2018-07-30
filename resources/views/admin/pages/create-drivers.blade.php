@@ -84,6 +84,7 @@
                                 </div>
                                 <button class="btn btn-info btn-offer" type="submit">Create</button>
                             </fieldset>
+                            <input type="hidden" name="role" value="driver">
                         </form>
                     </div>
                 </div>
