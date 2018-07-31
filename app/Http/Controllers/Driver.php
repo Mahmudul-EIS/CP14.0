@@ -35,6 +35,10 @@ class Driver extends Controller
         ]);
     }
 
+    /**
+     * EditProfile - Profile edit functionality for driver
+     * params - $request, takes post/get method data and changes them on database
+    */
     public function editProfile(Request $request,$id){
         $user = User::find($id);
         $usd = User_data::where('user_id',$id)->first();
@@ -65,6 +69,10 @@ class Driver extends Controller
     }
 
 
+    /**
+     * ImageUpload - function for uploading driver's profile picture
+     * params - $request takes post method data and processes accordingly
+    */
     public function imageUpload(Request $request,$id){
         $usd = User_data::where('user_id',$id)->first();
         if($request->isMethod('post')){
@@ -84,10 +92,14 @@ class Driver extends Controller
     }
 
 
-    public function editPassword(Request $request,$id){
+    /**
+     * EditPassword - function for editing driver account password
+     * params - $request takes post/get request data and processes accordingly
+    */
+    public function editPassword(Request $request, $id){
         $user = User::find($id);
         if($request->isMethod('post')){
-            if(Hash::check($request->oldpass,$user->password ) == false){
+            if(Hash::check($request->oldpass, $user->password ) == false){
                 return redirect()
                     ->to('d/profile/edit/12')
                     ->with('error','Password Did not matched !!');
@@ -112,6 +124,11 @@ class Driver extends Controller
         }
     }
 
+    /**
+     * OfferRide - shows the offer ride page for drivers
+     * takes post request with offer data and creates the offer
+     * param - takes post and get request data as object
+    */
     public function offerRide(Request $request){
         $req_id = $req_details = $ex_offer = '';
         if(isset($request->req) && $request->req != null){
@@ -222,7 +239,11 @@ class Driver extends Controller
     }
 
 
-    public function rideDetails(Request $request,$id){
+    /**
+     * RideDetails - returns the ride offer details
+     * params - takes request and ride link
+    */
+    public function rideDetails(Request $request, $id){
         $user = User::find($id);
         $ro = RideOffers::find($id);
         $rideStart = new RideComp();
