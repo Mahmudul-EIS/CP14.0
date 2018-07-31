@@ -68,7 +68,7 @@
                                     </div>
                                     <div class="col-sm-3">
                                         <select name="month" id="" class="get-select-picker" title="Month">
-                                            <@for($i = 1; $i <= 12; $i++)
+                                            @for($i = 1; $i <= 12; $i++)
                                                 <option value="{{ $i }}" @if(date_format(new DateTime($usd->dob), 'm') == $i){{ 'selected'  }}@endif>{{ $i }}</option>
                                             @endfor
                                         </select>
