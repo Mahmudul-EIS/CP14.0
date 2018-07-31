@@ -172,19 +172,19 @@
                     <div class="col-sm-3 col-sm-offset-3 col-xs-12 ride-details-feature">
                         <ul class="get-ride-feature">
                             <li>
-                                <span class="right-ride-feature <?php foreach ($data->rd as $r){if($r->key == 'pets' && $r->value == 'yes'){echo "icon-feature-details";}else{echo "icon-cross-details";}}?>"></span>
+                                <span class="right-ride-feature <?php foreach($data->rd as $r){if($r->key == 'pets' && $r->value= 'yes'){echo "icon-feature-details";}else{echo "icon-cross-details";}} ?>"></span>
                                 <span class="left-ride-feature">Pets</span>
                             </li>
                             <li>
-                                <span class="right-ride-feature <?php foreach ($data->rd as $r){if($r->key == 'music' && $r->value == 'yes'){echo "icon-feature-details";}else{echo "icon-cross-details";}}?>"></span>
+                                <span class="right-ride-feature <?php foreach($data->rd as $r){if($r->key == 'music' && $r->value= 'yes'){echo "icon-feature-details";}else{echo "icon-cross-details";}} ?>"></span>
                                 <span class="left-ride-feature">Music</span>
                             </li>
                             <li>
-                                <span class="right-ride-feature <?php foreach ($data->rd as $r){if($r->key == 'smoking' && $r->value == 'yes'){echo "icon-feature-details";}else{echo "icon-cross-details";}}?>"></span>
+                                <span class="right-ride-feature <?php foreach($data->rd as $r){if($r->key == 'smoking' && $r->value= 'yes'){echo "icon-feature-details";}else{echo "icon-cross-details";}} ?>"></span>
                                 <span class="left-ride-feature">Smoking</span>
                             </li>
                             <li>
-                                <span class="right-ride-feature <?php foreach ($data->rd as $r){if($r->key == 'back_seat' && $r->value == 'yes'){echo "icon-feature-details";}else{echo "icon-cross-details";}}?>"></span>
+                                <span class="right-ride-feature <?php foreach($data->rd as $r){if($r->key == 'back_seat' && $r->value= 'yes'){echo "icon-feature-details";}else{echo "icon-cross-details";}} ?>"></span>
                                 <span class="left-ride-feature">Max.2 in back Seat</span>
                             </li>
                         </ul>

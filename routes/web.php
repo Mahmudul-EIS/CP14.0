@@ -73,7 +73,7 @@ Route::prefix('c')->group(function(){
 Route::get ('d/ride-details/{id}', 'Driver@rideDetails');
 Route::post ('d/ride-details/{id}', ['as' => 'ride_details', 'uses' => 'Driver@rideDetails']);
 Route::prefix('d')->group(function(){
-    Route::get('/profile/{id}', 'Driver@viewProfile');
+    Route::get('/profile/', 'Driver@viewProfile');
     Route::get('/profile/edit/{id}', 'Driver@editProfile');
     Route::post('/profile/edit/{id}', 'Driver@editProfile');
     Route::post('/profile/edit/password/{id}', 'Driver@editPassword');
