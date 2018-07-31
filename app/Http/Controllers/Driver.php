@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Ride_request;
+use App\RideBookings;
 use App\User_data;
 use App\User;
 use App\DriverData;
@@ -12,6 +13,7 @@ use App\VehiclesData;
 use App\RideComp;
 use DateTime;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Input;
 use Carbon\Carbon;
@@ -33,6 +35,10 @@ class Driver extends Controller
         ]);
     }
 
+    /**
+     * EditProfile - Profile edit functionality for driver
+     * params - $request, takes post/get method data and changes them on database
+    */
     public function editProfile(Request $request,$id){
         $user = User::find($id);
         $usd = User_data::where('user_id',$id)->first();
@@ -63,6 +69,10 @@ class Driver extends Controller
     }
 
 
+    /**
+     * ImageUpload - function for uploading driver's profile picture
+     * params - $request takes post method data and processes accordingly
+    */
     public function imageUpload(Request $request,$id){
         $usd = User_data::where('user_id',$id)->first();
         if($request->isMethod('post')){
@@ -82,10 +92,14 @@ class Driver extends Controller
     }
 
 
-    public function editPassword(Request $request,$id){
+    /**
+     * EditPassword - function for editing driver account password
+     * params - $request takes post/get request data and processes accordingly
+    */
+    public function editPassword(Request $request, $id){
         $user = User::find($id);
         if($request->isMethod('post')){
-            if(Hash::check($request->oldpass,$user->password ) == false){
+            if(Hash::check($request->oldpass, $user->password ) == false){
                 return redirect()
                     ->to('d/profile/edit/12')
                     ->with('error','Password Did not matched !!');
@@ -110,18 +124,33 @@ class Driver extends Controller
         }
     }
 
+    /**
+     * OfferRide - shows the offer ride page for drivers
+     * takes post request with offer data and creates the offer
+     * param - takes post and get request data as object
+    */
     public function offerRide(Request $request){
-        $req_id = $req_details = '';
+        $req_id = $req_details = $ex_offer = '';
         if(isset($request->req) && $request->req != null){
             $req_id = $request->req;
         }
         if($req_id != ''){
             $req_details = Ride_request::find($req_id);
         }
-        $ride_offer = new RideOffers();
+        $ex_offer = RideOffers::where(['request_id' => $req_id])->first();
+        if($ex_offer){
+            return redirect('/')
+                ->with('error', 'Offer already created!!');
+        }
+        $vd = VehiclesData::where(['user_id' => Auth::id()])->first();
         if($request->isMethod('post')){
-            $ride_offer->request_id = 1;
-            $ride_offer->offer_by = 1;
+            $ride_offer = new RideOffers();
+            if($request->req_id != ''){
+                $ride_offer->request_id = $request->req_id;
+            }else{
+                $ride_offer->request_id = 0;
+            }
+            $ride_offer->offer_by = Auth::id();
             $ride_offer->origin = $request->origin;
             $ride_offer->destination = $request->destination;
             $ride_offer->price_per_seat = $request->price_per_seat;
@@ -137,13 +166,29 @@ class Driver extends Controller
             $ride_offer->arrival_time = $a_date;
             $ride_offer->save();
             $ride_offer_id = $ride_offer->id;
-            $vehicles_data = new VehiclesData();
-            $vehicles_data->ride_offer_id = $ride_offer_id;
-            $vehicles_data->own_vehicle = $request->own_vehicle;
-            $vehicles_data->car_type = $request->car_type;
-            $vehicles_data->car_plate_no = $request->car_plate_no;
-            $vehicles_data->luggage_no = $request->luggage_no;
-            $vehicles_data->save();
+            if($request->vd_action == 'add'){
+                $vehicles_data = new VehiclesData();
+                $vehicles_data->user_id = Auth::id();
+                $vehicles_data->car_type = $request->car_type;
+                $vehicles_data->car_plate_no = $request->car_plate_no;
+                $vehicles_data->luggage_limit = $request->luggage_limit;
+                $vehicles_data->save();
+                $ride_desc = new RideDescriptions();
+                $ride_desc->ride_offer_id = $ride_offer_id;
+                $ride_desc->key = 'vehicle_id';
+                $ride_desc->value = $vehicles_data->id;
+                $ride_desc->save();
+            }else{
+                $vd_data = VehiclesData::find($request->vd_id);
+                $vd_data->car_type = $request->car_type;
+                $vd_data->luggage_limit = $request->luggage_limit;
+                $vd_data->save();
+                $ride_desc = new RideDescriptions();
+                $ride_desc->ride_offer_id = $ride_offer_id;
+                $ride_desc->key = 'vehicle_id';
+                $ride_desc->value = $request->vd_id;
+                $ride_desc->save();
+            }
             if($request->pets != ''){
                 $ride_desc = new RideDescriptions();
                 $ride_desc->ride_offer_id = $ride_offer_id;
@@ -172,19 +217,33 @@ class Driver extends Controller
                 $ride_desc->value = $request->back_seat;
                 $ride_desc->save();
             }
-            
+
+            if($request->req_id != ''){
+                $ride_book = new RideBookings();
+                $ride_book->user_id = $request->req_user_id;
+                $ride_book->ride_id = $ride_offer_id;
+                $ride_book->status = 'booked';
+                $ride_book->save();
+            }
+
             return redirect()
                 ->to('d/offer-ride')
                 ->with('success', 'Ride Created Successfully !!');
         }
         return view('frontend.pages.offer-ride', [
             'data' => $req_details,
+            'vd' => $vd,
+            'req_id' => $req_id,
             'js' => 'frontend.pages.js.offer-ride-js'
         ]);
     }
 
 
-    public function rideDetails(Request $request,$id){
+    /**
+     * RideDetails - returns the ride offer details
+     * params - takes request and ride link
+    */
+    public function rideDetails(Request $request, $id){
         $user = User::find($id);
         $ro = RideOffers::find($id);
         $rideStart = new RideComp();

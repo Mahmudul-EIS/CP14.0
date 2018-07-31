@@ -38,6 +38,7 @@
                                         <option value="4" @if(isset($data->seat_required) && $data->seat_required == '4') selected @endif>4 Seats</option>
                                         <option value="5" @if(isset($data->seat_required) && $data->seat_required == '5') selected @endif>5 Seats</option>
                                     </select>
+                                    @if(isset($data->seat_required)) <input type="hidden" name="total_seats" value="{{ $data->seat_required }}"> @endif
                                 </div>
                             </div>
                         </div>
@@ -45,7 +46,7 @@
                             <div class="form-group pick-get-time">
                                 <label for="departure-time">Departure Time</label>
                                 <div class="col-sm-6 padding-left-o">
-                                    <input name="d_date" type="date" class="form-control" placeholder="Pick a Date" required="required">
+                                    <input name="d_date" type="date" class="form-control" placeholder="Pick a Date" required="required" @if(isset($data->departure_date)) value="{{ $data->departure_date }}" readonly @endif>
                                 </div>
                                 <div class="col-sm-3">
                                     <input name="d_hour" type="text" class="form-control timepicker-hh" placeholder="Hrs:HH" required="required">
@@ -86,7 +87,7 @@
                                 <div class="col-sm-6 padding-ride-o">
                                     <ul class="ride-select-option">
                                         <li><input class="check-input" type="checkbox" id="checkbox1" name="checkbox01">
-                                            <label class="green-color" id="own-vehicle-green" for="checkbox1"></label>
+                                            <label class="green-color @if(isset($vd)) add-green-color @endif" id="own-vehicle-green" for="checkbox1"></label>
                                         </li>
                                         <li>
                                             <input class="check-input-2" type="checkbox" id="checkbox2" name="checkbox01">
@@ -101,7 +102,7 @@
                                     <label for="car-type" class="ride-label">Car Type <span class="right-into">:</span></label>
                                 </div>
                                 <div class="col-sm-6 padding-ride-o">
-                                    <input name="car_type" type="text" class="form-control">
+                                    <input name="car_type" id="car-type" type="text" class="form-control" @if(isset($vd->car_type)) value="{{ $vd->car_type }}" @endif>
                                 </div>
                             </div>
                             <div class="form-group clearfix">
@@ -109,7 +110,7 @@
                                     <label for="car-plate" class="ride-label">Car Plate No <span class="right-into">:</span></label>
                                 </div>
                                 <div class="col-sm-6 padding-ride-o">
-                                    <input name="car_plate_no" type="text" class="form-control">
+                                    <input name="car_plate_no" id="car-plate" type="text" class="form-control" @if(isset($vd->car_plate_no)) value="{{ $vd->car_plate_no }}" readonly @endif>
                                 </div>
                             </div>
                             <div class="form-group clearfix">
@@ -117,9 +118,10 @@
                                     <label for="car-luggage" class="ride-label">MAXIMUM LUGGAGE <span class="right-into">:</span></label>
                                 </div>
                                 <div class="col-sm-6 padding-ride-o">
-                                    <input name="luggage_no" type="text" class="form-control">
+                                    <input name="luggage_limit" id="car-luggage" type="text" class="form-control" @if(isset($vd->luggage_limit)) value="{{ $vd->luggage_limit }}" @endif>
                                 </div>
                             </div>
+                            @if(isset($vd))<input type="hidden" name="vd_action" id="vd_action" value="edit"><input type="hidden" name="vd_id" value="{{ $vd->id }}">@else <input type="hidden" id="vd_action" name="vd_action" value="add"> @endif
                         </div>
                         <div class="col-md-3 col-md-offset-2 col-sm-12 col-xs-12 col-xs-offset-0 ride-offer-button">
                             <ul class="get-ride-feature">
@@ -164,7 +166,7 @@
                             <input type="hidden" name="music" id="music" value="">
                             <input type="hidden" name="smoking" id="smoking" value="">
                             <input type="hidden" name="back_seat" id="back" value="">
-                            <button class="btn btn-info btn-offer">Add More <i class="fas fa-plus"></i></button>
+                            <button type="button" class="btn btn-info btn-offer">Add More <i class="fas fa-plus"></i></button>
                         </div>
                     </div>
                     <div class="get-ride-offer-button text-center clearfix">
@@ -174,6 +176,7 @@
                 </div>
             </div>
         </div>
+       @if($req_id != '')<input type="hidden" name="req_id" value="{{ $req_id }}"><input type="hidden" name="req_user_id" value="{{ $data->user_id }}">@endif
     </form>
     <!-- end offer a ride -->
 

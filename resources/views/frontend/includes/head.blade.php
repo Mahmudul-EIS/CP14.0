@@ -13,6 +13,8 @@
     <link rel="stylesheet" href="{{ asset('public/assets/frontend/css/bootstrap.min.css') }}">
     <!-- bootstrap select -->
     <link rel="stylesheet" href="{{ asset('public/assets/frontend/css/bootstrap-select.css') }}">
+    <!-- datepicker css -->
+    <link rel="stylesheet" href="{{ asset('public/assets/frontend/css/bootstrap-datetimepicker.css') }}">
     <!-- style css -->
     <link rel="stylesheet" href="{{ asset('public/assets/frontend/css/style.css') }}">
     <!-- mordernizr css -->

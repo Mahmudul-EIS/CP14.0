@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\VehiclesData;
 use Illuminate\Http\Request;
 use App\User;
 use App\User_data;
@@ -29,6 +30,7 @@ class Authenticate extends Controller
             $user = new User();
             $usd = new User_data();
             $dd = new DriverData();
+            $vd = new VehiclesData();
             $data = $request->all();
             if(!$user->validate($data)){
                 $user_e = $user->errors();
@@ -76,6 +78,9 @@ class Authenticate extends Controller
                 $dd->expiry = $request->expiry;
                 $dd->uploads = $request->uploads;
                 $dd->save();
+                $vd->user_id = $last_id->id;
+                $vd->car_plate_no = $dd->car_reg = $request->car_reg;
+                $vd->save();
                 return redirect()
                     ->to('/sign-up/success')
                     ->with('success', 'The Driver is created successfully!!');

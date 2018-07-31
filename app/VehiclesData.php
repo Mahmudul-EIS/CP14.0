@@ -7,7 +7,8 @@ use Illuminate\Database\Eloquent\Model;
 class VehiclesData extends Model
 {
     protected $rules = array(
-        'ride_offer_id'  => 'required'
+        'user_id'  => 'required',
+        'car_plate_no' => 'required',
     );
 
     protected $errors;
