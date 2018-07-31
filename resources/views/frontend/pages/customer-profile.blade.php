@@ -9,18 +9,20 @@
                     <!-- notification popupbar -->
                     <div class="get-edit-profile">
                         <ul class="edit-profile-option">
-                            <li><a href="#">Edit Profile</a></li>
+                            <li><a href="{{ url('c/profile/edit/'.$user->id) }}">Edit Profile</a></li>
                             <li data-toggle="modal" data-target="#myModal">Credit Card Information</li>
                             <li data-toggle="modal" data-target="#myModalx">Change Password</li>
                         </ul>
                     </div>
                 </div>
                 <div class="clearfix"></div>
+                <div class="col-sm-6">
                 @if(session()->has('success'))
                     <div class="alert alert-success">
                         {{ session()->get('success') }}
                     </div>
                 @endif
+                </div>
                 <div class="col-md-9 col-lg-8 col-sm-12 col-xs-12 ride--profile padding-left-o">
                     <form action="#">
                         <h3 class="get-popular-list">Riders Profile</h3>
@@ -34,15 +36,15 @@
                                         <label for="name" class="user-get-label">Name</label>
                                     </div>
                                     <div class="col-sm-9 col-xs-12">
-                                        <input type="text" class="form-control" placeholder="Your Full Name">
+                                        <p>{{ $user->name }}</p>
                                     </div>
                                 </div>
                                 <div class="form-group ">
-                                    <div class="col-sm-3">
+                                    <p class="col-sm-3">
                                         <label for="email" class="user-get-label">Email</label>
-                                    </div>
+                                    </p>
                                     <div class="col-sm-9">
-                                        <input type="emil" class="form-control" placeholder="Your Email">
+                                        <p>{{ $user->email }}</p>
                                     </div>
                                 </div>
                                 <div class="form-group ">
@@ -50,25 +52,7 @@
                                         <label for="age" class="user-get-label">Age</label>
                                     </div>
                                     <div class="col-sm-3">
-                                        <select name="" id="" class="get-select-picker" title="Day">
-                                            <option value="1">1</option>
-                                            <option value="2">2</option>
-                                            <option value="3">3</option>
-                                        </select>
-                                    </div>
-                                    <div class="col-sm-3">
-                                        <select name="" id="" class="get-select-picker" title="Month">
-                                            <option value="12">12</option>
-                                            <option value="11">11</option>
-                                            <option value="10">10</option>
-                                        </select>
-                                    </div>
-                                    <div class="col-sm-3">
-                                        <select name="" id="" class="get-select-picker" title="Year">
-                                            <option value="2017">2017</option>
-                                            <option value="2016">2016</option>
-                                            <option value="2016">2015</option>
-                                        </select>
+                                        <p>{{ date('Y') - date('Y',strtotime($usd->dob)) }}</p>
                                     </div>
                                 </div>
                                 <div class="form-group">
@@ -76,16 +60,9 @@
                                         <label for="age" class="user-get-label">Gender</label>
                                     </div>
                                     <div class="col-sm-4">
-                                        <select name="" id="" class="get-select-picker" title="Gender">
-                                            <option value="1">Male</option>
-                                            <option value="2">Female</option>
-                                        </select>
+                                        <p>{{ $usd->gender }}</p>
                                     </div>
                                 </div>
-                            </div>
-                            <div class="rider-profile-button">
-                                <button class="btn btn-info get-notification">Join Us</button>
-                                <button class="btn btn-info get-notification" style="margin-right: 15px;">Sign In</button>
                             </div>
                         </div>
                     </form>
@@ -294,8 +271,10 @@
                 </div>
             </div>
             <div class="modal-footer login-modal-footer">
-                <button class="btn btn-info btn-offer">Save</button>
-                <button class="btn btn-info btn-offer" data-dismiss="modal" aria-label="Close">Cancel</button>
+                <div class="modal-footer login-modal-footer">
+                    <button type="submit" class="btn btn-info btn-offer">Confirm</button>
+                    <button type="button" class="btn btn-info btn-offer" data-dismiss="modal" aria-label="Close">Cancel</button>
+                </div>
             </div>
         </div>
     </div>
@@ -311,23 +290,26 @@
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                 <h4 class="modal-title" id="myModalLabel">Change Password</h4>
             </div>
+            <form action="{{ url('c/profile/edit/password/'.$user->id) }}" method="post">
+                {{csrf_field()}}
             <div class="modal-body">
                 <div class="col-sm-12 padding-left-o padding-right-0">
                     <div class="form-group">
-                        <input type="password" class="form-control" placeholder="Old Password">
+                        <input type="password" name="oldpass" class="form-control" placeholder="Old Password" required>
                     </div>
                     <div class="form-group">
-                        <input type="password" class="form-control" placeholder="New Password">
+                        <input type="password" name="newpass" class="form-control" placeholder="New Password" required>
                     </div>
                     <div class="form-group">
-                        <input type="password" class="form-control" placeholder="Confirm Password">
+                        <input type="password" name="repass" class="form-control" placeholder="Confirm Password" required>
                     </div>
                 </div>
             </div>
             <div class="modal-footer login-modal-footer">
-                <button class="btn btn-info btn-offer">Confirm</button>
-                <button class="btn btn-info btn-offer" data-dismiss="modal" aria-label="Close">Cancel</button>
+                <button type="submit" class="btn btn-info btn-offer">Confirm</button>
+                <button type="button" class="btn btn-info btn-offer" data-dismiss="modal" aria-label="Close">Cancel</button>
             </div>
+            </form>
         </div>
     </div>
 </div>
@@ -345,8 +327,8 @@
                 <p>Are you sure you want to cancel your booking ?</p>
             </div>
             <div class="modal-footer login-modal-footer">
-                <button class="btn btn-info btn-offer">Confirm</button>
-                <button class="btn btn-info btn-offer" data-dismiss="modal" aria-label="Close">Cancel</button>
+                <button type="submit" class="btn btn-info btn-offer">Confirm</button>
+                <button type="button" class="btn btn-info btn-offer" data-dismiss="modal" aria-label="Close">Cancel</button>
             </div>
         </div>
     </div>

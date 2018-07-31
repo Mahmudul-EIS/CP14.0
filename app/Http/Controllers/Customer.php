@@ -23,11 +23,19 @@ class Customer extends Controller
         $this->middleware('Customer');
     }
 
-    public function viewProfile($id){
-        $usd = User_data::where('user_id',$id)->first();
-        return view('frontend.pages.customer-profile',[
-            'usd' => $usd
-        ]);
+    public function viewProfile(){
+        if(Auth::user()){
+            $id = Auth::id();
+            $user = User::find($id);
+            $usd = User_data::where('user_id',$id)->first();
+            if($user->role != 'customer'){
+                return redirect()->back();
+            }
+            return view('frontend.pages.customer-profile',[
+                'usd' => $usd,
+                'user' => $user
+            ]);
+        }
     }
 
     public function editProfile(Request $request,$id){
@@ -43,7 +51,7 @@ class Customer extends Controller
                 $usd->id_card = $request->id_card;
                 $usd->save();
                 return redirect()
-                    ->to('/c/profile/'.$id)
+                    ->to('/c/profile/')
                     ->with('success', 'Your Account Updated Successfully !!');
             }
         return view('frontend.pages.customer-profile-edit', [
@@ -64,7 +72,7 @@ class Customer extends Controller
                 $usd->picture = $name;
                 $usd->save();
                 return redirect()
-                    ->to('/c/profile/'.$id)
+                    ->to('/c/profile/')
                     ->with('success', 'Your Profile Picture Updated Successfully !!');
             }
         }
@@ -74,24 +82,24 @@ class Customer extends Controller
         if($request->isMethod('post')){
             if(Hash::check($request->oldpass,$user->password ) == false){
                 return redirect()
-                    ->to('c/profile/edit/8')
+                    ->to('c/profile/edit/'.$id)
                     ->with('error','Password Did not matched !!');
             }
             elseif ($request->newpass != $request->repass){
                 return redirect()
-                    ->to('c/profile/edit/8')
+                    ->to('c/profile/edit/'.$id)
                     ->with('error','Wrong password entered');
             }
             elseif(strlen($request->newpass) < 6 ){
                 return redirect()
-                    ->to('c/profile/edit/8')
+                    ->to('c/profile/edit/'.$id)
                     ->with('error','Password Must be 6 characters or greater !');
             }
             else{
                 $user->password = bcrypt($request->newpass);
                 $user->save();
                 return redirect()
-                    ->to('c/profile/edit/8')
+                    ->to('c/profile/edit/'.$id)
                     ->with('success','Password Changed Successfully !');
             }
         }

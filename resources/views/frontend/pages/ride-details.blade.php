@@ -1,16 +1,12 @@
 @extends('frontend.layout')
 @section('content')
-
     <div class="get-offer-ride">
         <div class="container">
             <div class="row">
-               
                 <h3 class="get-popular-list list-option-ride">Ride Details</h3>
-                
                 <div class="get-form-control-button">
                     <button type="button" class="btn btn-info btn-offer" data-toggle="modal" data-target="#startRide">Ride Start</button>
                 </div>
-
                 <div class="col-sm-12 get-join-as">
                     <div class="col-sm-5">
                         <div class="form-ride-details">
@@ -282,10 +278,9 @@
                 <p>Please log in first!!!</p>
             </div>
             <div class="modal-footer login-modal-footer">
-                 <form method="post" action="{{ route('ride_details', $ride_id) }}">
+                 <form method="post" action="{{ route('ride_details', $data->id) }}">
                      {{ csrf_field() }}
                 <button type="submit" class="btn btn-success btn-offer" name="start_ride">Yes</button>
-            
                 <button class="btn btn-danger btn-offer" data-dismiss="modal" aria-label="Close">Cancel</button>
                 </form>
             </div>

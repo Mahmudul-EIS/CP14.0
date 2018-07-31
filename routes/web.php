@@ -55,7 +55,7 @@ Route::prefix('admin')->group(function(){
  * Customer area
  */
 Route::prefix('c')->group(function(){
-    Route::get('/profile/{id}', 'Customer@viewProfile');
+    Route::get('/profile/', 'Customer@viewProfile');
     Route::get('/profile/edit/{id}', 'Customer@editProfile');
     Route::post('/profile/edit/{id}', 'Customer@editProfile');
     Route::post('/profile/edit/password/{id}', 'Customer@editPassword');
