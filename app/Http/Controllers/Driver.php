@@ -21,11 +21,17 @@ use Carbon\Carbon;
 class Driver extends Controller
 {
 
+    /**
+     * Constructor - Applies two middleware Auth and Driver on this Controller
+    */
     public function __construct(){
         $this->middleware('auth');
         $this->middleware('Driver');
     }
 
+    /**
+     * ViewProfile - shows the driver profile info
+    */
     public function viewProfile($id){
         $user = User::find($id);
         $usd = User_data::where('user_id',$id)->first();

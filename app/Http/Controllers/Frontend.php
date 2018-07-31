@@ -60,12 +60,12 @@ class Frontend extends Controller
         $ro = RideOffers::find($id);
         $rd = RideDescriptions::where('ride_offer_id',$id)->get();
         $ro->rd = $rd;
-        $vd = VehiclesData::where('ride_offer_id',$id)->first();
-        $ro->vd = $vd;
         $user = User::where('id',$ro->offer_by)->first();
         $ro->user = $user;
         $usd = User_data::where('user_id',$ro->offer_by)->first();
         $ro->usd = $usd;
+        $vd = VehiclesData::where('user_id',$user->id)->first();
+        $ro->vd = $vd;
         return view('frontend.pages.ride-details',[
             'data' => $ro,
             'js' => 'frontend.pages.js.ride-details-js'
