@@ -69,9 +69,6 @@ Route::prefix('c')->group(function(){
 /**
  * Driver area
  */
-
-Route::get ('d/ride-details/{id}', 'Driver@rideDetails');
-Route::post ('d/ride-details/{id}', ['as' => 'ride_details', 'uses' => 'Driver@rideDetails']);
 Route::prefix('d')->group(function(){
     Route::get('/profile/{id}', 'Driver@viewProfile');
     Route::get('/profile/edit/{id}', 'Driver@editProfile');
@@ -80,6 +77,9 @@ Route::prefix('d')->group(function(){
     Route::post('/profile/edit/image/{id}', 'Driver@imageUpload');
     Route::get('/offer-ride', 'Driver@offerRide');
     Route::post('/offer-ride', 'Driver@offerRide');
+    Route::get('/active-offers', 'Driver@myOffers');
+    Route::get ('/ride-details/{id}', 'Driver@rideDetails');
+    Route::post ('/ride-details/{id}', ['as' => 'ride_details', 'uses' => 'Driver@rideDetails']);
 });
 
 /**

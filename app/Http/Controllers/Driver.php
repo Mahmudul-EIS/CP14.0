@@ -244,22 +244,33 @@ class Driver extends Controller
         ]);
     }
 
+    /**
+     * MyOffers - shows all the active offers created by a driver
+    */
+    public function myOffers(Request $request){
+        $offers = RideOffers::where(['offer_by' => Auth::id()])
+            ->where('departure_time', '>=', date('Y-m-d H:s'))
+            ->get();
+        return view('frontend.pages.my-offers', [
+            'data' => $offers
+        ]);
+    }
+
 
     /**
      * RideDetails - returns the ride offer details
      * params - takes request and ride link
     */
     public function rideDetails(Request $request, $id){
-        $user = User::find($id);
         $ro = RideOffers::find($id);
         $rideStart = new RideComp();
-        $rd = RideDescriptions::where('ride_offer_id',$id)->get();
+        $rd = RideDescriptions::where('ride_offer_id', $id)->get();
         $ro->rd = $rd;
-        $vd = VehiclesData::where('ride_offer_id',$id)->first();
+        $vd = VehiclesData::where('user_id', Auth::id())->first();
         $ro->vd = $vd;
-        $user = User::where('id',$ro->offer_by)->first();
+        $user = User::find(Auth::id());
         $ro->user = $user;
-        $usd = User_data::where('user_id',$ro->offer_by)->first();
+        $usd = User_data::where('user_id', $ro->offer_by)->first();
         $ro->usd = $usd;
         if($request->isMethod('post')){
             if (Input::has('start_ride'))
