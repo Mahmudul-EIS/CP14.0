@@ -267,7 +267,7 @@ class Driver extends Controller
      * params - takes request and ride link
     */
     public function rideDetails(Request $request, $link){
-        $ro = RideOffers::where('link',$link)->first();
+        $ro = RideOffers::where('link', $link)->first();
         $rideStart = new RideComp();
         $rd = RideDescriptions::where('ride_offer_id', $ro->id)->get();
         $ro->rd = $rd;
@@ -299,7 +299,8 @@ class Driver extends Controller
         
         return view('frontend.pages.ride-details',[
             'data' => $ro,
-            'js' => 'frontend.pages.js.ride-details-js'
+            'js' => 'frontend.pages.js.ride-details-js',
+            'modals' => 'frontend.pages.modals.ride-details-modals'
         ])->with('ride_id', $ro->id);
     }
 
@@ -317,10 +318,10 @@ class Driver extends Controller
      * params - $request accepts get/post request data
      * param - $link accepts the database link field for a particular ride
     */
-    public function editRide(Request $request, $id){
-        $ro = RideOffers::find($id);
+    public function editRide(Request $request, $link){
+        $ro = RideOffers::where(['link' => $link])->first();
         $rideStart = new RideComp();
-        $rd = RideDescriptions::where('ride_offer_id', $id)->get();
+        $rd = RideDescriptions::where('ride_offer_id', $ro->id)->get();
         $ro->rd = $rd;
         $vd = VehiclesData::where('user_id', Auth::id())->first();
         $ro->vd = $vd;
@@ -328,7 +329,7 @@ class Driver extends Controller
         $ro->user = $user;
         $usd = User_data::where('user_id', $ro->offer_by)->first();
         $ro->usd = $usd;
-        $bookings = RideBookings::where(['ride_id' => $id])
+        $bookings = RideBookings::where(['ride_id' => $ro->id])
             ->where(['status' => 'booked'])
             ->get();
         $ro->bookings = $bookings;

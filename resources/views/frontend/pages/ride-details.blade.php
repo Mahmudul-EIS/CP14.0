@@ -163,7 +163,7 @@
                     <button class="btn btn-info btn-offer ride-final-ride-button" type="button" data-toggle="modal" data-target="#myModalx">Ridemate Details</button>
                         @endif
                     @if(Auth::check() && Auth::user()->role == 'driver')
-                        <button class="btn btn-info btn-offer ride-final-ride-button" type="button"><a style="color: #ffffff" href="{{ url('/d/edit-ride/'.$data->id) }}">Edit Ride Details</a></button>
+                        <button class="btn btn-info btn-offer ride-final-ride-button" type="button"><a style="color: #ffffff" href="{{ url('/d/edit-ride/'.$data->link) }}">Edit Ride Details</a></button>
                     @endif
                 </div>
                 
@@ -172,6 +172,7 @@
     </div>
     <!-- end offer a ride -->
     @endsection
+
 
 <!--Riders details -->
 <div class="modal fade" id="myModalx" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
