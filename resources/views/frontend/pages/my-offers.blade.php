@@ -49,7 +49,7 @@
                                     <span class="ride-label-badge"></span>
                                 </div>
                             </div>
-                            <button class="btn btn-info btn-offer ride-final-ride-button" type="button"><a href="{{ url('/d/ride-details/'.$offer->id) }}">Ride Details</a></button>
+                            <button class="btn btn-info btn-offer ride-final-ride-button" type="button"><a style="color: #ffffff" href="{{ url('/d/ride-details/'.$offer->id) }}">Ride Details</a></button>
                         </div>
                         <div class="col-sm-4 col-xs-12 ride-details-feature">
                             <div class="get-car-details-area clearfix">
@@ -60,7 +60,7 @@
                                     <span class="ride-label-badge">{{ $offer->departure_time }}</span>
                                 </div>
                             </div>
-                            <button class="btn btn-info btn-offer offer-ride-ridemate-home">Edit Ride</button>
+                            <button class="btn btn-info btn-offer offer-ride-ridemate-home"><a style="color: purple" href="{{ url('/d/edit-ride/'.$offer->id) }}">Edit Ride</a></button>
                         </div>
                     </div>
                     <!-- end single ridemate area -->
