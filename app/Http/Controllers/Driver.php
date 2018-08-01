@@ -161,14 +161,13 @@ class Driver extends Controller
             $ride_offer->destination = $request->destination;
             $ride_offer->price_per_seat = $request->price_per_seat;
             $ride_offer->total_seats = $request->total_seats;
-            $ride_offer->total_seats = $request->total_seats;
             $d_f_date = $request->d_date .' '. $request->d_hour.':'.$request->d_minute;
             //$d_date = new DateTime($d_f_date);
-            $d_date = DateTime::createFromFormat('Y-m-d H:i \P\M', $d_f_date);
+            $d_date = DateTime::createFromFormat('Y-m-d H:i A', $d_f_date);
             $ride_offer->departure_time = $d_date;
             $a_f_date = $request->a_date .' '. $request->a_hour.':'.$request->a_minute;
             //$a_date = new DateTime($a_f_date);
-            $a_date = DateTime::createFromFormat('Y-m-d H:i \P\M', $a_f_date);
+            $a_date = DateTime::createFromFormat('Y-m-d H:i A', $a_f_date);
             $ride_offer->arrival_time = $a_date;
             $ride_offer->save();
             $ride_offer_id = $ride_offer->id;
@@ -228,6 +227,7 @@ class Driver extends Controller
                 $ride_book = new RideBookings();
                 $ride_book->user_id = $request->req_user_id;
                 $ride_book->ride_id = $ride_offer_id;
+                $ride_book->seat_booked = $request->seat_booked;
                 $ride_book->status = 'booked';
                 $ride_book->save();
             }
@@ -272,6 +272,10 @@ class Driver extends Controller
         $ro->user = $user;
         $usd = User_data::where('user_id', $ro->offer_by)->first();
         $ro->usd = $usd;
+        $bookings = RideBookings::where(['ride_id' => $id])
+            ->where(['status' => 'booked'])
+            ->get();
+        $ro->bookings = $bookings;
         if($request->isMethod('post')){
             if (Input::has('start_ride'))
                 {
@@ -292,6 +296,33 @@ class Driver extends Controller
             'data' => $ro,
             'js' => 'frontend.pages.js.ride-details-js'
         ])->with('ride_id', $ro->id);
+    }
+
+    /**
+     * EditRide - function to edit an ride from driver's end
+     * params - $request accepts get/post request data
+     * param - $link accepts the database link field for a particular ride
+    */
+    public function editRide(Request $request, $id){
+        $ro = RideOffers::find($id);
+        $rideStart = new RideComp();
+        $rd = RideDescriptions::where('ride_offer_id', $id)->get();
+        $ro->rd = $rd;
+        $vd = VehiclesData::where('user_id', Auth::id())->first();
+        $ro->vd = $vd;
+        $user = User::find(Auth::id());
+        $ro->user = $user;
+        $usd = User_data::where('user_id', $ro->offer_by)->first();
+        $ro->usd = $usd;
+        $bookings = RideBookings::where(['ride_id' => $id])
+            ->where(['status' => 'booked'])
+            ->get();
+        $ro->bookings = $bookings;
+
+        return view('frontend.pages.edit-ride',[
+            'data' => $ro,
+            'js' => 'frontend.pages.js.edit-ride-js'
+        ]);
     }
 
 }

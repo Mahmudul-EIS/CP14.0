@@ -80,6 +80,8 @@ Route::prefix('d')->group(function(){
     Route::get('/active-offers', 'Driver@myOffers');
     Route::get ('/ride-details/{id}', 'Driver@rideDetails');
     Route::post ('/ride-details/{id}', ['as' => 'ride_details', 'uses' => 'Driver@rideDetails']);
+    Route::get('/edit-ride/{id}', 'Driver@editRide');
+    Route::post('/edit-ride/{id}', 'Driver@editRide');
 });
 
 /**
