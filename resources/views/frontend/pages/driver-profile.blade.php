@@ -5,9 +5,16 @@
         <div class="container">
             <div class="row">
                 <div class="col-sm-2 col-sm-offset-10 col-xs-12 col-xs-offset-0 padding-right-0">
-                    <div class="get-offer-button">
-                        <button class="btn btn-info btn-offer" data-toggle="modal" data-target="#myModalx2">Find a ride <i class="fas fa-car"></i></button>
+                    <div class="col-lg-12 col-sm-12">
+                        <button class="btn btn-info btn-offer edit-badge-area">Edit Info <img src="{{ url('/') }}/public/assets/frontend/img/file.png" alt=""></button>
+                        <!-- notification popupbar -->
+                        <div class="get-edit-profile">
+                            <ul class="edit-profile-option">
+                                <li><a href="{{ url('d/profile/edit/'.$user->id) }}">Edit Profile</a></li>
+                            </ul>
+                        </div>
                     </div>
+                    <div class="clearfix"></div>
                 </div>
                 <div class="highlight-get-popular clearfix">
                     <div class="col-sm-12 col-md-8 col-xs-12 padding-left-o">
@@ -22,7 +29,7 @@
                                 <img src="<?php if(isset($usd->picture)){echo asset('public/uploads/drivers/'.$usd->picture);}?>" alt="">
                             </div>
                             <div class="user-details">
-                                <h3 class="get-ride-user">Franklin Martin</h3>
+                                <h3 class="get-ride-user">{{ $user->name }}</h3>
                                 <div class="user-get-emails">
                                     <ul>
                                         <li><p>Email<span class="ride-button">:</span></p>

@@ -28,17 +28,22 @@ class Driver extends Controller
         $this->middleware('auth');
         $this->middleware('Driver');
     }
-
     /**
      * ViewProfile - shows the driver profile info
-    */
-    public function viewProfile($id){
-        $user = User::find($id);
-        $usd = User_data::where('user_id',$id)->first();
-        return view('frontend.pages.driver-profile',[
-            'usd' => $usd,
-            'user' => $user
-        ]);
+     */
+    public function viewProfile(){
+        if(Auth::user()){
+            $id = Auth::id();
+            $user = User::find($id);
+            $usd = User_data::where('user_id',$id)->first();
+            if($user->role != 'driver'){
+                return redirect()->back();
+            }
+            return view('frontend.pages.driver-profile',[
+                'usd' => $usd,
+                'user' => $user
+            ]);
+        }
     }
 
     /**
@@ -64,7 +69,7 @@ class Driver extends Controller
             $dd->expiry = $request->expiry;
             $dd->save();
             return redirect()
-                ->to('/d/profile/'.$id)
+                ->to('/d/profile/')
                 ->with('success', 'Your Profile Updated Successfully!!');
         }
         return view('frontend.pages.driver-profile-edit',[
@@ -91,7 +96,7 @@ class Driver extends Controller
                 $usd->picture = $name;
                 $usd->save();
                 return redirect()
-                    ->to('/d/profile/'.$id)
+                    ->to('/d/profile/')
                     ->with('success', 'Your Profile Picture Updated Successfully !!');
             }
         }
@@ -112,19 +117,19 @@ class Driver extends Controller
             }
             elseif ($request->newpass != $request->repass){
                 return redirect()
-                    ->to('d/profile/edit/12')
+                    ->to('d/profile/edit/'.$id)
                     ->with('error','Wrong password entered');
             }
             elseif(strlen($request->newpass) < 6 ){
                 return redirect()
-                    ->to('d/profile/edit/12')
+                    ->to('d/profile/edit/'.$id)
                     ->with('error','Password Must be 6 characters or greater !');
             }
             else{
                 $user->password = bcrypt($request->newpass);
                 $user->save();
                 return redirect()
-                    ->to('d/profile/edit/12')
+                    ->to('d/profile/edit/'.$id)
                     ->with('success','Password Changed Successfully !');
             }
         }
@@ -144,10 +149,10 @@ class Driver extends Controller
             $req_details = Ride_request::find($req_id);
         }
         $ex_offer = RideOffers::where(['request_id' => $req_id])->first();
-        if($ex_offer){
-            return redirect('/')
-                ->with('error', 'Offer already created!!');
-        }
+//        if($ex_offer){
+//            return redirect('/')
+//                ->with('error', 'Offer already created!!');
+//        }
         $vd = VehiclesData::where(['user_id' => Auth::id()])->first();
         if($request->isMethod('post')){
             $ride_offer = new RideOffers();

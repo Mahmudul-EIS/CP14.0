@@ -70,7 +70,7 @@ Route::prefix('c')->group(function(){
  * Driver area
  */
 Route::prefix('d')->group(function(){
-    Route::get('/profile/{id}', 'Driver@viewProfile');
+    Route::get('/profile/', 'Driver@viewProfile');
     Route::get('/profile/edit/{id}', 'Driver@editProfile');
     Route::post('/profile/edit/{id}', 'Driver@editProfile');
     Route::post('/profile/edit/password/{id}', 'Driver@editPassword');

@@ -7,16 +7,26 @@
             <div class="container">
                 <div class="row">
                     <h3 class="get-ride-title">Offer a Ride</h3>
+                    <div class="col-sm-6">
                     @if(session()->has('success'))
-                            <p class="alert alert-success">
-                                {{ session()->get('success') }}
-                            </p>
+                        <p class="alert alert-success">
+                            {{ session()->get('success') }}
+                        </p>
                     @endif
                     @if(session()->has('error'))
                         <p class="alert alert-danger">
                             {{ session()->get('error') }}
                         </p>
                     @endif
+                    </div>
+                    <div class="col-sm-6">
+                        @if(session()->has('error'))
+                            <p class="alert alert-danger">
+                                {{ session()->get('error') }}
+                            </p>
+                        @endif
+                    </div>
+                    <div class="clearfix"></div>
                     <div class="get-form-offer">
                         <div class="col-sm-6 padding-left-o price-seat">
                             <div class="form-group">
@@ -51,7 +61,7 @@
                             <div class="form-group pick-get-time">
                                 <label for="departure-time">Departure Time</label>
                                 <div class="col-sm-6 padding-left-o">
-                                    <input name="d_date" type="date" class="form-control" placeholder="Pick a Date" required="required" @if(isset($data->departure_date)) value="{{ $data->departure_date }}" readonly @endif>
+                                    <input name="d_date" type="text" class="form-control datepicker-f" placeholder="Pick a Date" required="required" @if(isset($data->departure_date)) value="{{ $data->departure_date }}" readonly @endif>
                                 </div>
                                 <div class="col-sm-3">
                                     <input name="d_hour" type="text" class="form-control timepicker-hh" placeholder="Hrs:HH" required="required">
@@ -64,6 +74,7 @@
                                 <label for="departure-time">Arrival Time(Optional)</label>
                                 <div class="col-sm-6 padding-left-o">
                                     <input name="a_date" type="date" class="form-control" placeholder="Pick a Date" required="required" @if(isset($data->departure_date)) value="{{ $data->departure_date }}" readonly @endif>
+                                    <input name="a_date" type="text" class="form-control datepicker-f" placeholder="Pick a Date">
                                 </div>
                                 <div class="col-sm-3">
                                     <input name="a_hour" type="text" class="form-control timepicker-hh" placeholder="Hrs:HH" required="required">
