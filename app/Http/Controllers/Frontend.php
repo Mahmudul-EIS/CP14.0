@@ -56,9 +56,9 @@ class Frontend extends Controller
         ]);
     }
 
-    public function rideDetails(Request $request,$id){
-        $ro = RideOffers::find($id);
-        $rd = RideDescriptions::where('ride_offer_id',$id)->get();
+    public function rideDetails(Request $request,$link){
+        $ro = RideOffers::where('link',$link)->first();
+        $rd = RideDescriptions::where('ride_offer_id',$ro->id)->get();
         $ro->rd = $rd;
         $user = User::where('id',$ro->offer_by)->first();
         $ro->user = $user;

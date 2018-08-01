@@ -5,6 +5,11 @@
         <div class="get-offer-ride">
             <div class="container">
                 <div class="row">
+                    @if(session()->has('error'))
+                        <p class="alert alert-danger">
+                            {{ session()->get('error') }}
+                        </p>
+                    @endif
                     <div class="ridemate-offer-button">
                         <button class="btn btn-info btn-offer"><a style="color: #ffffff;" href="{{ url('/d/offer-ride') }}">Offer a ride <i class="fas fa-car"></i></a></button>
                         <button class="btn btn-info btn-offer">Requests For Ride</button>
