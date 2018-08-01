@@ -158,20 +158,16 @@ class Customer extends Controller
             /*echo $ride_request;
             exit();*/
             if($ride_request->save()){
-                return redirect()
-                    ->back()
+                return redirect($request->url())
                     ->with('success', 'The ride request was created successfully!');
             }else{
-                return redirect($request->path())
-                    ->back()
+                return redirect($request->url())
                     ->with('error', 'The ride request couldn\'t created!');
             }
             // echo $user->id;
-        }else {
-            return redirect($request->path())
-                ->back()
-                ->with('error', 'The method not allowed!');
         }
+
+        return view('frontend.pages.rider-index');
     }
 
 }

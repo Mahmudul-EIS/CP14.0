@@ -15,6 +15,16 @@
             <li><a href="{{ url('/login') }}">Login</a></li>
             <li><a href="{{ url('/join') }}">Join</a></li>
             @endif
+            @if(Auth::check() && Auth::user()->role == 'driver')
+                <li><a href="{{ url('/d/offer-ride') }}">Offer a Ride</a></li>
+                <li><a href="{{ url('/d/active-offers') }}">My Active Offers</a></li>
+                <li><a href="{{ url('/d/profile') }}">My Profile</a></li>
+            @endif
+            @if(Auth::check() && Auth::user()->role == 'customer')
+                <li><a href="{{ url('/c/request-ride') }}">Request a Ride</a></li>
+                <li><a href="{{ url('/c/bookings') }}">My Bookings</a></li>
+                <li><a href="{{ url('/c/profile') }}">My Profile</a></li>
+            @endif
             <li><a href="{{ url('/about-us') }}">About Us</a></li>
             <li><a href="{{ url('/terms') }}">Terms Of Services</a></li>
             <li><a href="{{ url('/contact-us') }}">Contact Us</a></li>
@@ -27,15 +37,6 @@
                     <li><a href="privacy-policy.html">Privaciy Policy</a></li>
                 </ul>
             </li>
-            @if(Auth::check() && Auth::user()->role == 'driver')
-                <li><a href="{{ url('/d/offer-ride') }}">Offer a Ride</a></li>
-                <li><a href="{{ url('/d/active-offers') }}">My Active Offers</a></li>
-                <li><a href="{{ url('/d/profile') }}">My Profile</a></li>
-            @endif
-            @if(Auth::check() && Auth::user()->role == 'customer')
-                <li><a href="{{ url('/c/bookings') }}">Offer a Ride</a></li>
-                <li><a href="{{ url('/c/profile') }}">My Profile</a></li>
-            @endif
             @if(Auth::check())
             <li data-toggle="modal" data-target="#myModalxss"><a  class="disabled" href="#">Log Out</a></li>
             @endif
