@@ -22,7 +22,7 @@ Route::post('/sign-up/driver', 'Authenticate@registerDriver');
 Route::get('/sign-up/customer', 'Authenticate@registerCustomer');
 Route::post('/sign-up/customer', 'Authenticate@registerCustomer');
 Route::get('/popular', 'Frontend@popular');
-Route::get('/ride-details/{id}', 'Frontend@rideDetails');
+Route::get('/ride-details/{link}', 'Frontend@rideDetails');
 
 /* ------------------------------------------------------ */
 
@@ -60,7 +60,7 @@ Route::prefix('c')->group(function(){
     Route::post('/profile/edit/{id}', 'Customer@editProfile');
     Route::post('/profile/edit/password/{id}', 'Customer@editPassword');
     Route::post('/profile/edit/image/{id}', 'Customer@imageUpload');
-    Route::get('/ride-details/{id}', 'Customer@rideDetails');
+    Route::get('/ride-details/{link}', 'Customer@rideDetails');
     Route::get('/request-ride', 'Customer@riderRequest');
     Route::post('/request-ride', ['as' => 'request_ride', 'uses' => 'Customer@riderRequest']);
     Route::get('/bookings', 'Customer@bookings');
@@ -78,8 +78,8 @@ Route::prefix('d')->group(function(){
     Route::get('/offer-ride', 'Driver@offerRide');
     Route::post('/offer-ride', 'Driver@offerRide');
     Route::get('/active-offers', 'Driver@myOffers');
-    Route::get ('/ride-details/{id}', 'Driver@rideDetails');
-    Route::post ('/ride-details/{id}', ['as' => 'ride_details', 'uses' => 'Driver@rideDetails']);
+    Route::get ('/ride-details/{link}', 'Driver@rideDetails');
+    Route::post ('/ride-details/{link}', ['as' => 'ride_details', 'uses' => 'Driver@rideDetails']);
     Route::get('/edit-ride/{id}', 'Driver@editRide');
     Route::post('/edit-ride/{id}', 'Driver@editRide');
 });

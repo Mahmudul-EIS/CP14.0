@@ -125,14 +125,14 @@ class Customer extends Controller
         ]);
     }
 
-    public function rideDetails(Request $request, $id){
-        $ro = RideOffers::find($id);
-        $rd = RideDescriptions::where('ride_offer_id',$id)->get();
+    public function rideDetails(Request $request, $link){
+        $ro = RideOffers::where('link',$link)->first();
+        $rd = RideDescriptions::where('ride_offer_id',$ro->id)->get();
         $ro->rd = $rd;
-        $vd = VehiclesData::where('ride_offer_id',$id)->first();
-        $ro->vd = $vd;
         $user = User::where('id',$ro->offer_by)->first();
         $ro->user = $user;
+        $vd = VehiclesData::where('user_id',$user->id)->first();
+        $ro->vd = $vd;
         $usd = User_data::where('user_id',$ro->offer_by)->first();
         $ro->usd = $usd;
         return view('frontend.pages.ride-details',[

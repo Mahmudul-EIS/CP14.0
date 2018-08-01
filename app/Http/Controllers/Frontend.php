@@ -59,9 +59,9 @@ class Frontend extends Controller
         ]);
     }
 
-    public function rideDetails(Request $request, $id){
-        $ro = RideOffers::find($id);
-        $rd = RideDescriptions::where('ride_offer_id', $id)->get();
+    public function rideDetails(Request $request,$link){
+        $ro = RideOffers::where('link',$link)->first();
+        $rd = RideDescriptions::where('ride_offer_id',$ro->id)->get();
         $ro->rd = $rd;
         $user = User::where('id', $ro->offer_by)->first();
         $ro->user = $user;
@@ -69,7 +69,7 @@ class Frontend extends Controller
         $ro->usd = $usd;
         $vd = VehiclesData::where('user_id', $user->id)->first();
         $ro->vd = $vd;
-        $bookings = RideBookings::where(['ride_id' => $id])->get();
+        $bookings = RideBookings::where(['ride_id' => $ro->id])->get();
         $ro->bookings = $bookings;
         return view('frontend.pages.ride-details',[
             'data' => $ro,

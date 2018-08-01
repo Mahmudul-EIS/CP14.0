@@ -141,14 +141,15 @@ class Driver extends Controller
      * param - takes post and get request data as object
     */
     public function offerRide(Request $request){
-        $req_id = $req_details = $ex_offer = '';
+        $req_details = $ex_offer = '';
+        $req_id = 0;
         if(isset($request->req) && $request->req != null){
             $req_id = $request->req;
         }
-        if($req_id != ''){
+        if($req_id != 0){
             $req_details = Ride_request::find($req_id);
         }
-        $ex_offer = RideOffers::where(['request_id' => $req_id])->first();
+//        $ex_offer = RideOffers::where(['request_id' => $req_id])->first();
 //        if($ex_offer){
 //            return redirect('/')
 //                ->with('error', 'Offer already created!!');
@@ -167,13 +168,12 @@ class Driver extends Controller
             $ride_offer->price_per_seat = $request->price_per_seat;
             $ride_offer->total_seats = $request->total_seats;
             $d_f_date = $request->d_date .' '. $request->d_hour.':'.$request->d_minute;
-            //$d_date = new DateTime($d_f_date);
-            $d_date = DateTime::createFromFormat('Y-m-d H:i A', $d_f_date);
+            $d_date = DateTime::createFromFormat('Y-m-d H:i \P\M', $d_f_date);
             $ride_offer->departure_time = $d_date;
             $a_f_date = $request->a_date .' '. $request->a_hour.':'.$request->a_minute;
-            //$a_date = new DateTime($a_f_date);
-            $a_date = DateTime::createFromFormat('Y-m-d H:i A', $a_f_date);
+            $a_date = DateTime::createFromFormat('Y-m-d H:i \P\M', $a_f_date);
             $ride_offer->arrival_time = $a_date;
+            $ride_offer->link = $this->generateRandomString();
             $ride_offer->save();
             $ride_offer_id = $ride_offer->id;
             if($request->vd_action == 'add'){
@@ -266,10 +266,10 @@ class Driver extends Controller
      * RideDetails - returns the ride offer details
      * params - takes request and ride link
     */
-    public function rideDetails(Request $request, $id){
-        $ro = RideOffers::find($id);
+    public function rideDetails(Request $request, $link){
+        $ro = RideOffers::where('link',$link)->first();
         $rideStart = new RideComp();
-        $rd = RideDescriptions::where('ride_offer_id', $id)->get();
+        $rd = RideDescriptions::where('ride_offer_id', $ro->id)->get();
         $ro->rd = $rd;
         $vd = VehiclesData::where('user_id', Auth::id())->first();
         $ro->vd = $vd;
@@ -277,7 +277,7 @@ class Driver extends Controller
         $ro->user = $user;
         $usd = User_data::where('user_id', $ro->offer_by)->first();
         $ro->usd = $usd;
-        $bookings = RideBookings::where(['ride_id' => $id])
+        $bookings = RideBookings::where(['ride_id' => $ro->id])
             ->where(['status' => 'booked'])
             ->get();
         $ro->bookings = $bookings;
@@ -303,7 +303,16 @@ class Driver extends Controller
         ])->with('ride_id', $ro->id);
     }
 
-    /**
+    function generateRandomString($length = 16)
+    {
+        $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+        $charactersLength = strlen($characters);
+        $randomString = '';
+        for ($i = 0; $i < $length; $i++) {
+            $randomString .= $characters[rand(0, $charactersLength - 1)];
+        }
+        return $randomString;
+    }   /**
      * EditRide - function to edit an ride from driver's end
      * params - $request accepts get/post request data
      * param - $link accepts the database link field for a particular ride

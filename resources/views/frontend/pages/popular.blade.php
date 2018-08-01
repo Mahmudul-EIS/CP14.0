@@ -83,7 +83,7 @@
                                     <div class="get-price">
                                         <h3 class="get-total-prize">${{ $d->price_per_seat }}</h3>
                                     </div>
-                                    <a href="{{ url('/ride-details/'.$d->id) }}"><button class="btn btn-info btn-offer text-uppercase">Details</button></a>
+                                    <a href="{{ url('/ride-details/'.$d->link) }}"><button class="btn btn-info btn-offer text-uppercase">Details</button></a>
                                 </div>
                             </div>
                         </div>

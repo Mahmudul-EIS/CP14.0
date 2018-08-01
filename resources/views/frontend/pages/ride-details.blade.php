@@ -89,11 +89,25 @@
                     <div class="col-sm-4 padding-left-o">
                         <h3 class="price-per-seats get-total-fare">Total Fare: <span>${{ $data->price_per_seat*$data->total_seats }}</span></h3>
                     </div>
+<<<<<<< HEAD
+                    @if(Auth::check())
+                        @if(Auth::user()->role == 'customer')
+                            <div class="col-sm-5 col-sm-offset-3 col-xs-12">
+                                <a href="{{ url('/c/bookings') }}"><button type="submit" class="btn btn-info btn-offer">Request To Book</button></a>
+                            </div>
+                        @endif
+                    @else
+                        <div class="col-sm-5 col-sm-offset-3 col-xs-12">
+                            <button class="btn btn-info btn-offer" data-toggle="modal" data-target="#myModal2">Request To Book</button>
+                        </div>
+                    @endif
+=======
                     @if(Auth::check() && Auth::user()->role != 'driver')
                     <div class="col-sm-5 col-sm-offset-3 col-xs-12">
                         <button class="btn btn-info btn-offer" data-toggle="modal" data-target="#myModal2">Request To Book</button>
                     </div>
                         @endif
+>>>>>>> 7b3854487b2f9f3f5641989967cc79394af1a3db
                 </div>
                 <!-- end available seats -->
 
@@ -136,32 +150,19 @@
                     <div class="col-sm-3 col-sm-offset-3 col-xs-12 ride-details-feature">
                         <ul class="get-ride-feature">
                             <li>
-                                <span class="right-ride-feature <?php foreach($data->rd as $r){if($r->key == 'pets' && $r->value == 'yes'){echo "icon-feature-details";}else{echo "icon-cross-details";}}?>"></span>
+                                <span class="right-ride-feature @foreach($data->rd as $r)@if($r->key == 'pets')@if( $r->value == 'yes'){{"icon-feature-details"}}@else{{"icon-cross-details"}}@endif @endif @endforeach"></span>
                                 <span class="left-ride-feature">Pets</span>
                             </li>
                             <li>
-                                <span class="right-ride-feature <?php foreach($data->rd as $r){if($r->key == 'music' && $r->value == 'yes'){echo "icon-feature-details";}else{echo "icon-cross-details";}}?>"></span>
+                                <span class="right-ride-feature @foreach($data->rd as $r)@if($r->key == 'music')@if( $r->value == 'yes'){{"icon-feature-details"}}@else{{"icon-cross-details"}}@endif @endif @endforeach"></span>
                                 <span class="left-ride-feature">Music</span>
                             </li>
                             <li>
-                                <span class="right-ride-feature <?php foreach($data->rd as $r){if($r->key == 'smoking' && $r->value == 'yes'){echo "icon-feature-details";}else{echo "icon-cross-details";}}?>"></span>
+                                <span class="right-ride-feature @foreach($data->rd as $r)@if($r->key == 'smoking')@if( $r->value == 'yes'){{"icon-feature-details"}}@else{{"icon-cross-details"}}@endif @endif @endforeach"></span>
                                 <span class="left-ride-feature">Smoking</span>
                             </li>
                             <li>
-                                <span class="right-ride-feature <?php foreach($data->rd as $r){if($r->key == 'back_seat' && $r->value == 'yes'){echo "icon-feature-details";}else{echo "icon-cross-details";}}?>"></span>
-                                <span class="right-ride-feature <?php foreach($data->rd as $r){if($r->key == 'pets' && $r->value= 'yes'){echo "icon-feature-details";}else{echo "icon-cross-details";}} ?>"></span>
-                                <span class="left-ride-feature">Pets</span>
-                            </li>
-                            <li>
-                                <span class="right-ride-feature <?php foreach($data->rd as $r){if($r->key == 'music' && $r->value= 'yes'){echo "icon-feature-details";}else{echo "icon-cross-details";}} ?>"></span>
-                                <span class="left-ride-feature">Music</span>
-                            </li>
-                            <li>
-                                <span class="right-ride-feature <?php foreach($data->rd as $r){if($r->key == 'smoking' && $r->value= 'yes'){echo "icon-feature-details";}else{echo "icon-cross-details";}} ?>"></span>
-                                <span class="left-ride-feature">Smoking</span>
-                            </li>
-                            <li>
-                                <span class="right-ride-feature <?php foreach($data->rd as $r){if($r->key == 'back_seat' && $r->value= 'yes'){echo "icon-feature-details";}else{echo "icon-cross-details";}} ?>"></span>
+                                <span class="right-ride-feature @foreach($data->rd as $r)@if($r->key == 'back_seat')@if( $r->value == 'yes'){{"icon-feature-details"}}@else{{"icon-cross-details"}}@endif @endif @endforeach"></span>
                                 <span class="left-ride-feature">Max.2 in back Seat</span>
                             </li>
                         </ul>
@@ -241,7 +242,7 @@
                 <p>Please log in first!!!</p>
             </div>
             <div class="modal-footer login-modal-footer">
-                <button class="btn btn-info btn-offer ">Login</button>
+                <a href="{{ url('/sign-up/customer') }}"><button class="btn btn-info btn-offer ">Login</button></a>
                 <button class="btn btn-info btn-offer" data-dismiss="modal" aria-label="Close">Cancel</button>
             </div>
         </div>
