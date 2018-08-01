@@ -11,6 +11,7 @@ use App\User;
 use App\User_data;
 use App\RideOffers;
 use App\DriverData;
+use App\GuestRequests;
 use Auth;
 
 class Frontend extends Controller
@@ -75,6 +76,19 @@ class Frontend extends Controller
             'data' => $ro,
             'js' => 'frontend.pages.js.ride-details-js'
         ]);
+    }
+    public function guestRequests(Request $request){
+        $gr = new GuestRequests();
+        $gr->ride_offer_id = $request->ride_offer_id;
+        $gr->token = $request->token;
+        $gr->status = 'processing';
+        $gr_id = $gr->id;
+        if($gr->save()){
+            return redirect('/sign-up/customer/');
+        }else{
+            return redirect()
+                ->back();
+        }
     }
 
 }

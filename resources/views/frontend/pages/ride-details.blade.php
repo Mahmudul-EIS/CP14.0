@@ -89,7 +89,6 @@
                     <div class="col-sm-4 padding-left-o">
                         <h3 class="price-per-seats get-total-fare">Total Fare: <span>${{ $data->price_per_seat*$data->total_seats }}</span></h3>
                     </div>
-<<<<<<< HEAD
                     @if(Auth::check())
                         @if(Auth::user()->role == 'customer')
                             <div class="col-sm-5 col-sm-offset-3 col-xs-12">
@@ -101,13 +100,6 @@
                             <button class="btn btn-info btn-offer" data-toggle="modal" data-target="#myModal2">Request To Book</button>
                         </div>
                     @endif
-=======
-                    @if(Auth::check() && Auth::user()->role != 'driver')
-                    <div class="col-sm-5 col-sm-offset-3 col-xs-12">
-                        <button class="btn btn-info btn-offer" data-toggle="modal" data-target="#myModal2">Request To Book</button>
-                    </div>
-                        @endif
->>>>>>> 7b3854487b2f9f3f5641989967cc79394af1a3db
                 </div>
                 <!-- end available seats -->
 
@@ -241,10 +233,15 @@
             <div class="modal-body table-responsive">
                 <p>Please log in first!!!</p>
             </div>
-            <div class="modal-footer login-modal-footer">
-                <a href="{{ url('/sign-up/customer') }}"><button class="btn btn-info btn-offer ">Login</button></a>
-                <button class="btn btn-info btn-offer" data-dismiss="modal" aria-label="Close">Cancel</button>
-            </div>
+            <form method="post" action="{{ url('/guest-requests') }}">
+                {{csrf_field()}}
+                <div class="modal-footer login-modal-footer">
+                    <button type="submit" class="btn btn-info btn-offer ">Login</button>
+                    <button class="btn btn-info btn-offer" data-dismiss="modal" aria-label="Close">Cancel</button>
+                    <input type="hidden" name="ride_offer_id" value="{{$data->id}}">
+                    <input type="hidden" name="token" value="{{ csrf_token() }}">
+                </div>
+            </form>
         </div>
     </div>
 </div>
