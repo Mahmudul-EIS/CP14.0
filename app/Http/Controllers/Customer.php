@@ -137,7 +137,8 @@ class Customer extends Controller
         $ro->usd = $usd;
         return view('frontend.pages.ride-details',[
             'data' => $ro,
-            'js' => 'frontend.pages.js.ride-details-js'
+            'js' => 'frontend.pages.js.ride-details-js',
+            'modals' => 'frontend.pages.modals.ride-details-modals'
         ]);
     }
 

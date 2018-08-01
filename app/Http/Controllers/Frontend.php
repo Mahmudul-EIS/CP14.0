@@ -73,7 +73,8 @@ class Frontend extends Controller
         $ro->bookings = $bookings;
         return view('frontend.pages.ride-details',[
             'data' => $ro,
-            'js' => 'frontend.pages.js.ride-details-js'
+            'js' => 'frontend.pages.js.ride-details-js',
+            'modals' => 'frontend.pages.modals.ride-details-modals'
         ]);
     }
 

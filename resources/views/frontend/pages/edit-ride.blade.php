@@ -11,11 +11,11 @@
                         <div class="col-sm-6 padding-left-o price-seat">
                             <div class="form-group">
                                 <label for="pickup-point">Pickup Point</label>
-                                <input type="text" placeholder="Dhaka, Bangladesh" class="form-control" value="{{ $data->origin }}">
+                                <input type="text" id="origin-input" class="form-control" value="{{ $data->origin }}">
                             </div>
                             <div class="form-group">
                                 <label for="pickup-point">Destination</label>
-                                <input type="text" placeholder="khulna, Bangladesh" class="form-control" value="{{ $data->destination }}">
+                                <input type="text" id="destination-input" class="form-control" value="{{ $data->destination }}">
                             </div>
                             <div class="col-sm-6 padding-left-o">
                                 <div class="form-group">
