@@ -87,3 +87,73 @@
         </div>
     </div>
 </div>
+
+@if(isset($data->bookings))
+    @foreach($data->bookings as $b)
+<!--Add Riders in Seats details -->
+<div class="modal fade" id="myModalnsx{{ $b->user_id }}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="myModalLabel">Rider Information</h4>
+            </div>
+            <div class="modal-body rider-details-ridemate">
+                <div class="ridemate-name-area">
+                    <div class="ridemate-name">
+                        Name <span class="ridemate-right">:</span>
+                    </div>
+                    <div class="ridemate-name-xs">
+                        <span>{{ $b->requester->name }} {{ $b->ud->last_name }}</span>
+                    </div>
+                </div>
+                <div class="ridemate-name-area">
+                    <div class="ridemate-name">
+                        Email <span class="ridemate-right">:</span>
+                    </div>
+                    <div class="ridemate-name-xs">
+                        <span>{{ $b->requester->email }}</span>
+                    </div>
+                </div>
+
+                <div class="ridemate-name-area">
+                    <div class="ridemate-name">
+                        Gender <span class="ridemate-right">:</span>
+                    </div>
+                    <div class="ridemate-name-xs">
+                        <span>{{ $b->ud->gender }}</span>
+                    </div>
+                </div>
+                <div class="ridemate-name-area">
+                    <div class="ridemate-popup">
+                        Rider Add/Cancel Information<span class="ridemate-right">:</span>
+                    </div>
+                </div>
+                <div class="ridemate-name-area">
+                    @if($b->status != 'confirmed')
+                    <form id="confirm-book" method="post" action="{{ url('/d/confirm-bookings') }}">
+                        {{ csrf_field() }}
+                        <input type="hidden" name="book_id" value="{{ $b->id }}">
+                        <input type="hidden" name="link" value="{{ $data->link }}">
+                        <input type="hidden" name="status" value="confirmed">
+                    </form>
+                    @endif
+                    <form method="post" action="{{ url('/d/cancel-bookings') }}">
+                        {{ csrf_field() }}
+                        <input type="hidden" name="book_id" value="{{ $b->id }}">
+                        <input type="hidden" name="link" value="{{ $data->link }}">
+                        <input type="hidden" name="status" value="rejected">
+                    </form>
+                    <div class="ridemate-popup">
+                        @if($b->status != 'confirmed')
+                        <button type="submit" form="confirm-book" class="btn btn-info btn-offer ride-popup-ride-button">Confirm Booking</button>
+                        @endif
+                        <button class="btn btn-info btn-offer ride-popup-ride-button"  data-dismiss="modal">Cancel Booking</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+        @endforeach
+    @endif

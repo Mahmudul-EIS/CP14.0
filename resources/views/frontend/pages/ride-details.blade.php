@@ -4,6 +4,18 @@
         <div class="container">
             <div class="row">
                 <h3 class="get-popular-list list-option-ride">Ride Details</h3>
+                <div class="clearfix">
+                    @if(session()->has('error'))
+                        <p class="alert alert-danger">
+                            {{ session()->get('error') }}
+                        </p>
+                    @endif
+                        @if(session()->has('success'))
+                            <p class="alert alert-success">
+                                {{ session()->get('success') }}
+                            </p>
+                        @endif
+                </div>
                 <div class="get-form-control-button">
                     <button type="button" class="btn btn-info btn-offer" data-toggle="modal" data-target="#startRide">Ride Start</button>
                 </div>
@@ -53,7 +65,7 @@
                                     @for($j = 1; $j <= $book->seat_booked; $j++)
                                         <li>
                                             <div class="ride-seat-icon first-ride">
-                                                <i class="fas fa-user fixed-hover"></i>
+                                                <i class="fas fa-user fixed-hover" data-toggle="modal" data-target="#myModalnsx{{ $book->user_id }}"></i>
                                                 <span>Booked</span>
                                             </div>
                                         </li>
@@ -63,7 +75,7 @@
                                     @for($k = 1; $k <= $book->seat_booked; $k++)
                                         <li>
                                             <div class="ride-seat-icon first-ride">
-                                                <i class="fas fa-user fixed-hover"></i>
+                                                <i class="fas fa-user fixed-hover" data-toggle="modal" data-target="#myModalnsx{{ $book->user_id }}"></i>
                                                 <span>Confirmed</span>
                                             </div>
                                         </li>
