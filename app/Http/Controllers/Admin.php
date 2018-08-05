@@ -57,7 +57,7 @@ class Admin extends Controller
             }else{
                 return redirect()
                     ->to('/admin/create-admin')
-                    ->with('errors',$errors)
+                    ->with('errors', $errors)
                     ->withInput();
             }
         }

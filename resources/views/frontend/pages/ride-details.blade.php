@@ -16,6 +16,7 @@
                             </p>
                         @endif
                 </div>
+
                 <div class="get-form-control-button">
                     <button type="button" class="btn btn-info btn-offer" data-toggle="modal" data-target="#startRide">Ride Start</button>
                 </div>

@@ -65,6 +65,7 @@ Route::prefix('c')->group(function(){
     Route::get('/request-ride', 'Customer@riderRequest');
     Route::post('/request-ride', ['as' => 'request_ride', 'uses' => 'Customer@riderRequest']);
     Route::get('/bookings', 'Customer@bookings');
+    Route::post('/book-ride', 'Customer@bookRide');
 });
 
 /**

@@ -88,6 +88,7 @@
     </div>
 </div>
 
+@if(Auth::check() && Auth::user()->role == 'driver')
 @if(isset($data->bookings))
     @foreach($data->bookings as $b)
 <!--Add Riders in Seats details -->
@@ -156,4 +157,5 @@
     </div>
 </div>
         @endforeach
+    @endif
     @endif

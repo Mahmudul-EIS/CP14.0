@@ -126,15 +126,28 @@ class Customer extends Controller
     }
 
     public function rideDetails(Request $request, $link){
-        $ro = RideOffers::where('link',$link)->first();
-        $rd = RideDescriptions::where('ride_offer_id',$ro->id)->get();
+        $ro = RideOffers::where('link', $link)->first();
+        $rd = RideDescriptions::where('ride_offer_id', $ro->id)->get();
         $ro->rd = $rd;
-        $user = User::where('id',$ro->offer_by)->first();
+        $user = User::find($ro->offer_by);
         $ro->user = $user;
-        $vd = VehiclesData::where('user_id',$user->id)->first();
+        $vd = VehiclesData::where('user_id', $user->id)->first();
         $ro->vd = $vd;
-        $usd = User_data::where('user_id',$ro->offer_by)->first();
+        $usd = User_data::where('user_id', $ro->offer_by)->first();
         $ro->usd = $usd;
+        $bookings = RideBookings::where(['ride_id' => $ro->id])
+            ->where(function($q){
+                $q->where(['status' => 'booked'])
+                    ->orWhere(['status' => 'confirmed']);
+            })
+            ->get();
+        foreach($bookings as $book){
+            $requester = User::find($book->user_id);
+            $book->requester = $requester;
+            $ud = User_data::where(['user_id' => $book->user_id])->first();
+            $book->ud = $ud;
+        }
+        $ro->bookings = $bookings;
         return view('frontend.pages.ride-details',[
             'data' => $ro,
             'js' => 'frontend.pages.js.ride-details-js',
