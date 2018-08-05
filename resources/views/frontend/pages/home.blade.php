@@ -100,16 +100,16 @@
                 <h2 class="get-section-header">Where to?</h2>
                 <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor inc ididunt ut labore et dolore magna aliqua.</p>
                 <div class="get-a-ride">
-                    <form method="post" action="{{ url('/c/request-ride') }}">
+                    <form method="post" action="@if(Auth::user() && Auth::user()->role == 'customer'){{url('/c/request-ride')}}@else{{url('/guest-ride-requests')}}@endif">
                         {{ csrf_field() }}
                         <div class="col-sm-3 col-xs-12 padding-left-o">
-                            <input type="text" name="from" id="" class="get-select-picker placepicker form-control" placeholder="From">
+                            <input type="text" name="from" id="" class="get-select-picker placepicker form-control" placeholder="From" required>
                         </div>
                         <div class="col-sm-3 col-xs-12 padding-left-o">
-                            <input type="text" name="to" id="" class="get-select-picker placepicker form-control" placeholder="To">
+                            <input type="text" name="to" id="" class="get-select-picker placepicker form-control" placeholder="To" required>
                         </div>
                         <div class="col-sm-3 col-xs-12 padding-left-o">
-                            <input type="text" name="departure_date" placeholder="When" class="form-control datepicker-f">
+                            <input type="text" name="departure_date" placeholder="When" class="form-control" id="datetimepicker4" required>
                         </div>
                         <div class="col-sm-3 col-xs-12 padding-left-o">
                             <button type="submit" class="btn btn-info btn-offer"><span>Get a ride </span><i class="fas fa-car"></i></button>

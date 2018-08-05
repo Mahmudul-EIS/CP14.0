@@ -24,6 +24,9 @@ Route::post('/sign-up/customer', 'Authenticate@registerCustomer');
 Route::get('/popular', 'Frontend@popular');
 Route::get('/ride-details/{link}', 'Frontend@rideDetails');
 Route::post('/guest-requests', 'Frontend@guestRequests');
+Route::post('/request-ride', 'Frontend@riderRequest');
+Route::post('/request-ride', 'Frontend@riderRequest');
+Route::post('/guest-ride-requests', 'Frontend@guestRideRequest');
 
 /* ------------------------------------------------------ */
 
