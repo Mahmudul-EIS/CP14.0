@@ -86,6 +86,8 @@ Route::prefix('d')->group(function(){
     Route::post ('/ride-details/{link}', ['as' => 'ride_details', 'uses' => 'Driver@rideDetails']);
     Route::get('/edit-ride/{id}', 'Driver@editRide');
     Route::post('/edit-ride/{id}', 'Driver@editRide');
+    Route::post('/confirm-bookings', 'Driver@confirmBookings');
+    Route::post('/cancel-bookings', 'Driver@cancelBookings');
 });
 
 /**

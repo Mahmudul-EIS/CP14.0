@@ -278,8 +278,17 @@ class Driver extends Controller
         $usd = User_data::where('user_id', $ro->offer_by)->first();
         $ro->usd = $usd;
         $bookings = RideBookings::where(['ride_id' => $ro->id])
-            ->where(['status' => 'booked'])
+            ->where(function($q){
+                $q->where(['status' => 'booked'])
+                    ->orWhere(['status' => 'confirmed']);
+            })
             ->get();
+        foreach($bookings as $book){
+            $requester = User::find($book->user_id);
+            $book->requester = $requester;
+            $ud = User_data::where(['user_id' => $book->user_id])->first();
+            $book->ud = $ud;
+        }
         $ro->bookings = $bookings;
         if($request->isMethod('post')){
             if (Input::has('start_ride'))
@@ -304,6 +313,61 @@ class Driver extends Controller
         ])->with('ride_id', $ro->id);
     }
 
+    /**
+     * ConfirmBookings - function for accepting customer bookings
+     * param - $request only takes post request data
+    */
+    public function confirmBookings(Request $request){
+        if($request->isMethod('post')){
+            $booking = RideBookings::find($request->book_id);
+            if($booking->status == 'confirmed'){
+                return redirect('/d/ride-details/'.$request->link)
+                    ->with('error', 'Booking was already confirmed!');
+            }
+            $offer = RideOffers::find($booking->ride_id);
+            $check = RideBookings::where(['ride_id' => $booking->ride_id])
+                ->where(['status' => 'confirmed'])
+                ->get();
+            if(count($check) >= $offer->total_seats){
+                return redirect('/d/ride-details/'.$request->link)
+                    ->with('error', 'All seats are confirmed! Can\'t add anymore!');
+            }
+            $booking->status = 'confirmed';
+            $booking->save();
+            return redirect('/d/ride-details/'.$request->link)
+                ->with('success', 'The ride booking was confirmed!');
+        }else{
+            return redirect('/')
+                ->with('error', 'Wrong request type! Method not allowed!');
+        }
+    }
+
+    /**
+     * CancelBookings - function for rejecting customer bookings
+     * param - $request only takes post request data
+     */
+    public function cancelBookings(Request $request){
+        if($request->isMethod('post')){
+            $booking = RideBookings::find($request->book_id);
+            if($booking->status == 'rejected'){
+                return redirect('/d/ride-details/'.$request->link)
+                    ->with('error', 'Booking was already rejected!');
+            }
+            $booking->status = 'rejected';
+            $booking->save();
+            return redirect('/d/ride-details/'.$request->link)
+                ->with('success', 'The ride booking was rejected!');
+        }else{
+            return redirect('/d/ride-details/'.$request->link)
+                ->with('error', 'Wrong request type! Method not allowed!');
+        }
+    }
+
+
+    /**
+     * generateRandomString - generates random string with alphanumeric characters
+     * param - $length is the length of the desired string. 16 by default
+    */
     function generateRandomString($length = 16)
     {
         $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
@@ -313,7 +377,10 @@ class Driver extends Controller
             $randomString .= $characters[rand(0, $charactersLength - 1)];
         }
         return $randomString;
-    }   /**
+    }
+
+
+    /**
      * EditRide - function to edit an ride from driver's end
      * params - $request accepts get/post request data
      * param - $link accepts the database link field for a particular ride
