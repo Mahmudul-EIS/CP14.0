@@ -7,6 +7,8 @@ use Illuminate\Http\Request;
 use App\User;
 use App\User_data;
 use App\DriverData;
+use App\RideRequestTemp;
+use Illuminate\Support\Facades\Session;
 
 class Authenticate extends Controller
 {
@@ -139,6 +141,16 @@ class Authenticate extends Controller
                 $usd->address = $request->address;
                 $usd->id_card = $request->id_card;
                 $usd->save();
+                if($request->query('from') != ''){
+                    $rrt = new RideRequestTemp();
+                    $rrt->user_id = $last_id->id;
+                    $rrt->place_from = $request->from;
+                    $rrt->place_to = $request->to;
+                    $rrt->departure_date = $request->departure_date;
+                    $rrt->seat_required = 1;
+                    $rrt->status = 'processing';
+                    $rrt->save();
+                }
                 return redirect()
                     ->to('/sign-up/success')
                     ->with('success', 'Registration is successful !!');

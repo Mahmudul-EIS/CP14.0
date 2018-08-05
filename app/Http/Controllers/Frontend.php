@@ -12,6 +12,7 @@ use App\User_data;
 use App\RideOffers;
 use App\DriverData;
 use App\GuestRequests;
+use App\RideRequestTemp;
 use Auth;
 
 class Frontend extends Controller
@@ -85,11 +86,16 @@ class Frontend extends Controller
         $gr->status = 'processing';
         $gr_id = $gr->id;
         if($gr->save()){
-            return redirect('/sign-up/customer/');
+            return redirect('/sign-up/customer/')
+                ->with('gr_id',$gr_id);
         }else{
             return redirect()
                 ->back();
         }
     }
-
+    public function guestRideRequest(Request $request){
+        if($request->isMethod('post')){
+            return redirect('/sign-up/customer/?from='.$request->from.'&to='.$request->to.'&date='.$request->departure_date);
+        }
+    }
 }
