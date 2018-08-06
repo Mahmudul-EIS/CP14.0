@@ -155,7 +155,10 @@ class Customer extends Controller
         ]);
     }
 
-    public function riderRequest(Request $request){
+    /**
+     * Search - function for searching drivers
+     */
+    public function search(Request $request){
         if(Auth::user()){
             $id = Auth::id();
             $ride_request = new Ride_request();
