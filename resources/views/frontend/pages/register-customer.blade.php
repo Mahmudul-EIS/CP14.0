@@ -97,6 +97,11 @@
                         </div>
                     </div>
                     <input type="hidden" name="role" value="customer">
+                    @if(isset($data))
+                        @foreach($data as $k => $v)
+                            <input type="hidden" name="{{ $k }}" value="{{ $v }}">
+                            @endforeach
+                        @endif
                 </form>
             </div>
         </div>

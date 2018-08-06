@@ -9,6 +9,7 @@ use App\User_data;
 use App\DriverData;
 use App\RideRequestTemp;
 use Illuminate\Support\Facades\Session;
+use DateTime;
 
 class Authenticate extends Controller
 {
@@ -98,8 +99,8 @@ class Authenticate extends Controller
 
     public function registerCustomer(Request $request){
         $errors = array();
-//        $input = $request->all();
-//        dd($input);
+//        $inp = $request->all();
+//        dd($inp);
         if($request->isMethod('post')){
             if($request->password !== $request->repass){
                 $errors[] = 'Passwords didn\'t match !!';
@@ -156,7 +157,8 @@ class Authenticate extends Controller
                     $rrt->user_id = $last_id->id;
                     $rrt->place_from = $request->from;
                     $rrt->place_to = $request->to;
-                    $rrt->departure_date = $request->departure_date;
+                    $rrt_date = date('Y-m-d H:i', strtotime($request->departure_date));
+                    $rrt->departure_date = $rrt_date;
                     $rrt->seat_required = 1;
                     $rrt->status = 'processing';
                     $rrt->save();
@@ -171,7 +173,9 @@ class Authenticate extends Controller
                     ->withInput();
             }
         }
-        return view('frontend.pages.register-customer');
+        return view('frontend.pages.register-customer',[
+            'data' => $request->all()
+        ]);
     }
 
     public function loginDriver(Request $request){

@@ -8,15 +8,13 @@ use Illuminate\Support\Facades\Validator;
 class RideRequestTemp extends Model
 {
     protected $fillable = [
-        'user_id', 'from', 'to', 'departure_date','seat_required',
+        'from', 'to', 'departure_date',
     ];
 
     protected $rules = array(
-        'user_id'  => 'required',
         'from'  => 'required',
         'to' => 'required',
         'departure_date' => 'required',
-        'seat_required'=>'required'
     );
     protected $errors;
 
