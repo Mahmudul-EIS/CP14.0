@@ -3,6 +3,7 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Validator;
 
 class RideRequestTemp extends Model
 {
@@ -18,6 +19,7 @@ class RideRequestTemp extends Model
         'seat_required'=>'required'
     );
     protected $errors;
+
     protected $table = 'ride_request_temp';
 
     public function validate($data)

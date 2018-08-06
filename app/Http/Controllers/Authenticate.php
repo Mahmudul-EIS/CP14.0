@@ -98,6 +98,8 @@ class Authenticate extends Controller
 
     public function registerCustomer(Request $request){
         $errors = array();
+//        $input = $request->all();
+//        dd($input);
         if($request->isMethod('post')){
             if($request->password !== $request->repass){
                 $errors[] = 'Passwords didn\'t match !!';
@@ -110,6 +112,7 @@ class Authenticate extends Controller
             }
             $user = new User();
             $usd = new User_data();
+            $rrt = new RideRequestTemp();
             $data = $request->all();
             if(!$user->validate($data)){
                 $user_e = $user->errors();
@@ -122,6 +125,14 @@ class Authenticate extends Controller
             if(!$usd->validate($data)){
                 $usd_e = $usd->errors();
                 foreach ($usd_e->messages() as $k => $v){
+                    foreach ($v as $e){
+                        $errors[] = $e;
+                    }
+                }
+            }
+            if(!$rrt->validate($data)){
+                $rrt_e = $rrt->errors();
+                foreach ($rrt_e->messages() as $k => $v){
                     foreach ($v as $e){
                         $errors[] = $e;
                     }
@@ -141,8 +152,7 @@ class Authenticate extends Controller
                 $usd->address = $request->address;
                 $usd->id_card = $request->id_card;
                 $usd->save();
-                if($request->query('from') != ''){
-                    $rrt = new RideRequestTemp();
+                if($request->from != ''){
                     $rrt->user_id = $last_id->id;
                     $rrt->place_from = $request->from;
                     $rrt->place_to = $request->to;
