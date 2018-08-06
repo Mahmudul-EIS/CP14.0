@@ -65,8 +65,8 @@ Route::prefix('c')->group(function(){
     Route::post('/profile/edit/password/{id}', 'Customer@editPassword');
     Route::post('/profile/edit/image/{id}', 'Customer@imageUpload');
     Route::get('/ride-details/{link}', 'Customer@rideDetails');
-    Route::get('/request-ride', 'Customer@riderRequest');
-    Route::post('/request-ride', ['as' => 'request_ride', 'uses' => 'Customer@riderRequest']);
+    Route::get('/search', 'Customer@search');
+    Route::post('/search', 'Customer@search');
     Route::get('/bookings', 'Customer@bookings');
     Route::post('/book-ride', 'Customer@bookRide');
 });

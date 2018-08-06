@@ -125,7 +125,7 @@
 	        <h4 class="modal-title" id="myModalLabel">My Requests</h4>
 	      </div>
 	      <div class="modal-body">
-	        <form method="post"  action="{{ url('/c/request-ride') }}" role="form">
+	        <form method="post"  action="{{ url('/c/search') }}" role="form">
 	        	{{ csrf_field() }}
 
 				<div class="get-a-ride">
