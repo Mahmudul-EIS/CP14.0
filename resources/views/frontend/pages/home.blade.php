@@ -100,7 +100,7 @@
                 <h2 class="get-section-header">Where to?</h2>
                 <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor inc ididunt ut labore et dolore magna aliqua.</p>
                 <div class="get-a-ride">
-                    <form method="@if(Auth::user() && Auth::user()->role == 'customer'){{'post'}}@else{{'get'}}@endif" action="@if(Auth::user() && Auth::user()->role == 'customer'){{url('/c/request-ride')}}@else{{url('/sign-up/customer')}}@endif">
+                    <form method="@if(Auth::user() && Auth::user()->role == 'customer'){{'post'}}@else{{'get'}}@endif" action="@if(Auth::user() && Auth::user()->role == 'customer'){{url('/c/search')}}@else{{url('/sign-up/customer')}}@endif">
                         {{ csrf_field() }}
                         <div class="col-sm-3 col-xs-12 padding-left-o">
                             <input type="text" name="from" id="" class="get-select-picker placepicker form-control" placeholder="From" required>

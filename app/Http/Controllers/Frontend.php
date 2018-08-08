@@ -38,6 +38,8 @@ class Frontend extends Controller
                 }
             }
         }
+        $offers_today = RideOffers::where('departure_time', '>=', date('Y-m-d H:s'))
+            ->get();
         return view('frontend.pages.home', [
             'reqs' => $reqs,
             'slug' => 'home',

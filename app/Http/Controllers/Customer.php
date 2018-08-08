@@ -159,34 +159,28 @@ class Customer extends Controller
      * Search - function for searching drivers
      */
     public function search(Request $request){
-        if(Auth::user()){
-            $id = Auth::id();
+        if($request->isMethod('post')){
+            //dd($request->all());
             $ride_request = new Ride_request();
-            if(Auth::user()->role == 'customer'){
-                if($request->isMethod('post')){
-                    $ride_request->user_id = $id;
-                    $ride_request->from = $request->from;
-                    $ride_request->to = $request->to;
-                    $ride_request->departure_date = $request->departure_date;
-                    if(isset($request->seat_required)){
-                        $ride_request->seat_required = $request->seat_required;
-                    }else{
-                        $ride_request->seat_required = 1;
-                    }
-                    if($ride_request->save()){
-                        return redirect($request->url())
-                            ->with('success', 'The ride request was created successfully!');
-                    }else{
-                        return redirect($request->url())
-                            ->with('error', 'The ride request couldn\'t created!');
-                    }
-                }
+            $ride_request->user_id = Auth::id();
+            $ride_request->from = $request->from;
+            $ride_request->to = $request->to;
+            $ride_request->departure_date = date('Y-m-d H:i:s', strtotime($request->departure_date));
+            if(isset($request->seat_required)){
+                $ride_request->seat_required = $request->seat_required;
+            }else{
+                $ride_request->seat_required = 1;
             }
-        }else{
-            return redirect('/sign-up/customer');
+            if($ride_request->save()){
+                return redirect($request->url())
+                    ->with('success', 'The ride request was created successfully!');
+            }else{
+                return redirect($request->url())
+                    ->with('error', 'The ride request couldn\'t created!');
+            }
         }
 
-        return view('frontend.pages.rider-index');
+        return view('frontend.pages.search');
     }
 
 }

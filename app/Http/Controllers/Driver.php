@@ -401,6 +401,93 @@ class Driver extends Controller
             ->get();
         $ro->bookings = $bookings;
 
+        if($request->isMethod('post')){
+            $ride_offer = new RideOffers();
+            if($request->req_id != ''){
+                $ride_offer->request_id = $request->req_id;
+            }else{
+                $ride_offer->request_id = 0;
+            }
+            $ride_offer->offer_by = Auth::id();
+            $ride_offer->origin = $request->origin;
+            $ride_offer->destination = $request->destination;
+            $ride_offer->price_per_seat = $request->price_per_seat;
+            $ride_offer->total_seats = $request->total_seats;
+            $d_f_date = $request->d_date .' '. $request->d_hour.':'.$request->d_minute;
+            $d_date = DateTime::createFromFormat('Y-m-d H:i \P\M', $d_f_date);
+            $ride_offer->departure_time = $d_date;
+            $a_f_date = $request->a_date .' '. $request->a_hour.':'.$request->a_minute;
+            $a_date = DateTime::createFromFormat('Y-m-d H:i \P\M', $a_f_date);
+            $ride_offer->arrival_time = $a_date;
+            $ride_offer->link = $this->generateRandomString();
+            $ride_offer->save();
+            $ride_offer_id = $ride_offer->id;
+            if($request->vd_action == 'add'){
+                $vehicles_data = new VehiclesData();
+                $vehicles_data->user_id = Auth::id();
+                $vehicles_data->car_type = $request->car_type;
+                $vehicles_data->car_plate_no = $request->car_plate_no;
+                $vehicles_data->luggage_limit = $request->luggage_limit;
+                $vehicles_data->save();
+                $ride_desc = new RideDescriptions();
+                $ride_desc->ride_offer_id = $ride_offer_id;
+                $ride_desc->key = 'vehicle_id';
+                $ride_desc->value = $vehicles_data->id;
+                $ride_desc->save();
+            }else{
+                $vd_data = VehiclesData::find($request->vd_id);
+                $vd_data->car_type = $request->car_type;
+                $vd_data->luggage_limit = $request->luggage_limit;
+                $vd_data->save();
+                $ride_desc = new RideDescriptions();
+                $ride_desc->ride_offer_id = $ride_offer_id;
+                $ride_desc->key = 'vehicle_id';
+                $ride_desc->value = $request->vd_id;
+                $ride_desc->save();
+            }
+            if($request->pets != ''){
+                $ride_desc = new RideDescriptions();
+                $ride_desc->ride_offer_id = $ride_offer_id;
+                $ride_desc->key = 'pets';
+                $ride_desc->value = $request->pets;
+                $ride_desc->save();
+            }
+            if($request->music != ''){
+                $ride_desc = new RideDescriptions();
+                $ride_desc->ride_offer_id = $ride_offer_id;
+                $ride_desc->key = 'music';
+                $ride_desc->value = $request->music;
+                $ride_desc->save();
+            }
+            if($request->smoking != ''){
+                $ride_desc = new RideDescriptions();
+                $ride_desc->ride_offer_id = $ride_offer_id;
+                $ride_desc->key = 'smoking';
+                $ride_desc->value = $request->smoking;
+                $ride_desc->save();
+            }
+            if($request->back_seat != ''){
+                $ride_desc = new RideDescriptions();
+                $ride_desc->ride_offer_id = $ride_offer_id;
+                $ride_desc->key = 'back_seat';
+                $ride_desc->value = $request->back_seat;
+                $ride_desc->save();
+            }
+
+            if($request->req_id != ''){
+                $ride_book = new RideBookings();
+                $ride_book->user_id = $request->req_user_id;
+                $ride_book->ride_id = $ride_offer_id;
+                $ride_book->seat_booked = $request->seat_booked;
+                $ride_book->status = 'booked';
+                $ride_book->save();
+            }
+
+            return redirect()
+                ->to('d/offer-ride')
+                ->with('success', 'Ride Created Successfully !!');
+        }
+
         return view('frontend.pages.edit-ride',[
             'data' => $ro,
             'js' => 'frontend.pages.js.edit-ride-js'
