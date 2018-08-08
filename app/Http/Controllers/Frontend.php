@@ -93,9 +93,7 @@ class Frontend extends Controller
                 ->back();
         }
     }
-    public function guestRideRequest(Request $request){
-        if($request->isMethod('post')){
-            return redirect('/sign-up/customer/?from='.$request->from.'&to='.$request->to.'&date='.$request->departure_date);
-        }
+    public function search(){
+
     }
 }

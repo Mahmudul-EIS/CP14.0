@@ -185,7 +185,6 @@ class Customer extends Controller
         }else{
             return redirect('/sign-up/customer');
         }
-
         return view('frontend.pages.rider-index');
     }
 

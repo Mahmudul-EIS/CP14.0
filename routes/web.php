@@ -14,6 +14,8 @@
 /**
  * Frontend area
 */
+
+
 Route::get('/', 'Frontend@home')->name('home');
 Route::get('/join', 'Authenticate@join');
 Route::get('/sign-up/success', 'Authenticate@success');
@@ -27,6 +29,7 @@ Route::post('/guest-requests', 'Frontend@guestRequests');
 Route::post('/request-ride', 'Frontend@riderRequest');
 Route::post('/request-ride', 'Frontend@riderRequest');
 Route::post('/guest-ride-requests', 'Frontend@guestRideRequest');
+Route::post('/search', 'Frontend@search');
 
 /* ------------------------------------------------------ */
 
