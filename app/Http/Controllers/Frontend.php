@@ -95,7 +95,33 @@ class Frontend extends Controller
                 ->back();
         }
     }
-    public function search(){
+    /**
+     * Search - Search functionality of the system
+     */
 
+    public function search(Request $request){
+        if($request->isMethod('post')){
+            $search_data = RideOffers::
+                where('departure_time', '>=', date('Y-m-d H:i:s',strtotime($request->when)))
+                ->where('origin', '=', $request->from)
+                ->where('destination' , '=' , $request->to)
+                ->where('total_seats' , '<=' , $request->seats)
+                ->get();
+            if(!empty($search_data)){
+                
+            }
+            return redirect()
+                ->to('/search-result')
+                ->with('data',$search_data);
+        }
+        return view('frontend.pages.search',[
+            'js' => 'frontend.pages.js.home-js'
+        ]);
+    }
+    /**
+     * Search Result - Search Result page functionality of the system
+     */
+    public function searchResult(){
+        return view('frontend.pages.search-result');
     }
 }
