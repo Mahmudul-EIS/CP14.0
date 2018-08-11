@@ -132,4 +132,24 @@ class Frontend extends Controller
             'js' => 'frontend.pages.js.home-js'
         ]);
     }
+    /**
+     * About Us page - About Us page of the system
+     */
+    public function aboutUs(){
+        return view('frontend.pages.about-us');
+    }
+
+    /**
+     * Terms page - terms page of the system
+     */
+    public function terms(){
+        return view('frontend.pages.terms');
+    }
+
+    /**
+     * Contact us page - Contact us page of the system
+     */
+    public function ContactUs(){
+        return view('frontend.pages.contact-us');
+    }
 }

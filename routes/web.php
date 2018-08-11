@@ -31,6 +31,9 @@ Route::post('/request-ride', 'Frontend@riderRequest');
 Route::post('/guest-ride-requests', 'Frontend@guestRideRequest');
 Route::get('/search', 'Frontend@search');
 Route::post('/search', 'Frontend@search');
+Route::get('/about-us', 'Frontend@aboutUs');
+Route::get('/terms', 'Frontend@terms');
+Route::get('/contact-us', 'Frontend@contactUs');
 
 /* ------------------------------------------------------ */
 
