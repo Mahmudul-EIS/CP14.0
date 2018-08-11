@@ -1,32 +1,47 @@
 @extends('frontend.layout')
 @section('content')
+    <?php $total_books = 0 ?>
+    @foreach($data->bookings as $books)
+        <?php $total_books += $books->seat_booked; ?>
+    @endforeach
     <div class="get-offer-ride">
         <div class="container">
             <div class="row">
                 <h3 class="get-popular-list list-option-ride">Ride Details</h3>
-                <div class="clearfix">
-                    @if(session()->has('error'))
-                        <p class="alert alert-danger">
-                            {{ session()->get('error') }}
-                        </p>
-                    @endif
-                        @if(session()->has('success'))
-                            <p class="alert alert-success">
-                                {{ session()->get('success') }}
+                <div class="col-sm-12 clearfix">
+                    @include('frontend.includes.messages')
+                    @if(isset($errors))
+                        @foreach($errors as $error)
+                            <p class="alert alert-danger">
+                                {{ $error }}
                             </p>
-                        @endif
+                        @endforeach
+                    @endif
                 </div>
 
+                @if(Auth::check() && Auth::user()->role == 'driver')
+                    @if(empty($ride_start))
+                    @if(date('Y-m-d H:i', strtotime($data->departure_time)) <= date('Y-m-d H:i', strtotime('+1 Hour')))
                 <div class="get-form-control-button">
-                    <button type="button" class="btn btn-info btn-offer" data-toggle="modal" data-target="#startRide">Ride Start</button>
+                    <button type="button" class="btn btn-info btn-offer" data-toggle="modal" data-target="#startRidePop">Start the Ride</button>
                 </div>
+                        @endif
+                        @else
+                        @if(!isset($ride_start->end_time))
+                        <div class="get-form-control-button">
+                            <p class="alert alert-success">Your ride was started. Please click to end the ride.</p>
+                            <button type="button" class="btn btn-info btn-offer" data-toggle="modal" data-target="#endRidePop">End the Ride</button>
+                        </div>
+                            @endif
+                        @endif
+                @endif
                 <div class="col-sm-12 get-join-as">
                     <div class="col-sm-5">
                         <div class="form-ride-details">
                             <h3>Form</h3>
                             <h2 id="start">{{ $data->origin }}</h2>
                             <p></p>
-                            <p class="get-departure-time">Departure Time: <span class="get-time">{{ date('h:i A', strtotime($data->departure_time)) }}</span></p>
+                            <p class="get-departure-time">Departure Time: <span class="get-time">{{ date('Y-m-d H:i A', strtotime($data->departure_time)) }}</span></p>
                         </div>
                     </div>
                     <div class="col-sm-2">
@@ -39,7 +54,7 @@
                             <h3>To</h3>
                             <h2 id="end">{{ $data->destination }}</h2>
                             <p></p>
-                            <p class="get-departure-time">Arraival Time: <span class="get-time">{{ date('h:i A',strtotime($data->arrival_time)) }}</span></p>
+                            <p class="get-departure-time">Arraival Time: <span class="get-time">{{ date('Y-m-d H:i A', strtotime($data->arrival_time)) }}</span></p>
                         </div>
                     </div>
                 </div>
@@ -66,7 +81,7 @@
                                     @for($j = 1; $j <= $book->seat_booked; $j++)
                                         <li>
                                             <div class="ride-seat-icon first-ride">
-                                                <i class="fas fa-user fixed-hover" data-toggle="modal" data-target="#myModalnsx{{ $book->user_id }}"></i>
+                                                <i class="fas fa-user fixed-hover" data-toggle="modal" data-target="#myModalnsx{{ $book->id }}"></i>
                                                 <span>Booked</span>
                                             </div>
                                         </li>
@@ -76,7 +91,7 @@
                                     @for($k = 1; $k <= $book->seat_booked; $k++)
                                         <li>
                                             <div class="ride-seat-icon first-ride">
-                                                <i class="fas fa-user fixed-hover" data-toggle="modal" data-target="#myModalnsx{{ $book->user_id }}"></i>
+                                                <i class="fas fa-user fixed-hover" data-toggle="modal" data-target="#myModalnsx{{ $book->id }}"></i>
                                                 <span>Confirmed</span>
                                             </div>
                                         </li>
@@ -100,13 +115,15 @@
                     <span class="text-right">*Click To Select Your Seat</span>
                     @endif
                     <div class="col-sm-4 padding-left-o">
-                        <h3 class="price-per-seats get-total-fare">Total Fare: <span>${{ $data->price_per_seat*$data->total_seats }}</span></h3>
+                        <h3 class="price-per-seats get-total-fare">Total Fare: <span>${{ $data->price_per_seat*$total_books }}</span></h3>
                     </div>
                     @if(Auth::check())
                         @if(Auth::user()->role == 'customer')
-                            <div class="col-sm-5 col-sm-offset-3 col-xs-12">
-                                <a href="{{ url('/c/bookings') }}"><button type="submit" class="btn btn-info btn-offer">Request To Book</button></a>
-                            </div>
+                            @if($total_books != $data->total_seats)
+                                <div class="col-sm-5 col-sm-offset-3 col-xs-12">
+                                    <button class="btn btn-info btn-offer" data-toggle="modal" data-target="#book-ride">Request To Book</button>
+                                </div>
+                                @endif
                         @endif
                     @else
                         <div class="col-sm-5 col-sm-offset-3 col-xs-12">
@@ -175,109 +192,13 @@
                     @if(Auth::check() && Auth::user()->role != 'driver')
                     <button class="btn btn-info btn-offer ride-final-ride-button" type="button" data-toggle="modal" data-target="#myModalx">Ridemate Details</button>
                         @endif
-                    @if(Auth::check() && Auth::user()->role == 'driver')
+                    @if(Auth::check() && Auth::user()->role == 'driver' && !isset($ride_start->start_time))
                         <button class="btn btn-info btn-offer ride-final-ride-button" type="button"><a style="color: #ffffff" href="{{ url('/d/edit-ride/'.$data->link) }}">Edit Ride Details</a></button>
                     @endif
                 </div>
-                
             </div>
         </div>
     </div>
     <!-- end offer a ride -->
     @endsection
 
-
-<!--Riders details -->
-<div class="modal fade" id="myModalx" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                <h4 class="modal-title" id="myModalLabel">Riders Details</h4>
-            </div>
-            <div class="modal-body rider-details-ridemate">
-                <h3 class="rider-title">Rider</h3>
-                <div class="ridemate-name-area">
-                    <div class="ridemate-name">
-                        Name <span class="ridemate-right">:</span>
-                    </div>
-                    <div class="ridemate-name-xs">
-                        <span>{{ $data->user->name }}</span>
-                    </div>
-                </div>
-                <div class="ridemate-name-area">
-                    <div class="ridemate-name">
-                        Email <span class="ridemate-right">:</span>
-                    </div>
-                    <div class="ridemate-name-xs">
-                        <span>{{ $data->user->email }}</span>
-                    </div>
-                </div>
-
-                <div class="ridemate-name-area">
-                    <div class="ridemate-name">
-                        Gender <span class="ridemate-right">:</span>
-                    </div>
-                    <div class="ridemate-name-xs">
-                        <span>{{ $data->user->gender }}</span>
-                    </div>
-                </div>
-                <div class="ridemate-name-area">
-                    <div class="ridemate-name">
-                        Occupied Seat <span class="ridemate-right">:</span>
-                    </div>
-                    <div class="ridemate-name-xs">
-                        <span></span>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-
-
-<!-- request to book -->
-<div class="modal fade" id="myModal2" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                <h4 class="modal-title" id="myModalLabel">Require Log In</h4>
-            </div>
-            <div class="modal-body table-responsive">
-                <p>Please log in first!!!</p>
-            </div>
-            <form method="post" action="{{ url('/guest-requests') }}">
-                {{csrf_field()}}
-                <div class="modal-footer login-modal-footer">
-                    <button type="submit" class="btn btn-info btn-offer ">Login</button>
-                    <button class="btn btn-info btn-offer" data-dismiss="modal" aria-label="Close">Cancel</button>
-                    <input type="hidden" name="ride_offer_id" value="{{$data->id}}">
-                    <input type="hidden" name="token" value="{{ csrf_token() }}">
-                </div>
-            </form>
-        </div>
-    </div>
-</div>
-
-<!-- request to book -->
-<div class="modal fade" id="startRide" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                <h4 class="modal-title" id="myModalLabel">Require Log In</h4>
-            </div>
-            <div class="modal-body table-responsive">
-                <p>Please log in first!!!</p>
-            </div>
-            <div class="modal-footer login-modal-footer">
-                 <form method="post" action="{{ route('ride_details', $data->id) }}">
-                     {{ csrf_field() }}
-                <button type="submit" class="btn btn-success btn-offer" name="start_ride">Yes</button>
-                <button class="btn btn-danger btn-offer" data-dismiss="modal" aria-label="Close">Cancel</button>
-                </form>
-            </div>
-        </div>
-    </div>
-</div>

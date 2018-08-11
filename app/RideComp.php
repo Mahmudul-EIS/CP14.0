@@ -3,6 +3,7 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Validator;
 
 class RideComp extends Model
 {
@@ -12,9 +13,7 @@ class RideComp extends Model
 
     protected $rules = array(
         'ride_id'  => 'required',
-        'start_time'  => 'required',
-        'end_time' => 'required',
-        'total_fair' => 'required'
+        'start_time'  => 'required'
     );
     protected $errors;
 

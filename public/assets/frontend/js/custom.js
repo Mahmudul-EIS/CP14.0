@@ -7,15 +7,15 @@
   /*--==================
   Radio button callback
   ======================--*/
-  $('.check-input').on('click', function() {
-     $('.green-color').addClass('add-green-color');
-     $('.red-color').removeClass('add-radio-color');
-  });
-
-   $('.check-input-2').on('click', function() {
-     $('.red-color').addClass('add-radio-color');
-      $('.green-color').removeClass('add-green-color');
-  });
+  //$('.check-input').on('click', function() {
+  //   $('.green-color').addClass('add-green-color');
+  //   $('.red-color').removeClass('add-radio-color');
+  //});
+  //
+  // $('.check-input-2').on('click', function() {
+  //   $('.red-color').addClass('add-radio-color');
+  //    $('.green-color').removeClass('add-green-color');
+  //});
 
 	/*--========================
 	slidebar call js
@@ -105,13 +105,14 @@ Datepicker init
 =========================================*/
 
   $('.datepicker-f').datetimepicker({
-    format: "DD/MM/YYYY",
+    format: "YYYY-MM-DD",
     icons: {
       up: 'fa fa-angle-up',
       down: 'fa fa-angle-down',
       previous: 'fa fa-angle-left',
       next: 'fa fa-angle-right',
-    }
+    },
+      minDate: moment()
   });
 
 /*=======================================
@@ -129,7 +130,7 @@ Timepicker init
   });
   
   $('.timepicker-mm').datetimepicker({
-    format: "mm A",
+    format: "mm",
     icons: {
       up: 'fa fa-angle-up',
       down: 'fa fa-angle-down',
@@ -139,12 +140,14 @@ Timepicker init
   });
 
 $('#datetimepicker4').datetimepicker({
+    format: "YYYY-MM-DD HH:mm",
     icons:{
       time:'fas fa-clock',
     }
   });
   
   $('#datetimepicker5').datetimepicker({
+      format: "YYYY-MM-DD HH:mm",
     icons:{
       time:'fas fa-clock',
     }
@@ -152,6 +155,7 @@ $('#datetimepicker4').datetimepicker({
   });
 
    $('#datetimepicker6').datetimepicker({
+       format: "YYYY-MM-DD HH:mm",
     icons:{
       time:'fas fa-clock',
     }

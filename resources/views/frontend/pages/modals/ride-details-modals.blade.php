@@ -88,11 +88,11 @@
     </div>
 </div>
 
-@if(Auth::check() && Auth::user()->role == 'driver')
+
 @if(isset($data->bookings))
     @foreach($data->bookings as $b)
 <!--Add Riders in Seats details -->
-<div class="modal fade" id="myModalnsx{{ $b->user_id }}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+<div class="modal fade" id="myModalnsx{{ $b->id }}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
@@ -125,6 +125,26 @@
                         <span>{{ $b->ud->gender }}</span>
                     </div>
                 </div>
+                @if(Auth::id() == $b->user_id)
+                    <div class="ridemate-name-area">
+                        <div class="ridemate-popup">
+                            Ride Add/Cancel Information<span class="ridemate-right">:</span>
+                        </div>
+                    </div>
+                    <div class="ridemate-name-area">
+                        <form method="post" action="{{ url('/c/cancel-book') }}" id="cancel-book">
+                            {{ csrf_field() }}
+                            <input type="hidden" name="ride_url" value="{{ url()->current() }}">
+                            <input type="hidden" name="book_id" value="{{ $b->id }}">
+                            <input type="hidden" name="status" value="canceled">
+                        </form>
+                        <div class="ridemate-popup">
+                            <button type="submit" form="cancel-book" class="btn btn-info btn-offer ride-popup-ride-button">Cancel Booking</button>
+                            <button class="btn btn-info btn-offer ride-popup-ride-button"  data-dismiss="modal">Close</button>
+                        </div>
+                    </div>
+                @endif
+                @if(Auth::check() && Auth::user()->role == 'driver')
                 <div class="ridemate-name-area">
                     <div class="ridemate-popup">
                         Rider Add/Cancel Information<span class="ridemate-right">:</span>
@@ -152,10 +172,111 @@
                         <button class="btn btn-info btn-offer ride-popup-ride-button"  data-dismiss="modal">Cancel Booking</button>
                     </div>
                 </div>
+                @endif
             </div>
         </div>
     </div>
 </div>
         @endforeach
     @endif
-    @endif
+
+                <!-- request to book -->
+<div class="modal fade" id="startRidePop" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="myModalLabel">Start the Ride</h4>
+            </div>
+            <div class="modal-body table-responsive">
+                <p>Do you want to start the ride?</p>
+            </div>
+            <div class="modal-footer login-modal-footer">
+                <form method="post" action="{{ url('/d/start-ride') }}">
+                    {{ csrf_field() }}
+                    <input type="hidden" name="ride_id" value="{{ $data->id }}">
+                    <input type="hidden" name="start_time" value="{{ date('Y-m-d H:i:s') }}">
+                    <input type="hidden" name="ride_url" value="{{ url()->current() }}">
+                    <button type="submit" class="btn btn-success btn-offer">Yes</button>
+                    <button type="button" class="btn btn-danger btn-offer" data-dismiss="modal" aria-label="Close">Cancel</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+        @if(!empty($ride_start))
+            <div class="modal fade" id="endRidePop" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                            <h4 class="modal-title" id="myModalLabel">End the Ride</h4>
+                        </div>
+                        <div class="modal-body table-responsive">
+                            <p>Do you want to end the ride?</p>
+                        </div>
+                        <div class="modal-footer login-modal-footer">
+                            <form method="post" action="{{ url('/d/end-ride') }}">
+                                {{ csrf_field() }}
+                                <input type="hidden" name="ride_id" value="{{ $ride_start->id }}">
+                                <input type="hidden" name="end_time" value="{{ date('Y-m-d H:i:s') }}">
+                                <input type="hidden" name="ride_url" value="{{ url()->current() }}">
+                                <button type="submit" class="btn btn-success btn-offer">Yes</button>
+                                <button type="button" class="btn btn-danger btn-offer" data-dismiss="modal" aria-label="Close">Cancel</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            @endif
+
+@if(Auth::check() && Auth::user()->role == 'customer')
+            <!--Add Riders in Seats details -->
+            <div class="modal fade" id="book-ride" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                            <h4 class="modal-title" id="myModalLabel">Ride Information</h4>
+                        </div>
+                        <div class="modal-body rider-details-ridemate">
+                            <form method="post" action="{{ url('/c/book-ride') }}">
+                                {{ csrf_field() }}
+                            <div class="ridemate-name-area">
+                                <div class="ridemate-name">
+                                    Available Seats <span class="ridemate-right">:</span>
+                                </div>
+                                <div class="ridemate-name-xs">
+                                    <span>{{ $data->total_seats - $total_books }}</span>
+                                </div>
+                            </div>
+                            <div class="ridemate-name-area">
+                                <div class="ridemate-name">
+                                    Required seats <span class="ridemate-right">:</span>
+                                </div>
+                                <div class="ridemate-name-xs">
+                                    <span class="col-xs-4"><input type="number" class="form-control" name="seat_booked" min="1" max="{{ $data->total_seats - $total_books }}" value="1" required=""></span>
+                                </div>
+                            </div>
+
+                            <div class="ridemate-name-area">
+                                <div class="ridemate-popup">
+                                    Ride Book/Cancel Information<span class="ridemate-right">:</span>
+                                </div>
+                            </div>
+                            <div class="ridemate-name-area">
+                                <div class="ridemate-popup">
+                                    <input type="hidden" name="ride_id" value="{{ $data->id }}">
+                                    <input type="hidden" name="status" value="booked">
+                                    <input type="hidden" name="ride_url" value="{{ url()->current() }}">
+                                    <button type="submit" class="btn btn-info btn-offer ride-popup-ride-button">Confirm Booking</button>
+                                    <button type="button" class="btn btn-info btn-offer ride-popup-ride-button"  data-dismiss="modal">Cancel Booking</button>
+                                </div>
+                            </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+@endif

@@ -3,11 +3,13 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Validator;
 
 class RideBookings extends Model
 {
     protected $rules = array(
-        'status'  => 'required',
+        'seat_booked' => 'required',
+        'status'  => 'required'
     );
 
     protected $errors;

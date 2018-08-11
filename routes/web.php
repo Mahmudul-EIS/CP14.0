@@ -27,7 +27,6 @@ Route::get('/popular', 'Frontend@popular');
 Route::get('/ride-details/{link}', 'Frontend@rideDetails');
 Route::post('/guest-requests', 'Frontend@guestRequests');
 Route::post('/request-ride', 'Frontend@riderRequest');
-Route::post('/request-ride', 'Frontend@riderRequest');
 Route::post('/guest-ride-requests', 'Frontend@guestRideRequest');
 Route::post('/search', 'Frontend@search');
 
@@ -72,6 +71,8 @@ Route::prefix('c')->group(function(){
     Route::post('/search', 'Customer@search');
     Route::get('/bookings', 'Customer@bookings');
     Route::post('/book-ride', 'Customer@bookRide');
+    Route::post('/cancel-book', 'Customer@cancelBooking');
+    Route::post('/ride-request', 'Customer@rideRequest');
 });
 
 /**
@@ -92,6 +93,8 @@ Route::prefix('d')->group(function(){
     Route::post('/edit-ride/{id}', 'Driver@editRide');
     Route::post('/confirm-bookings', 'Driver@confirmBookings');
     Route::post('/cancel-bookings', 'Driver@cancelBookings');
+    Route::post('/start-ride', 'Driver@startRide');
+    Route::post('/end-ride', 'Driver@endRide');
 });
 
 /**

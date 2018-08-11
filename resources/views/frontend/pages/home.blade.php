@@ -59,7 +59,7 @@
                                         <span class="ride-label">Date <span class="right-into">:</span></span>
                                     </div>
                                     <div class="col-sm-6">
-                                        <span class="ride-label-badge">{{ $req->departure_date }}</span>
+                                        <span class="ride-label-badge">{{ date('Y-m-d H:i A', strtotime($req->departure_date)) }}</span>
                                     </div>
                                 </div>
                                 <button class="btn btn-info btn-offer offer-ride-ridemate-home"><a style="color: purple;" href="{{ url('/d/offer-ride?req='.$req->id) }}">Offer Ride</a></button>
@@ -99,24 +99,43 @@
             <div class="row">
                 <h2 class="get-section-header">Where to?</h2>
                 <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor inc ididunt ut labore et dolore magna aliqua.</p>
+                <div class="col-sm-12 clearfix">
+                    @include('frontend.includes.messages')
+                    @if(isset($errors))
+                        @foreach($errors as $error)
+                            <p class="alert alert-danger">
+                                {{ $error }}
+                            </p>
+                        @endforeach
+                    @endif
+                </div>
                 <div class="get-a-ride">
-                    <form method="@if(Auth::user() && Auth::user()->role == 'customer'){{'post'}}@else{{'get'}}@endif" action="@if(Auth::user() && Auth::user()->role == 'customer'){{url('/c/search')}}@else{{url('/sign-up/customer')}}@endif">
+                    <form method="@if(Auth::user() && Auth::user()->role == 'customer'){{'post'}}@else{{'get'}}@endif" action="@if(Auth::user() && Auth::user()->role == 'customer'){{url('/c/ride-request')}}@else{{url('/sign-up/customer')}}@endif">
                         {{ csrf_field() }}
                         <div class="col-sm-3 col-xs-12 padding-left-o">
-                            <input type="text" name="from" id="" class="get-select-picker placepicker form-control" placeholder="From" required>
+                            <input type="text" name="from" id="" class="get-select-picker placepicker form-control" placeholder="From" required value="{{ old('from') }}">
                         </div>
                         <div class="col-sm-3 col-xs-12 padding-left-o">
-                            <input type="text" name="to" id="" class="get-select-picker placepicker form-control" placeholder="To" required>
+                            <input type="text" name="to" id="" class="get-select-picker placepicker form-control" placeholder="To" required value="{{ old('to') }}">
                         </div>
-                        <div class="col-sm-3 col-xs-12 padding-left-o">
-                            <input type="text" name="departure_date" placeholder="When" class="form-control" id="datetimepicker4" required>
+                        <div class="col-sm-2 col-xs-12 padding-left-o">
+                            <input type="text" name="departure_date" placeholder="When" class="form-control" id="datetimepicker4" required value="{{ old('departure_date') }}">
                         </div>
-                        <div class="col-sm-3 col-xs-12 padding-left-o">
+                        <div class="col-sm-2 col-xs-12 padding-left-o">
+                            <select name="seat_required" id="" class="get-select-picker" title="Seats" required>
+                                <option value="1" @if(old('seat_required') == 1) selected @endif>1 Seat</option>
+                                <option value="2" @if(old('seat_required') == 2) selected @endif>2 Seats</option>
+                                <option value="3" @if(old('seat_required') == 3) selected @endif>3 Seats</option>
+                                <option value="4" @if(old('seat_required') == 4) selected @endif>4 Seats</option>
+                                <option value="5" @if(old('seat_required') == 5) selected @endif>5 Seats</option>
+                            </select>
+                        </div>
+                        <input type="hidden" name="req_url" value="{{ url()->current() }}">
+                        <div class="col-sm-2 col-xs-12 padding-left-o">
                             <button type="submit" class="btn btn-info btn-offer"><span>Get a ride </span><i class="fas fa-car"></i></button>
                         </div>
                     </form>
                 </div>
-                @include('frontend.includes.messages')
             </div>
         </div>
     </div>

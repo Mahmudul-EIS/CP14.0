@@ -90,7 +90,7 @@ class Authenticate extends Controller
             }else{
                 return redirect()
                     ->to('/sign-up/driver')
-                    ->with('errors',$errors)
+                    ->with('errors', $errors)
                     ->withInput();
             }
         }

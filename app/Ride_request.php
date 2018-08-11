@@ -3,6 +3,7 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Validator;
 
 class Ride_request extends Model
 {
@@ -12,7 +13,6 @@ class Ride_request extends Model
     ];
 
     protected $rules = array(
-        'user_id'  => 'required',
         'from'  => 'required',
         'to' => 'required',
         'departure_date' => 'required',

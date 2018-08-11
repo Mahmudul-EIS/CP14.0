@@ -64,6 +64,11 @@ class Handler extends ExceptionHandler
                     return \Response::view('404', array(), 500);
                     break;
 
+                // method not allowed error
+                case '405':
+                    return \Response::view('404', ['error' => '405'], 405);
+                    break;
+
                 default:
                     return $this->renderHttpException($exception);
                     break;

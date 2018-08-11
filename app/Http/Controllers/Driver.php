@@ -148,98 +148,159 @@ class Driver extends Controller
         }
         if($req_id != 0){
             $req_details = Ride_request::find($req_id);
+            $time_check = RideOffers::where(['offer_by' => Auth::id()])
+                ->where('departure_time', '<=', $req_details->departure_date)
+                ->where('arrival_time', '>=', $req_details->departure_date)
+                ->first();
+            if(!empty($time_check)){
+                return redirect('/d/offer-ride')
+                    ->with('error', 'You already have existing ride during the requested time!');
+            }
+            $ex_offer = RideOffers::where(['request_id' => $req_id])->first();
+            if(!empty($ex_offer)){
+                return redirect('/d/offer-ride')
+                    ->with('error', 'Offer already created!!');
+            }
         }
-//        $ex_offer = RideOffers::where(['request_id' => $req_id])->first();
-//        if($ex_offer){
-//            return redirect('/')
-//                ->with('error', 'Offer already created!!');
-//        }
         $vd = VehiclesData::where(['user_id' => Auth::id()])->first();
         if($request->isMethod('post')){
             $ride_offer = new RideOffers();
+            $vehicles_data = new VehiclesData();
+            $errors = array();
+            $page_link = '';
+
+            $ro_valid['origin'] = $request->origin;
+            $ro_valid['destination'] = $request->destination;
+            $ro_valid['price_per_seat'] = $request->price_per_seat;
+            $ro_valid['total_seats'] = $request->total_seats;
+            $ro_valid['departure_time'] = date('Y-m-d H:i', strtotime($request->d_date .' '. $request->d_hour.':'.$request->d_minute));
+            $ro_valid['arrival_time'] = date('Y-m-d H:i', strtotime($request->a_date .' '. $request->a_hour.':'.$request->a_minute));
+
+            if($ro_valid['departure_time'] >= $ro_valid['arrival_time']){
+                $errors[] = 'Arrival time has to be greater than the departure time!';
+            }
+            if(!$ride_offer->validate($ro_valid)){
+                $ride_e = $ride_offer->errors();
+                foreach ($ride_e->messages() as $k => $v){
+                    foreach ($v as $e){
+                        $errors[] = $e;
+                    }
+                }
+            }
+
+            $vd_valid['user_id'] = Auth::id();
+            $vd_valid['car_plate_no'] = $request->car_plate_no;
+            if(!$vehicles_data->validate($vd_valid)){
+                $vd_e = $vehicles_data->errors();
+                foreach ($vd_e->messages() as $k => $v){
+                    foreach ($v as $e){
+                        $errors[] = $e;
+                    }
+                }
+            }
+
             if($request->req_id != ''){
                 $ride_offer->request_id = $request->req_id;
+                $page_link = '?req='.$request->req_id;
+                $time_check = RideOffers::where(['offer_by' => Auth::id()])
+                    ->whereDate('departure_time', '<=', $ro_valid['departure_time'])
+                    ->whereDate('arrival_time', '>=', $ro_valid['departure_time'])
+                    ->first();
+                if(!empty($time_check)){
+                    $errors[] = 'You already have existing ride during the requested time!';
+                }
+                $ex_offer = RideOffers::where(['request_id' => $request->req_id])->first();
+                if(!empty($ex_offer)){
+                    return redirect('/d/offer-ride')
+                        ->with('error', 'Offer already created!!');
+                }
             }else{
                 $ride_offer->request_id = 0;
             }
-            $ride_offer->offer_by = Auth::id();
-            $ride_offer->origin = $request->origin;
-            $ride_offer->destination = $request->destination;
-            $ride_offer->price_per_seat = $request->price_per_seat;
-            $ride_offer->total_seats = $request->total_seats;
-            $d_f_date = $request->d_date .' '. $request->d_hour.':'.$request->d_minute;
-            $d_date = DateTime::createFromFormat('Y-m-d H:i \P\M', $d_f_date);
-            $ride_offer->departure_time = $d_date;
-            $a_f_date = $request->a_date .' '. $request->a_hour.':'.$request->a_minute;
-            $a_date = DateTime::createFromFormat('Y-m-d H:i \P\M', $a_f_date);
-            $ride_offer->arrival_time = $a_date;
-            $ride_offer->link = $this->generateRandomString();
-            $ride_offer->save();
-            $ride_offer_id = $ride_offer->id;
-            if($request->vd_action == 'add'){
-                $vehicles_data = new VehiclesData();
-                $vehicles_data->user_id = Auth::id();
-                $vehicles_data->car_type = $request->car_type;
-                $vehicles_data->car_plate_no = $request->car_plate_no;
-                $vehicles_data->luggage_limit = $request->luggage_limit;
-                $vehicles_data->save();
-                $ride_desc = new RideDescriptions();
-                $ride_desc->ride_offer_id = $ride_offer_id;
-                $ride_desc->key = 'vehicle_id';
-                $ride_desc->value = $vehicles_data->id;
-                $ride_desc->save();
+
+            if(empty($errors)){
+                $ride_offer->offer_by = Auth::id();
+                $ride_offer->origin = $request->origin;
+                $ride_offer->destination = $request->destination;
+                $ride_offer->price_per_seat = $request->price_per_seat;
+                $ride_offer->total_seats = $request->total_seats;
+                $ride_offer->departure_time = $ro_valid['departure_time'];
+                $ride_offer->arrival_time = $ro_valid['arrival_time'];
+                $ride_offer->link = $this->generateRandomString();
+                $ride_offer->status = 'active';
+                $ride_offer->save();
+                $ride_offer_id = $ride_offer->id;
+                if($request->vd_action == 'add'){
+                    $vehicles_data->user_id = Auth::id();
+                    $vehicles_data->car_type = $request->car_type;
+                    $vehicles_data->car_plate_no = $request->car_plate_no;
+                    $vehicles_data->luggage_limit = $request->luggage_limit;
+                    $vehicles_data->save();
+                    $ride_desc = new RideDescriptions();
+                    $ride_desc->ride_offer_id = $ride_offer_id;
+                    $ride_desc->key = 'vehicle_id';
+                    $ride_desc->value = $vehicles_data->id;
+                    $ride_desc->save();
+                }else{
+                    $vd_data = VehiclesData::find($request->vd_id);
+                    $vd_data->car_type = $request->car_type;
+                    $vd_data->luggage_limit = $request->luggage_limit;
+                    $vd_data->save();
+                    $ride_desc = new RideDescriptions();
+                    $ride_desc->ride_offer_id = $ride_offer_id;
+                    $ride_desc->key = 'vehicle_id';
+                    $ride_desc->value = $request->vd_id;
+                    $ride_desc->save();
+                }
+                if($request->pets != ''){
+                    $ride_desc = new RideDescriptions();
+                    $ride_desc->ride_offer_id = $ride_offer_id;
+                    $ride_desc->key = 'pets';
+                    $ride_desc->value = $request->pets;
+                    $ride_desc->save();
+                }
+                if($request->music != ''){
+                    $ride_desc = new RideDescriptions();
+                    $ride_desc->ride_offer_id = $ride_offer_id;
+                    $ride_desc->key = 'music';
+                    $ride_desc->value = $request->music;
+                    $ride_desc->save();
+                }
+                if($request->smoking != ''){
+                    $ride_desc = new RideDescriptions();
+                    $ride_desc->ride_offer_id = $ride_offer_id;
+                    $ride_desc->key = 'smoking';
+                    $ride_desc->value = $request->smoking;
+                    $ride_desc->save();
+                }
+                if($request->back_seat != ''){
+                    $ride_desc = new RideDescriptions();
+                    $ride_desc->ride_offer_id = $ride_offer_id;
+                    $ride_desc->key = 'back_seat';
+                    $ride_desc->value = $request->back_seat;
+                    $ride_desc->save();
+                }
+
+                if($request->req_id != ''){
+                    $ride_book = new RideBookings();
+                    $ride_book->user_id = $request->req_user_id;
+                    $ride_book->ride_id = $ride_offer_id;
+                    $ride_book->seat_booked = $request->seat_booked;
+                    $ride_book->status = 'booked';
+                    $ride_book->save();
+                }
+
+                return redirect()
+                    ->to('d/offer-ride')
+                    ->with('success', 'Ride Created Successfully !!');
             }else{
-                $vd_data = VehiclesData::find($request->vd_id);
-                $vd_data->car_type = $request->car_type;
-                $vd_data->luggage_limit = $request->luggage_limit;
-                $vd_data->save();
-                $ride_desc = new RideDescriptions();
-                $ride_desc->ride_offer_id = $ride_offer_id;
-                $ride_desc->key = 'vehicle_id';
-                $ride_desc->value = $request->vd_id;
-                $ride_desc->save();
-            }
-            if($request->pets != ''){
-                $ride_desc = new RideDescriptions();
-                $ride_desc->ride_offer_id = $ride_offer_id;
-                $ride_desc->key = 'pets';
-                $ride_desc->value = $request->pets;
-                $ride_desc->save();
-            }
-            if($request->music != ''){
-                $ride_desc = new RideDescriptions();
-                $ride_desc->ride_offer_id = $ride_offer_id;
-                $ride_desc->key = 'music';
-                $ride_desc->value = $request->music;
-                $ride_desc->save();
-            }
-            if($request->smoking != ''){
-                $ride_desc = new RideDescriptions();
-                $ride_desc->ride_offer_id = $ride_offer_id;
-                $ride_desc->key = 'smoking';
-                $ride_desc->value = $request->smoking;
-                $ride_desc->save();
-            }
-            if($request->back_seat != ''){
-                $ride_desc = new RideDescriptions();
-                $ride_desc->ride_offer_id = $ride_offer_id;
-                $ride_desc->key = 'back_seat';
-                $ride_desc->value = $request->back_seat;
-                $ride_desc->save();
+                return redirect()
+                    ->to('/d/offer-ride'.$page_link)
+                    ->with('errors', $errors)
+                    ->withInput();
             }
 
-            if($request->req_id != ''){
-                $ride_book = new RideBookings();
-                $ride_book->user_id = $request->req_user_id;
-                $ride_book->ride_id = $ride_offer_id;
-                $ride_book->seat_booked = $request->seat_booked;
-                $ride_book->status = 'booked';
-                $ride_book->save();
-            }
 
-            return redirect()
-                ->to('d/offer-ride')
-                ->with('success', 'Ride Created Successfully !!');
         }
         return view('frontend.pages.offer-ride', [
             'data' => $req_details,
@@ -268,10 +329,16 @@ class Driver extends Controller
     */
     public function rideDetails(Request $request, $link){
         $ro = RideOffers::where('link', $link)->first();
-        $rideStart = new RideComp();
+        $rideStart = RideComp::where(['ride_id' => $ro->id])->first();
         $rd = RideDescriptions::where('ride_offer_id', $ro->id)->get();
         $ro->rd = $rd;
-        $vd = VehiclesData::where('user_id', Auth::id())->first();
+        $vehicle = '';
+        foreach($rd as $r){
+            if($r->key == 'vehicle_id'){
+                $vehicle = $r->value;
+            }
+        }
+        $vd = VehiclesData::find($vehicle);
         $ro->vd = $vd;
         $user = User::find(Auth::id());
         $ro->user = $user;
@@ -290,27 +357,13 @@ class Driver extends Controller
             $book->ud = $ud;
         }
         $ro->bookings = $bookings;
-        if($request->isMethod('post')){
-            if (Input::has('start_ride'))
-                {
-                    $rideStart->ride_id = $ro->id;
-                    $rideStart->start_time = Carbon::now();
-                    $rideStart->end_time = '0';
-                    $rideStart->total_fair = '200';
-                    $rideStart->save();
-                    return view('frontend.pages.ride-details',[
-                        'data' => $ro,
-                        'js' => 'frontend.pages.js.ride-details-js'
-                    ])->with('ride_id', $ro->id);
-                }
-            return view('frontend.pages.ride-details')->with('ride_id', $ro->id);
-        }
         
         return view('frontend.pages.ride-details',[
             'data' => $ro,
+            'ride_start' => $rideStart,
             'js' => 'frontend.pages.js.ride-details-js',
             'modals' => 'frontend.pages.modals.ride-details-modals'
-        ])->with('ride_id', $ro->id);
+        ]);
     }
 
     /**
@@ -363,6 +416,69 @@ class Driver extends Controller
         }
     }
 
+    /**
+     * rideComp - Function for tracking down the whole ride from start to end
+    */
+    public function startRide(Request $request){
+        if($request->isMethod('post')){
+            //dd($request->all());
+            $start = new RideComp();
+            $errors = array();
+            if(!$start->validate($request->all())){
+                $ride_e = $start->errors();
+                foreach ($ride_e->messages() as $k => $v){
+                    foreach ($v as $e){
+                        $errors[] = $e;
+                    }
+                }
+            }
+            if(empty($errors)){
+                $start->ride_id = $request->ride_id;
+                $start->start_time = $request->start_time;
+                if($start->save()){
+                    return redirect()
+                        ->to($request->ride_url)
+                        ->with('success', 'Your ride was started successfully!');
+                }else{
+                    return redirect()
+                        ->to($request->ride_url)
+                        ->with('error', 'Your ride couldn\'t started! Please try again!');
+                }
+            }else{
+                return redirect()
+                    ->to($request->ride_url)
+                    ->with('errors', $errors);
+            }
+        }
+    }
+
+    /**
+     * endRide - Function for ending a ride
+     */
+    public function endRide(Request $request){
+        if($request->isMethod('post')){
+            $end = RideComp::find($request->ride_id);
+            $end->end_time = $request->end_time;
+            $ride_det = RideOffers::find($end->ride_id);
+            $ride_book = RideBookings::where(['ride_id' => $end->ride_id])
+                ->where(['status' => 'confirmed'])
+                ->count();
+            $end->total_fair = $ride_book * $ride_det->price_per_seat;
+            if($end->save()){
+                $ride_det->status = 'completed';
+                $ride_det->save();
+                return redirect()
+                    ->to($request->ride_url)
+                    ->with('success', 'Your ride was ended successfully!');
+            }
+            else{
+                return redirect()
+                    ->to($request->ride_url)
+                    ->with('error', 'Your ride couln\'t ended! Please try again!');
+            }
+        }
+    }
+
 
     /**
      * generateRandomString - generates random string with alphanumeric characters
@@ -387,10 +503,15 @@ class Driver extends Controller
     */
     public function editRide(Request $request, $link){
         $ro = RideOffers::where(['link' => $link])->first();
-        $rideStart = new RideComp();
         $rd = RideDescriptions::where('ride_offer_id', $ro->id)->get();
         $ro->rd = $rd;
-        $vd = VehiclesData::where('user_id', Auth::id())->first();
+        $vehicle = '';
+        foreach($rd as $r){
+            if($r->key == 'vehicle_id'){
+                $vehicle = $r->value;
+            }
+        }
+        $vd = VehiclesData::find($vehicle);
         $ro->vd = $vd;
         $user = User::find(Auth::id());
         $ro->user = $user;
@@ -402,26 +523,29 @@ class Driver extends Controller
         $ro->bookings = $bookings;
 
         if($request->isMethod('post')){
-            $ride_offer = new RideOffers();
-            if($request->req_id != ''){
-                $ride_offer->request_id = $request->req_id;
-            }else{
-                $ride_offer->request_id = 0;
+            $ro_edit = RideOffers::find($request->ride_id);
+            $ro_edit->origin = $request->origin;
+            $ro_edit->destination = $request->destination;
+            $ro_edit->price_per_seat = $request->price_per_seat;
+            $ro_edit->total_seats = $request->total_seats;
+            $ro_edit->departure_time = date('Y-m-d H:i', strtotime($request->d_date .' '. $request->d_hour.':'.$request->d_minute));
+            $ro_edit->arrival_time = date('Y-m-d H:i', strtotime($request->a_date .' '. $request->a_hour.':'.$request->a_minute));
+            if($ro_edit->departure_time >= $ro_edit->arrival_time){
+                return redirect()
+                    ->to('/d/edit-ride/'.$ro_edit->link)
+                    ->with('error', 'Arrival time should be greater than the departure time!');
             }
-            $ride_offer->offer_by = Auth::id();
-            $ride_offer->origin = $request->origin;
-            $ride_offer->destination = $request->destination;
-            $ride_offer->price_per_seat = $request->price_per_seat;
-            $ride_offer->total_seats = $request->total_seats;
-            $d_f_date = $request->d_date .' '. $request->d_hour.':'.$request->d_minute;
-            $d_date = DateTime::createFromFormat('Y-m-d H:i \P\M', $d_f_date);
-            $ride_offer->departure_time = $d_date;
-            $a_f_date = $request->a_date .' '. $request->a_hour.':'.$request->a_minute;
-            $a_date = DateTime::createFromFormat('Y-m-d H:i \P\M', $a_f_date);
-            $ride_offer->arrival_time = $a_date;
-            $ride_offer->link = $this->generateRandomString();
-            $ride_offer->save();
-            $ride_offer_id = $ride_offer->id;
+            $ride_check = RideOffers::where(['offer_by' => Auth::id()])
+                ->where('departure_time', '>=', $ro_edit->departure_time)
+                ->where('departure_time', '<=', $ro_edit->arrival_time)
+                ->first();
+            if(!empty($ride_check)){
+                return redirect()
+                    ->to('/d/edit-ride/'.$ro_edit->link)
+                    ->with('error', 'You already have existing ride during the requested time!');
+            }
+            $ro_edit->save();
+            $ride_offer_id = $ro->id;
             if($request->vd_action == 'add'){
                 $vehicles_data = new VehiclesData();
                 $vehicles_data->user_id = Auth::id();
@@ -429,9 +553,9 @@ class Driver extends Controller
                 $vehicles_data->car_plate_no = $request->car_plate_no;
                 $vehicles_data->luggage_limit = $request->luggage_limit;
                 $vehicles_data->save();
-                $ride_desc = new RideDescriptions();
-                $ride_desc->ride_offer_id = $ride_offer_id;
-                $ride_desc->key = 'vehicle_id';
+                $ride_desc = RideDescriptions::where(['ride_offer_id' => $ride_offer_id])
+                    ->where(['key' => 'vehicle_id'])
+                    ->first();
                 $ride_desc->value = $vehicles_data->id;
                 $ride_desc->save();
             }else{
@@ -439,53 +563,39 @@ class Driver extends Controller
                 $vd_data->car_type = $request->car_type;
                 $vd_data->luggage_limit = $request->luggage_limit;
                 $vd_data->save();
-                $ride_desc = new RideDescriptions();
-                $ride_desc->ride_offer_id = $ride_offer_id;
-                $ride_desc->key = 'vehicle_id';
-                $ride_desc->value = $request->vd_id;
-                $ride_desc->save();
             }
             if($request->pets != ''){
-                $ride_desc = new RideDescriptions();
-                $ride_desc->ride_offer_id = $ride_offer_id;
-                $ride_desc->key = 'pets';
+                $ride_desc = RideDescriptions::where(['ride_offer_id' => $ride_offer_id])
+                    ->where(['key' => 'pets'])
+                    ->first();
                 $ride_desc->value = $request->pets;
                 $ride_desc->save();
             }
             if($request->music != ''){
-                $ride_desc = new RideDescriptions();
-                $ride_desc->ride_offer_id = $ride_offer_id;
-                $ride_desc->key = 'music';
+                $ride_desc = RideDescriptions::where(['ride_offer_id' => $ride_offer_id])
+                    ->where(['key' => 'music'])
+                    ->first();
                 $ride_desc->value = $request->music;
                 $ride_desc->save();
             }
             if($request->smoking != ''){
-                $ride_desc = new RideDescriptions();
-                $ride_desc->ride_offer_id = $ride_offer_id;
-                $ride_desc->key = 'smoking';
+                $ride_desc = RideDescriptions::where(['ride_offer_id' => $ride_offer_id])
+                    ->where(['key' => 'smoking'])
+                    ->first();
                 $ride_desc->value = $request->smoking;
                 $ride_desc->save();
             }
             if($request->back_seat != ''){
-                $ride_desc = new RideDescriptions();
-                $ride_desc->ride_offer_id = $ride_offer_id;
-                $ride_desc->key = 'back_seat';
+                $ride_desc = RideDescriptions::where(['ride_offer_id' => $ride_offer_id])
+                    ->where(['key' => 'back_seat'])
+                    ->first();
                 $ride_desc->value = $request->back_seat;
                 $ride_desc->save();
             }
 
-            if($request->req_id != ''){
-                $ride_book = new RideBookings();
-                $ride_book->user_id = $request->req_user_id;
-                $ride_book->ride_id = $ride_offer_id;
-                $ride_book->seat_booked = $request->seat_booked;
-                $ride_book->status = 'booked';
-                $ride_book->save();
-            }
-
             return redirect()
-                ->to('d/offer-ride')
-                ->with('success', 'Ride Created Successfully !!');
+                ->to('d/edit-ride/'.$ro->link)
+                ->with('success', 'Ride Updated Successfully !!');
         }
 
         return view('frontend.pages.edit-ride',[

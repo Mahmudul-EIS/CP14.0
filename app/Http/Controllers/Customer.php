@@ -125,13 +125,86 @@ class Customer extends Controller
         ]);
     }
 
+    /**
+     * bookRide - function to book a ride
+    */
+    public function bookRide(Request $request){
+        if($request->isMethod('post')){
+            $ride = RideOffers::find($request->ride_id);
+            $bookings = RideBookings::where(['ride_id' => $request->ride_id])
+                ->where(function($q){
+                    $q->where(['status' => 'booked'])
+                        ->orWhere(['status' => 'confirmed']);
+                })
+                ->get();
+            $book_count = $request->seat_booked;
+            foreach($bookings as $book){
+                $book_count += $book->seat_booked;
+            }
+            if($book_count > $ride->total_seats){
+                return redirect()
+                    ->to($request->ride_url)
+                    ->with('error', 'This ride has reached the maximum bookings!');
+            }
+            $errors = array();
+            $ride_book = new RideBookings();
+            if(!$ride_book->validate($request->all())){
+                $rb_e = $ride_book->errors();
+                foreach ($rb_e->messages() as $k => $v){
+                    foreach ($v as $e){
+                        $errors[] = $e;
+                    }
+                }
+            }
+            if(empty($errors)){
+                $ride_book->user_id = Auth::id();
+                $ride_book->ride_id = $request->ride_id;
+                $ride_book->seat_booked = $request->seat_booked;
+                $ride_book->status = $request->status;
+                if($ride_book->save()){
+                    return redirect()
+                        ->to($request->ride_url)
+                        ->with('success', 'The ride booking was added!');
+                }else{
+                    return redirect()
+                        ->to($request->ride_url)
+                        ->with('errors', 'The ride booking couldn\'t added! Please try again!');
+                }
+            }else{
+                return redirect()
+                    ->to($request->ride_url)
+                    ->with('errors', $errors);
+            }
+        }
+    }
+
+    /**
+     * cancelRide - Function for cancelling a ride booking
+    */
+    public function cancelBooking(Request $request){
+        if($request->isMethod('post')){
+            $book = RideBookings::find($request->book_id);
+            $book->status = 'canceled';
+            $book->save();
+            return redirect()
+                ->to($request->ride_url)
+                ->with('success', 'Your ride booking was canceled!');
+        }
+    }
+
     public function rideDetails(Request $request, $link){
         $ro = RideOffers::where('link', $link)->first();
         $rd = RideDescriptions::where('ride_offer_id', $ro->id)->get();
         $ro->rd = $rd;
         $user = User::find($ro->offer_by);
         $ro->user = $user;
-        $vd = VehiclesData::where('user_id', $user->id)->first();
+        $vehicle = '';
+        foreach($rd as $r){
+            if($r->key == 'vehicle_id'){
+                $vehicle = $r->value;
+            }
+        }
+        $vd = VehiclesData::find($vehicle);
         $ro->vd = $vd;
         $usd = User_data::where('user_id', $ro->offer_by)->first();
         $ro->usd = $usd;
@@ -147,12 +220,81 @@ class Customer extends Controller
             $ud = User_data::where(['user_id' => $book->user_id])->first();
             $book->ud = $ud;
         }
+        dd($bookings);
         $ro->bookings = $bookings;
         return view('frontend.pages.ride-details',[
             'data' => $ro,
             'js' => 'frontend.pages.js.ride-details-js',
             'modals' => 'frontend.pages.modals.ride-details-modals'
         ]);
+    }
+
+    /**
+     * rideRequest - function for creating a ride request
+    */
+    public function rideRequest(Request $request){
+        if($request->isMethod('post')){
+            //dd($request->all());
+            $ex_req = Ride_request::where(['user_id' => Auth::id()])
+                ->where(['status' => 'requested'])
+                ->get();
+            foreach($ex_req as $er){
+                if(date('Y-m-d H:i', strtotime($request->departure_date)) == date('Y-m-d H:i', strtotime($er->departure_date))){
+                    return redirect()
+                        ->to($request->req_url)
+                        ->with('error', 'You already have ride request on this requested time!')
+                        ->withInput();
+                }
+                $ex_off = RideOffers::where(['request_id' => $er->id])
+                    ->where(['status' => 'active'])
+                    ->where('departure_time', '<=', date('Y-m-d H:i:s', strtotime($request->departure_date)))
+                    ->where('arrival_time', '>=', date('Y-m-d H:i:s', strtotime($request->departure_date)))
+                    ->first();
+                if(!empty($ex_off)){
+                    return redirect()
+                        ->to($request->req_url)
+                        ->with('error', 'You already have a ride booking during this requested time!')
+                        ->withInput();
+                }
+            }
+            $errors = array();
+            $ride_request = new Ride_request();
+            if(!$ride_request->validate($request->all())){
+                $ride_req_e = $ride_request->errors();
+                foreach ($ride_req_e->messages() as $k => $v){
+                    foreach ($v as $e){
+                        $errors[] = $e;
+                    }
+                }
+            }
+            if(empty($errors)){
+                $ride_request->user_id = Auth::id();
+                $ride_request->from = $request->from;
+                $ride_request->to = $request->to;
+                $ride_request->departure_date = date('Y-m-d H:i', strtotime($request->departure_date));
+                if(isset($request->seat_required)){
+                    $ride_request->seat_required = $request->seat_required;
+                }else{
+                    $ride_request->seat_required = 1;
+                }
+                $ride_request->status = 'requested';
+                if($ride_request->save()){
+                    return redirect()
+                        ->to($request->req_url)
+                        ->with('success', 'The ride request was created successfully!');
+                }else{
+                    return redirect()
+                        ->to($request->req_url)
+                        ->with('error', 'The ride request couldn\'t created!')
+                        ->withInput();
+                }
+            }else{
+                return redirect()
+                    ->to($request->req_url)
+                    ->with('errors', $errors)
+                    ->withInput();
+            }
+        }
     }
 
     /**
@@ -179,7 +321,7 @@ class Customer extends Controller
                     ->with('error', 'The ride request couldn\'t created!');
             }
         }
-            return view('frontend.pages.rider-index');
+            return view('frontend.pages.search');
     }
 
 }

@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>404 | Not found! - GetWobo</title>
+    <title>@if(isset($error)){{ $error }}@endif | Not found! - GetWobo</title>
     <!-- Required meta tags -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -25,7 +25,7 @@
     <div class="not-found text-center">
         <h4>oops!</h4>
         <h3>We can't seem to find the page you are looking for.</h3>
-        <p><b>Error 404</b></p>
+        <p><b>Error @if(isset($error)){{ $error }}@endif</b></p>
         <p>Go Back <a href="{{ url('/') }}">GetWobo.com</a></p>
     </div>
 </div>

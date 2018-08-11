@@ -49,7 +49,8 @@ class Frontend extends Controller
     }
 
     public function popular(Request $request){
-        $ro = RideOffers::paginate(3);
+        $ro = RideOffers::where(['status' => 'active'])
+            ->paginate(3);
         foreach ($ro as $r){
             $user = User::find($r->offer_by);
             $r->user = $user;
@@ -71,9 +72,26 @@ class Frontend extends Controller
         $ro->user = $user;
         $usd = User_data::where('user_id', $ro->offer_by)->first();
         $ro->usd = $usd;
-        $vd = VehiclesData::where('user_id', $user->id)->first();
+        $vehicle = '';
+        foreach($rd as $r){
+            if($r->key == 'vehicle_id'){
+                $vehicle = $r->value;
+            }
+        }
+        $vd = VehiclesData::find($vehicle);
         $ro->vd = $vd;
-        $bookings = RideBookings::where(['ride_id' => $ro->id])->get();
+        $bookings = RideBookings::where(['ride_id' => $ro->id])
+            ->where(function($q){
+                $q->where(['status' => 'booked'])
+                    ->orWhere(['status' => 'confirmed']);
+            })
+            ->get();
+        foreach($bookings as $book){
+            $requester = User::find($book->user_id);
+            $book->requester = $requester;
+            $ud = User_data::where(['user_id' => $book->user_id])->first();
+            $book->ud = $ud;
+        }
         $ro->bookings = $bookings;
         return view('frontend.pages.ride-details',[
             'data' => $ro,

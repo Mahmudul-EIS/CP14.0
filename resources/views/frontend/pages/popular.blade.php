@@ -33,30 +33,11 @@
                                         <span class="get-dynamic-name">{{ date('Y') - date('Y',strtotime($d->usd->dob)) }}</span></h3>
                                     <h3 class="get-user-name"><span>Seats Available <span class="get-right-icon">:</span></span>
                                         <span class="get-dynamic-name"></span></h3>
-                                    @if($d->total_seats == 3)
-                                        <ul class="get-user-icon-layer">
-                                            <li><i class="fas fa-user"></i></li>
-                                            <li><i class="fas fa-user"></i></li>
-                                            <li><i class="fas fa-user"></i></li>
-                                        </ul>
-                                    @endif
-                                    @if($d->total_seats == 4)
-                                        <ul class="get-user-icon-layer">
-                                            <li><i class="fas fa-user"></i></li>
-                                            <li><i class="fas fa-user"></i></li>
-                                            <li><i class="fas fa-user"></i></li>
-                                            <li><i class="fas fa-user"></i></li>
-                                        </ul>
-                                    @endif
-                                    @if($d->total_seats == 5)
-                                        <ul class="get-user-icon-layer">
-                                            <li><i class="fas fa-user"></i></li>
-                                            <li><i class="fas fa-user"></i></li>
-                                            <li><i class="fas fa-user"></i></li>
-                                            <li><i class="fas fa-user"></i></li>
-                                            <li><i class="fas fa-user"></i></li>
-                                        </ul>
-                                    @endif
+                                    <ul class="get-user-icon-layer">
+                                        @for($i = 1; $i <= $d->total_seats; $i++)
+                                        <li><i class="fas fa-user"></i></li>
+                                        @endfor
+                                    </ul>
                                 </div>
                             </div>
                             <div class="col-sm-3">

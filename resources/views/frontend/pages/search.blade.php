@@ -146,10 +146,10 @@
 					</div>
 					<div class="get-form-control">
 						<select name="seat_required" id="seat_required" class="get-select-picker" title="REQUIRED SEATS">
-							<option value="1">1</option>
-							<option value="2">2</option>
-							<option value="3">3</option>
-							<option value="4">4</option>
+							<option value="1">1 Seat</option>
+							<option value="2">2 Seats</option>
+							<option value="3">3 Seats</option>
+							<option value="4">4 Seats</option>
 						</select>
 					</div>
 					<div class="get-form-control-button">
