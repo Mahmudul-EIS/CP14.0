@@ -101,27 +101,35 @@ class Frontend extends Controller
 
     public function search(Request $request){
         if($request->isMethod('post')){
+            //dd($request->all());
             $search_data = RideOffers::
-                where('departure_time', '>=', date('Y-m-d H:i:s',strtotime($request->when)))
-                ->where('origin', '=', $request->from)
-                ->where('destination' , '=' , $request->to)
-                ->where('total_seats' , '<=' , $request->seats)
+                Where('departure_time', '<=', date('Y-m-d H:i:s',strtotime($request->when)))
+                ->orWhere('origin', 'like', '%'. trim($request->from) .'%')
+                ->orWhere('destination' , 'like' , '%'. trim($request->to) .'%')
+                ->orWhere('total_seats' , '<=' , $request->seats)
+                ->orderBy('created_at', 'desc')
                 ->get();
-            if(!empty($search_data)){
-                
+            if(!$search_data->first()){
+                $search_data->error = "Your Desired Search Result Not Found !!";
+                return view('frontend.pages.search-result',[
+                    'data' => $search_data,
+                    'time' => $request->when
+                ]);
+            }else{
+                foreach ($search_data as $sd){
+                    $user = User::where('id',$sd->offer_by)->first();
+                    $sd->user = $user;
+                    $usd = User_data::where('user_id',$sd->offer_by)->first();
+                    $sd->usd = $usd;
+                }
+                return view('frontend.pages.search-result',[
+                    'data' => $search_data,
+                    'time' => $request->when
+                ]);
             }
-            return redirect()
-                ->to('/search-result')
-                ->with('data',$search_data);
         }
         return view('frontend.pages.search',[
             'js' => 'frontend.pages.js.home-js'
         ]);
-    }
-    /**
-     * Search Result - Search Result page functionality of the system
-     */
-    public function searchResult(){
-        return view('frontend.pages.search-result');
     }
 }

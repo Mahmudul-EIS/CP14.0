@@ -20,12 +20,12 @@
 						</div>
 						<div class="col-sm-3">
 							<div class="form-group">
-								<input type="text" name="when" class="form-control" id="datetimepicker4" placeholder="When">
+								<input type="text" name="when" class="form-control" id="datetimepicker4" placeholder="When" required>
 							</div>
 						</div>
 						<div class="col-sm-3">
 							<div class="form-group">
-								<select name="seats" class="get-select-picker" title="Seats">
+								<select name="seats" class="get-select-picker" title="Seats" required>
 									<option value="1">1 seats</option>
 									<option value="2">2 seats</option>
 									<option value="3">3 seats</option>
