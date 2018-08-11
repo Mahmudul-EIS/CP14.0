@@ -146,6 +146,14 @@
         <div class="container">
             <div class="row">
                 <h2 class="get-departure-title">Today's Departure</h2>
+                @if($offers->isNotEmpty())
+                @foreach($offers as $of)
+                    <?php $books = 0; ?>
+                    @if($of->bookings->isNotEmpty())
+                        @foreach($of->bookings as $book)
+                            <?php $books += $book->seat_booked; ?>
+                            @endforeach
+                        @endif
                 <!-- single departure -->
                 <div class="col-sm-6 col-xs-12 padding-left-o">
                     <div class="get-single-departure clearfix">
@@ -155,16 +163,15 @@
                             </div>
                             <div class="get-user-details">
                                 <h3 class="get-user-name"><span>Name <span class="get-right-icon">:</span></span>
-                                    <span class="get-dynamic-name">Jonson Martin</span></h3>
+                                    <span class="get-dynamic-name">{{ $of->user_details->name }} {{ $of->user_data->last_name }}</span></h3>
                                 <h3 class="get-user-name"><span>Age <span class="get-right-icon">:</span></span>
                                     <span class="get-dynamic-name">26</span></h3>
                                 <h3 class="get-user-name"><span>Seats Available <span class="get-right-icon">:</span></span>
                                     <span class="get-dynamic-name"></span></h3>
                                 <ul class="get-user-icon-layer">
+                                    @for($i = 0; $i < ($of->total_seats - $books); $i++)
                                     <li><i class="fas fa-user"></i></li>
-                                    <li><i class="fas fa-user"></i></li>
-                                    <li><i class="fas fa-user"></i></li>
-                                    <li><i class="fas fa-user"></i></li>
+                                    @endfor
                                 </ul>
                             </div>
                         </div>
@@ -177,126 +184,16 @@
                                     <li><i class="fas fa-star"></i></li>
                                     <li><i class="fas fa-star"></i></li>
                                 </ul>
-                                <button class="btn btn-info btn-offer text-uppercase">Book Ride</button>
+                                <a href="@if(Auth::check() && Auth::user()->role == 'driver') {{ url('/d/ride-deatils/'.$of->link) }} @elseif(Auth::check() && Auth::user()->role == 'customer') {{ url('/c/ride-deatils/'.$of->link) }} @else {{ url('/ride-deatils/'.$of->link) }} @endif"><button class="btn btn-info btn-offer text-uppercase">Book Ride</button></a>
                             </div>
                         </div>
                     </div>
                 </div>
                 <!-- end signle departure -->
-
-                <!-- single departure -->
-                <div class="col-sm-6 col-xs-12 padding-right-o">
-                    <div class="get-single-departure clearfix">
-                        <div class="col-md-8 col-sm-12">
-                            <div class="get-user-icon">
-                                <img src="{{ asset('public/assets/frontend/img/user/user-1.jpg') }}" alt="">
-                            </div>
-                            <div class="get-user-details">
-                                <h3 class="get-user-name"><span>Name <span class="get-right-icon">:</span></span>
-                                    <span class="get-dynamic-name">Jonson Martin</span></h3>
-                                <h3 class="get-user-name"><span>Age <span class="get-right-icon">:</span></span>
-                                    <span class="get-dynamic-name">26</span></h3>
-                                <h3 class="get-user-name"><span>Seats Available <span class="get-right-icon">:</span></span>
-                                    <span class="get-dynamic-name"></span></h3>
-                                <ul class="get-user-icon-layer">
-                                    <li><i class="fas fa-user"></i></li>
-                                    <li><i class="fas fa-user"></i></li>
-                                    <li><i class="fas fa-user"></i></li>
-                                    <li><i class="fas fa-user"></i></li>
-                                </ul>
-                            </div>
-                        </div>
-                        <div class="col-md-4 col-sm-12">
-                            <div class="get-user-ratings">
-                                <ul class="get-rate-user">
-                                    <li><i class="fas fa-star"></i></li>
-                                    <li><i class="fas fa-star"></i></li>
-                                    <li><i class="fas fa-star"></i></li>
-                                    <li><i class="fas fa-star"></i></li>
-                                    <li><i class="fas fa-star"></i></li>
-                                </ul>
-                                <button class="btn btn-info btn-offer text-uppercase">Book Ride</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <!-- end signle departure -->
-
-                <!-- single departure -->
-                <div class="col-sm-6 col-xs-12  padding-left-o">
-                    <div class="get-single-departure clearfix">
-                        <div class="col-md-8 col-sm-12">
-                            <div class="get-user-icon">
-                                <img src="{{ asset('public/assets/frontend/img/user/user-1.jpg') }}" alt="">
-                            </div>
-                            <div class="get-user-details">
-                                <h3 class="get-user-name"><span>Name <span class="get-right-icon">:</span></span>
-                                    <span class="get-dynamic-name">Jonson Martin</span></h3>
-                                <h3 class="get-user-name"><span>Age <span class="get-right-icon">:</span></span>
-                                    <span class="get-dynamic-name">26</span></h3>
-                                <h3 class="get-user-name"><span>Seats Available <span class="get-right-icon">:</span></span>
-                                    <span class="get-dynamic-name"></span></h3>
-                                <ul class="get-user-icon-layer">
-                                    <li><i class="fas fa-user"></i></li>
-                                    <li><i class="fas fa-user"></i></li>
-                                    <li><i class="fas fa-user"></i></li>
-                                    <li><i class="fas fa-user"></i></li>
-                                </ul>
-                            </div>
-                        </div>
-                        <div class="col-md-4 col-sm-12">
-                            <div class="get-user-ratings">
-                                <ul class="get-rate-user">
-                                    <li><i class="fas fa-star"></i></li>
-                                    <li><i class="fas fa-star"></i></li>
-                                    <li><i class="fas fa-star"></i></li>
-                                    <li><i class="fas fa-star"></i></li>
-                                    <li><i class="fas fa-star"></i></li>
-                                </ul>
-                                <button class="btn btn-info btn-offer text-uppercase">Book Ride</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <!-- end signle departure -->
-
-                <!-- single departure -->
-                <div class="col-sm-6 col-xs-12 padding-right-o">
-                    <div class="get-single-departure clearfix">
-                        <div class="col-md-8 col-sm-12">
-                            <div class="get-user-icon">
-                                <img src="{{ asset('public/assets/frontend/img/user/user-1.jpg') }}" alt="">
-                            </div>
-                            <div class="get-user-details">
-                                <h3 class="get-user-name"><span>Name <span class="get-right-icon">:</span></span>
-                                    <span class="get-dynamic-name">Jonson Martin</span></h3>
-                                <h3 class="get-user-name"><span>Age <span class="get-right-icon">:</span></span>
-                                    <span class="get-dynamic-name">26</span></h3>
-                                <h3 class="get-user-name"><span>Seats Available <span class="get-right-icon">:</span></span>
-                                    <span class="get-dynamic-name"></span></h3>
-                                <ul class="get-user-icon-layer">
-                                    <li><i class="fas fa-user"></i></li>
-                                    <li><i class="fas fa-user"></i></li>
-                                    <li><i class="fas fa-user"></i></li>
-                                    <li><i class="fas fa-user"></i></li>
-                                </ul>
-                            </div>
-                        </div>
-                        <div class="col-md-4 col-sm-12">
-                            <div class="get-user-ratings">
-                                <ul class="get-rate-user">
-                                    <li><i class="fas fa-star"></i></li>
-                                    <li><i class="fas fa-star"></i></li>
-                                    <li><i class="fas fa-star"></i></li>
-                                    <li><i class="fas fa-star"></i></li>
-                                    <li><i class="fas fa-star"></i></li>
-                                </ul>
-                                <button class="btn btn-info btn-offer text-uppercase">Book Ride</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <!-- end signle departure -->
+                @endforeach
+                    @else
+                    <h3>There's no departure in your area today.</h3>
+                    @endif
             </div>
         </div>
     </div>

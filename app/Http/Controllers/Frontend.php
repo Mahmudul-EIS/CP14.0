@@ -38,10 +38,25 @@ class Frontend extends Controller
                 }
             }
         }
-        $offers_today = RideOffers::where('departure_time', '>=', date('Y-m-d H:s'))
+        $offers_today = RideOffers::whereDate('departure_time', '<=', date('Y-m-d'))
+            ->where(['status' => 'active'])
             ->get();
+        foreach($offers_today as $of){
+            $user_of = User::find($of->offer_by);
+            $user_data_of = User_data::where(['user_id' => $of->offer_by])->first();
+            $of->user_details = $user_of;
+            $of->user_data = $user_data_of;
+            $bookings = RideBookings::where(['ride_id' => $of->id])
+                ->where(function($q){
+                    $q->where(['status' => 'booked'])
+                        ->orWhere(['status' => 'confirmed']);
+                })
+                ->get();
+            $of->bookings = $bookings;
+        }
         return view('frontend.pages.home', [
             'reqs' => $reqs,
+            'offers' => $offers_today,
             'slug' => 'home',
             'modals' => 'frontend.pages.modals.home-modals',
             'js' => 'frontend.pages.js.home-js'
