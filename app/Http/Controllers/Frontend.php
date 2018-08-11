@@ -152,4 +152,25 @@ class Frontend extends Controller
     public function ContactUs(){
         return view('frontend.pages.contact-us');
     }
+
+    /**
+     * Copyright page - Copyright us page of the system
+     */
+    public function Copyright(){
+        return view('frontend.pages.copyright');
+    }
+
+    /**
+     * non-discrimination page - non-discrimination page of the system
+     */
+    public function nonDiscrimination(){
+        return view('frontend.pages.non-discrimination');
+    }
+
+    /**
+     * privacy-policy page - privacy-policy us page of the system
+     */
+    public function privacyPolicy(){
+        return view('frontend.pages.privacy-policy');
+    }
 }

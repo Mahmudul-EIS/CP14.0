@@ -34,6 +34,9 @@ Route::post('/search', 'Frontend@search');
 Route::get('/about-us', 'Frontend@aboutUs');
 Route::get('/terms', 'Frontend@terms');
 Route::get('/contact-us', 'Frontend@contactUs');
+Route::get('/copyright', 'Frontend@copyright');
+Route::get('/non-discrimination', 'Frontend@nonDiscrimination');
+Route::get('/privacy-policy', 'Frontend@privacyPolicy');
 
 /* ------------------------------------------------------ */
 

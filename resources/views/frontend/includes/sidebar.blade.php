@@ -32,9 +32,9 @@
             <li><a href="{{ url('/search') }}">Search</a></li>
             <li class="otherlist-item"><a href="#" class="disabled">Others <i class="fas fa-angle-down"></i></a>
                 <ul class="main-dropdown-item">
-                    <li><a href="copyright.html">Copyright Policy</a></li>
-                    <li><a href="non-discriminaton.html">Nondiscrimination Policy</a></li>
-                    <li><a href="privacy-policy.html">Privaciy Policy</a></li>
+                    <li><a href="{{ url('/copyright') }}">Copyright Policy</a></li>
+                    <li><a href="{{ url('/non-discrimination') }}">Nondiscrimination Policy</a></li>
+                    <li><a href="{{ url('/privacy-policy') }}">Privacy Policy</a></li>
                 </ul>
             </li>
             @if(Auth::check())
