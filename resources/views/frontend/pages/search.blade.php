@@ -6,44 +6,36 @@
 				<div class="row">
 					<h2 class="get-section-header">Search</h2>
 					<div class="search-get-ride">
-					<form action="#">
+					<form action="{{ url('/search') }}" method="post">
+						{{ csrf_field() }}
 						<div class="col-sm-3">
 							<div class="form-group">
-								<select name="" id="" class="get-select-picker" title="Form">
-									<option value="dhaka">Dhaka</option>
-									<option value="Kualalampur">Kualalampur</option>
-								</select>
+								<input type="text" name="from" id="" class="get-select-picker placepicker form-control" placeholder="From" required>
 							</div>
 						</div>
 						<div class="col-sm-3">
 							<div class="form-group">
-								<select name="" id="" class="get-select-picker" title="To">
-									<option value="dhaka">Dhaka</option>
-									<option value="Kualalampur">Kualalampur</option>
-								</select>
+								<input type="text" name="to" id="" class="get-select-picker placepicker form-control" placeholder="To" required>
 							</div>
 						</div>
 						<div class="col-sm-3">
 							<div class="form-group">
-								<input type="text" class="form-control datepicker-f" placeholder="When">
+								<input type="text" name="when" class="form-control" id="datetimepicker4" placeholder="When" required>
 							</div>
 						</div>
 						<div class="col-sm-3">
 							<div class="form-group">
-								<select name="" id="" class="get-select-picker" title="Seats">
-									<option value="1_seats">1 seats</option>
-									<option value="2_seats">2 seats</option>
-									<option value="3_seats">3 seats</option>
+								<select name="seats" class="get-select-picker" title="Seats" required>
+									<option value="1">1 seats</option>
+									<option value="2">2 seats</option>
+									<option value="3">3 seats</option>
+									<option value="4">4 seats</option>
+									<option value="5">5 seats</option>
 								</select>
 							</div>
 						</div>
 						<div class="get-search-control clearfix">
-							<button class="btn btn-info btn-offer">Search</button>
-						</div>
-
-						<div class="get-add-request">
-							<button type="button" class="btn btn-info btn-offer" data-toggle="modal" data-target="#myModal">Delete Request</button>
-							<button type="button" class="btn btn-info btn-offer" data-toggle="modal" data-target="#myModal2">Add Request</button>
+							<button type="submit" class="btn btn-info btn-offer">Search</button>
 						</div>
 					</form>
 				</div>

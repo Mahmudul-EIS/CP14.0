@@ -113,7 +113,82 @@ class Frontend extends Controller
                 ->back();
         }
     }
-    public function search(){
+    /**
+     * Search - Search functionality of the system
+     */
 
+    public function search(Request $request){
+        if($request->isMethod('post')){
+            //dd($request->all());
+            $search_data = RideOffers::
+                Where('departure_time', '<=', date('Y-m-d H:i:s',strtotime($request->when)))
+                ->orWhere('origin', 'like', '%'. trim($request->from) .'%')
+                ->orWhere('destination' , 'like' , '%'. trim($request->to) .'%')
+                ->orWhere('total_seats' , '<=' , $request->seats)
+                ->orderBy('created_at', 'desc')
+                ->get();
+            if(!$search_data->first()){
+                $search_data->error = "Your Desired Search Result Not Found !!";
+                return view('frontend.pages.search-result',[
+                    'data' => $search_data,
+                    'time' => $request->when
+                ]);
+            }else{
+                foreach ($search_data as $sd){
+                    $user = User::where('id',$sd->offer_by)->first();
+                    $sd->user = $user;
+                    $usd = User_data::where('user_id',$sd->offer_by)->first();
+                    $sd->usd = $usd;
+                }
+                return view('frontend.pages.search-result',[
+                    'data' => $search_data,
+                    'time' => $request->when
+                ]);
+            }
+        }
+        return view('frontend.pages.search',[
+            'js' => 'frontend.pages.js.home-js'
+        ]);
+    }
+    /**
+     * About Us page - About Us page of the system
+     */
+    public function aboutUs(){
+        return view('frontend.pages.about-us');
+    }
+
+    /**
+     * Terms page - terms page of the system
+     */
+    public function terms(){
+        return view('frontend.pages.terms');
+    }
+
+    /**
+     * Contact us page - Contact us page of the system
+     */
+    public function ContactUs(){
+        return view('frontend.pages.contact-us');
+    }
+
+    /**
+     * Copyright page - Copyright us page of the system
+     */
+    public function Copyright(){
+        return view('frontend.pages.copyright');
+    }
+
+    /**
+     * non-discrimination page - non-discrimination page of the system
+     */
+    public function nonDiscrimination(){
+        return view('frontend.pages.non-discrimination');
+    }
+
+    /**
+     * privacy-policy page - privacy-policy us page of the system
+     */
+    public function privacyPolicy(){
+        return view('frontend.pages.privacy-policy');
     }
 }

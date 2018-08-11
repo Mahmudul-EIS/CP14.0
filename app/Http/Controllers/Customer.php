@@ -300,9 +300,8 @@ class Customer extends Controller
     /**
      * Search - function for searching drivers
      */
-    public function search(Request $request){
+    public function rideRequest(Request $request){
         if($request->isMethod('post')){
-            //dd($request->all());
             $ride_request = new Ride_request();
             $ride_request->user_id = Auth::id();
             $ride_request->from = $request->from;
