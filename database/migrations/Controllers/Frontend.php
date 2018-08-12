@@ -136,17 +136,18 @@ class Frontend extends Controller
         if($request->isMethod('post')){
             //dd($request->all());
             $search_data = RideOffers::
-                Where('departure_time', '<=', date('Y-m-d H:i:s',strtotime($request->when)))
+                whereDate('departure_time', '=', date('Y-m-d',strtotime($request->when)))
                 ->orWhere('origin', 'like', '%'. trim($request->from) .'%')
                 ->orWhere('destination' , 'like' , '%'. trim($request->to) .'%')
-                ->orWhere('total_seats' , '<=' , $request->seats)
+                ->where('status','=','active')
                 ->orderBy('created_at', 'desc')
                 ->get();
             if(!$search_data->first()){
                 $search_data->error = "Your Desired Search Result Not Found !!";
-                return view('frontend.pages.search-result',[
+                return view('frontend.pages.search',[
                     'data' => $search_data,
-                    'time' => $request->when
+                    'time' => $request->when,
+                    'js' => 'frontend.pages.js.home-js'
                 ]);
             }else{
                 foreach ($search_data as $sd){
@@ -154,10 +155,18 @@ class Frontend extends Controller
                     $sd->user = $user;
                     $usd = User_data::where('user_id',$sd->offer_by)->first();
                     $sd->usd = $usd;
+                    $bookings = RideBookings::where(['ride_id' => $sd->id])
+                        ->where(function($q){
+                            $q->where(['status' => 'booked'])
+                                ->orWhere(['status' => 'confirmed']);
+                        })
+                        ->get();
+                    $sd->bookings = $bookings;
                 }
-                return view('frontend.pages.search-result',[
+                return view('frontend.pages.search',[
                     'data' => $search_data,
-                    'time' => $request->when
+                    'time' => $request->when,
+                    'js' => 'frontend.pages.js.home-js'
                 ]);
             }
         }

@@ -220,7 +220,6 @@ class Customer extends Controller
             $ud = User_data::where(['user_id' => $book->user_id])->first();
             $book->ud = $ud;
         }
-        dd($bookings);
         $ro->bookings = $bookings;
         return view('frontend.pages.ride-details',[
             'data' => $ro,
@@ -295,32 +294,6 @@ class Customer extends Controller
                     ->withInput();
             }
         }
-    }
-
-    /**
-     * Search - function for searching drivers
-     */
-    public function rideRequest(Request $request){
-        if($request->isMethod('post')){
-            $ride_request = new Ride_request();
-            $ride_request->user_id = Auth::id();
-            $ride_request->from = $request->from;
-            $ride_request->to = $request->to;
-            $ride_request->departure_date = date('Y-m-d H:i:s', strtotime($request->departure_date));
-            if(isset($request->seat_required)){
-                $ride_request->seat_required = $request->seat_required;
-            }else{
-                $ride_request->seat_required = 1;
-            }
-            if($ride_request->save()){
-                return redirect($request->url())
-                    ->with('success', 'The ride request was created successfully!');
-            }else{
-                return redirect($request->url())
-                    ->with('error', 'The ride request couldn\'t created!');
-            }
-        }
-            return view('frontend.pages.search');
     }
 
 }
