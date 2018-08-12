@@ -91,6 +91,10 @@ class Customer extends Controller
             }
         }
     }
+
+    /**
+     * editPassword - function to edit the password
+    */
     public function editPassword(Request $request,$id){
         $user = User::find($id);
         if($request->isMethod('post')){
