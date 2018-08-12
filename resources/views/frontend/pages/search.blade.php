@@ -42,134 +42,83 @@
 				</div>
 			</div>
 		</div>
-
-
-
-
-	<!-- delete request popup -->
-	<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-	  <div class="modal-dialog delete-popup-modal" role="document">
-	    <div class="modal-content">
-	      <div class="modal-header">
-	        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-	        <h4 class="modal-title" id="myModalLabel">My Requests</h4>
-	      </div>
-	      <div class="modal-body table-responsive">
-	        <table class="table table-hover ">
-			    <tbody>
-			      <tr>
-			        <td><div class="table-form-form"><span>From :</span> <span class="right-text">Kampung Nyabor Malaysia</span></div></td>
-			        <td><div class="table-form-to"><span>To :</span> <span class="right-text">Kuching, sarawak Malaysia</span></div></td>
-			        <td><div class="table-form-req"><span>Requested Seats :</span> 4 Seats</div></td>
-			        <td><div class="table-form-req"><span>Date :</span> 13/08/2018</div></td>
-			        <td>
-			        	<input type="checkbox" id="checkbox2" name="checkbox01">
-			        	<label for="checkbox2"></label>
-			        </td>
-			      </tr>
-			      <tr>
-			        <td><div class="table-form-form"><span>From :</span> <span class="right-text">Kampung Nyabor Malaysia</span></div></td>
-			        <td><div class="table-form-to"><span>To :</span> <span class="right-text">Kuching, sarawak Malaysia</span></div></td>
-			        <td><div class="table-form-req"><span>Requested Seats :</span> 4 Seats</div></td>
-			        <td><div class="table-form-req"><span>Date :</span> 13/08/2018</div></td>
-			        <td>
-			        	<input type="checkbox" id="checkbox3" name="checkbox01">
-			        	<label for="checkbox3"></label>
-			        </td>
-			      </tr>
-			      <tr>
-			        <td><div class="table-form-form"><span>From :</span> <span class="right-text">Kampung Nyabor Malaysia</span></div></td>
-			        <td><div class="table-form-to"><span>To :</span> <span class="right-text">Kuching, sarawak Malaysia</span></div></td>
-			        <td><div class="table-form-req"><span>Requested Seats :</span> 4 Seats</div></td>
-			        <td><div class="table-form-req"><span>Date :</span> 13/08/2018</div></td>
-			        <td>
-			        	<input type="checkbox" id="checkbox1" name="checkbox01">
-			        	<label for="checkbox1"></label>
-			        </td>
-			      </tr>
-			      <tr>
-			      	<td><div class="table-form-form"><span>From :</span> <span class="right-text">Kampung Nyabor Malaysia</span></div></td>
-			        <td><div class="table-form-to"><span>To :</span> <span class="right-text">Kuching, sarawak Malaysia</span></div></td>
-			        <td><div class="table-form-req"><span>Requested Seats :</span> 4 Seats</div></td>
-			        <td><div class="table-form-req"><span>Date :</span> 13/08/2018</div></td>
-			        <td>
-			        	<input type="checkbox" id="checkbox4" name="checkbox01">
-			        	<label for="checkbox4"></label>
-			        </td>
-			      </tr>
-			    </tbody>
-			  </table>
-	      </div>
-	      <div class="modal-footer">
-	       <button class="btn btn-info btn-offer ">Delete Requests</button>
-	   		</div>
-	    </div>
-	  </div>
-	</div>
-
-
-	<!--Add request popup -->
-	<div class="modal fade" id="myModal2" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-	  <div class="modal-dialog add-modal-item add-modal-item-get-ride" role="document">
-	    <div class="modal-content">
-	      <div class="modal-header">
-	        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-	        <h4 class="modal-title" id="myModalLabel">My Requests</h4>
-	      </div>
-	      <div class="modal-body">
-	        <form method="post"  action="{{ url('/c/search') }}" role="form">
-	        	{{ csrf_field() }}
-
-				<div class="get-a-ride">
-					<div class="get-form-control">
-						<select name="from" id="from" class="get-select-picker" title="From">
-							<option value="dhaka">Dhaka</option>
-							<option value="Kualalampur">Kualalampur</option>
-						</select>
+		@if(isset($data))
+		<div class="get-offer-ride">
+			<div class="container">
+				<div class="row">
+					<div class="col-md-10 col-md-offset-1 col-sm-12 highlight-get-popular padding-left-o padding-right-o">
+						<h3 class="get-popular-list">Search result</h3>
+						<h3 class="highlight">@if(isset($time)) {{  date('l',strtotime($time)) }}, {{ date('d F Y',strtotime($time)) }}@endif</h3>
 					</div>
-					<div class="get-form-control">
-						<select name="to" id="to" class="get-select-picker" title="To">
-							<option value="dhaka">Dhaka</option>
-							<option value="Kualalampur">Kualalampur</option>
-						</select>
+					<!-- search result page -->
+					<div class="single-popular-item">
+						<div class="col-md-10 col-md-offset-1 col-sm-12 popular-departure col-xs-12 padding-left-o">
+							@if(isset($data->error))
+								<h3 class="highlight">{{ $data->error }}</h3>
+							@else
+								@foreach($data as $d)
+									@php $books = 0 @endphp
+									@if($d->bookings->isNotEmpty())
+										@foreach($d->bookings as $book)
+											@php $books += $book->seat_booked @endphp
+										@endforeach
+									@endif
+								@if($books != $d->total_seats)
+									<div class="get-single-departure clearfix">
+										<div class="col-sm-5">
+											<div class="get-user-icon">
+												<img src="<?php if(isset($d->usd->picture)){echo asset('public/uploads/drivers/'.$d->usd->picture);}?>" alt="">
+											</div>
+											<div class="get-user-details">
+												<h3 class="get-user-name"><span>Name <span class="get-right-icon">:</span></span>
+													<span class="get-dynamic-name">{{ $d->user->name }}</span></h3>
+												<h3 class="get-user-name"><span>Age <span class="get-right-icon">:</span></span>
+													<span class="get-dynamic-name">{{ date('Y') - date('Y',strtotime($d->usd->dob)) }}</span></h3>
+												<h3 class="get-user-name"><span>Seats Available <span class="get-right-icon">:</span></span>
+													<span class="get-dynamic-name"></span></h3>
+													<ul class="get-user-icon-layer">
+														@for($i = 0; $i < ($d->total_seats - $books); $i++)
+															<li><i class="fas fa-user"></i></li>
+														@endfor
+													</ul>
+											</div>
+										</div>
+										<div class="col-sm-3">
+											<div class="get-time-depatrue">
+												<div class="time-departure">
+													<span>Time Departure:</span>
+													<p class="time">{{ date('d-m-Y h:i A',strtotime($d->departure_time)) }}</p>
+												</div>
+												<div class="time-departure">
+													<span>Time Arrival:</span>
+													<p class="time">{{ date('d-m-Y h:i A',strtotime($d->arrival_time)) }}</p>
+												</div>
+											</div>
+										</div>
+										<div class="col-sm-4">
+											<div class="get-user-ratings">
+												<ul class="get-rate-user">
+													<li><i class="fas fa-star"></i></li>
+													<li><i class="fas fa-star"></i></li>
+													<li><i class="fas fa-star"></i></li>
+													<li><i class="fas fa-star"></i></li>
+													<li><i class="fas fa-star"></i></li>
+												</ul>
+												<div class="get-price">
+													<h3 class="get-total-prize">${{ $d->price_per_seat }}</h3>
+												</div>
+												<a href="@if(Auth::check() && Auth::user()->role == 'driver') {{ url('/d/ride-details/'.$d->link) }} @elseif(Auth::check() && Auth::user()->role == 'customer') {{ url('/c/ride-details/'.$d->link) }} @else {{ url('/ride-details/'.$d->link) }} @endif"><button class="btn btn-info btn-offer text-uppercase">Details</button></a>
+											</div>
+										</div>
+									</div>
+									@endif
+								@endforeach
+							@endif
+						</div>
 					</div>
-					<div class="get-form-control">
-						<input name="departure_date" type="date" placeholder="Pick a date" class="form-control">
-					</div>
-					<div class="get-form-control">
-						<select name="seat_required" id="seat_required" class="get-select-picker" title="REQUIRED SEATS">
-							<option value="1">1 Seat</option>
-							<option value="2">2 Seats</option>
-							<option value="3">3 Seats</option>
-							<option value="4">4 Seats</option>
-						</select>
-					</div>
-					<div class="get-form-control-button">
-						<button type="submit"	class="btn btn-info btn-offer" data-toggle="modal" data-target="#myModal2">Confirm</button>
-					</div>
+					<!-- end search result page -->
 				</div>
-
-			</form>
-	      </div>
-	    </div>
-	  </div>
-	</div>
-
-	<!--Add request confirm popup -->
-	<div class="modal fade" id="myModal2c" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-	  <div class="modal-dialog" role="document">
-	    <div class="modal-content">
-	      <div class="modal-header">
-	        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-	        <h4 class="modal-title" id="myModalLabel">Send Request</h4>
-	      </div>
-	      <div class="modal-body">
-	        <p>Your Request has been created successfully</p>
-	      </div>
-	      <div class="modal-footer">
-	      	<button class="btn btn-info btn-offer" data-dismiss="modal" aria-label="Close">Okay</button>
-	      </div>
-	    </div>
-	  </div>
-	</div>
+			</div>
+		</div>
+	@endif
  @endsection

@@ -148,12 +148,12 @@
                 <h2 class="get-departure-title">Today's Departure</h2>
                 @if($offers->isNotEmpty())
                 @foreach($offers as $of)
-                    <?php $books = 0; ?>
-                    @if($of->bookings->isNotEmpty())
-                        @foreach($of->bookings as $book)
-                            <?php $books += $book->seat_booked; ?>
-                            @endforeach
-                        @endif
+                @php $books = 0 @endphp
+                @if($of->bookings->isNotEmpty())
+                    @foreach($of->bookings as $book)
+                        @php $books += $book->seat_booked @endphp
+                    @endforeach
+                @endif
                 <!-- single departure -->
                 <div class="col-sm-6 col-xs-12 padding-left-o">
                     <div class="get-single-departure clearfix">
@@ -184,7 +184,7 @@
                                     <li><i class="fas fa-star"></i></li>
                                     <li><i class="fas fa-star"></i></li>
                                 </ul>
-                                <a href="@if(Auth::check() && Auth::user()->role == 'driver') {{ url('/d/ride-deatils/'.$of->link) }} @elseif(Auth::check() && Auth::user()->role == 'customer') {{ url('/c/ride-deatils/'.$of->link) }} @else {{ url('/ride-deatils/'.$of->link) }} @endif"><button class="btn btn-info btn-offer text-uppercase">Book Ride</button></a>
+                                <a href="@if(Auth::check() && Auth::user()->role == 'driver') {{ url('/d/ride-details/'.$of->link) }} @elseif(Auth::check() && Auth::user()->role == 'customer') {{ url('/c/ride-details/'.$of->link) }} @else {{ url('/ride-details/'.$of->link) }} @endif"><button class="btn btn-info btn-offer text-uppercase">Book Ride</button></a>
                             </div>
                         </div>
                     </div>

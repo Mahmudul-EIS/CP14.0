@@ -242,7 +242,6 @@ class Customer extends Controller
             $ud = User_data::where(['user_id' => $book->user_id])->first();
             $book->ud = $ud;
         }
-        dd($bookings);
         $ro->bookings = $bookings;
         return view('frontend.pages.ride-details',[
             'data' => $ro,
