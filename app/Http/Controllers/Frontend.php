@@ -23,6 +23,7 @@ class Frontend extends Controller
     */
     public function home(Request $request){
         $reqs = Ride_request::where('departure_date', '>=', date('Y-m-d'))
+            ->where(['status' => 'requested'])
             ->get();
         foreach($reqs as $req){
             $user = User::find($req->user_id);
@@ -136,7 +137,7 @@ class Frontend extends Controller
         if($request->isMethod('post')){
             //dd($request->all());
             $search_data = RideOffers::
-                Where('departure_time', '<=', date('Y-m-d H:i:s',strtotime($request->when)))
+                whereDate('departure_time', '=', date('Y-m-d',strtotime($request->when)))
                 ->orWhere('origin', 'like', '%'. trim($request->from) .'%')
                 ->orWhere('destination' , 'like' , '%'. trim($request->to) .'%')
                 ->orWhere('total_seats' , '<=' , $request->seats)

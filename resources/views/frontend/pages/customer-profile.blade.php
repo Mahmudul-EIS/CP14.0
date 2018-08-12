@@ -16,12 +16,15 @@
                     </div>
                 </div>
                 <div class="clearfix"></div>
-                <div class="col-sm-6">
-                @if(session()->has('success'))
-                    <div class="alert alert-success">
-                        {{ session()->get('success') }}
-                    </div>
-                @endif
+                <div class="col-sm-12 clearfix">
+                    @include('frontend.includes.messages')
+                    @if(isset($errors))
+                        @foreach($errors as $error)
+                            <p class="alert alert-danger">
+                                {{ $error }}
+                            </p>
+                        @endforeach
+                    @endif
                 </div>
                 <div class="col-md-9 col-lg-8 col-sm-12 col-xs-12 ride--profile padding-left-o">
                     <form action="#">
@@ -72,159 +75,61 @@
 
                 <div class="my-bookings-area clearfix">
                     <h3 class="get-popular-list">My Bookings</h3>
-                    <!-- single ride area -->
-                    <div class="col-md-12 col-lg-8 col-sm-12 col-xs-12 padding-left-o">
-                        <div class="single-booking-point">
-                            <div class="col-sm-5 padding-left-o">
-                                <div class="departure-to-arrival clearfix">
-                                    <div class="arrival-line">
-                                        <span class="my-location"></span>
-                                        <span class="arrival-lin-get"></span>
-                                        <span><i class="fas fa-map-marker-alt"></i></span>
-                                    </div>
-                                    <div class="get-area-details">
-                                        <div class="get-ride-departure-time">
-                                            <h3 class="departure-ride">Kuching</h3>
-                                            <h4 class="depature-time-get">Departure time: <span>13.00</span></h4>
+                    @foreach($data as $book)
+                        @if($book->ride_details->status == 'active')
+                            <!-- single ride area -->
+                            <div class="col-md-12 col-lg-8 col-sm-12 col-xs-12 padding-left-o">
+                                <div class="single-booking-point">
+                                    <div class="col-sm-5 padding-left-o">
+                                        <div class="departure-to-arrival clearfix">
+                                            <div class="arrival-line">
+                                                <span class="my-location"></span>
+                                                <span class="arrival-lin-get"></span>
+                                                <span><i class="fas fa-map-marker-alt"></i></span>
+                                            </div>
+                                            <div class="get-area-details">
+                                                <div class="get-ride-departure-time">
+                                                    <h3 class="departure-ride">{{ $book->ride_details->origin }}</h3>
+                                                    <h4 class="depature-time-get">Departure time: <span>{{ $book->ride_details->departure_time }}</span></h4>
+                                                </div>
+                                                <div class="get-ride-departure-time">
+                                                    <h3 class="departure-ride">{{ $book->ride_details->destination }}</h3>
+                                                    <h4 class="depature-time-get">Arrival time: <span>{{ $book->ride_details->arrival_time }}</span></h4>
+                                                </div>
+                                            </div>
                                         </div>
-                                        <div class="get-ride-departure-time">
-                                            <h3 class="departure-ride">Shibu</h3>
-                                            <h4 class="depature-time-get">Arrival time: <span>13.00</span></h4>
+                                        <div class="ridemade-details-button">
+                                            <button class="btn btn-info btn-offer">Ridemates Details</button>
                                         </div>
                                     </div>
-                                </div>
-                                <div class="ridemade-details-button">
-                                    <button class="btn btn-info btn-offer">Ridemates Details</button>
-                                </div>
-                            </div>
-                            <div class="col-sm-2">
-                                <div class="total-fare-area">
-                                    <h3 class="total-fare-get-section">
-                                        Total Fare <span>$20</span>
-                                    </h3>
-                                    <button class="btn btn-info btn-offer"><i class="fas fa-location-arrow"></i> <br> View <br> Distance</button>
-                                </div>
-                            </div>
-                            <div class="col-sm-5">
-                                <div class="car-details-type-arrow">
-                                    <h3>Car Details</h3>
-                                    <ul>
-                                        <li><span class="ride-label">Car Type <span class="right-into">:</span></span>
-                                        </li>
-                                        <li>
-                                            <span class="ride-label">Car Plate No <span class="right-into">:</span></span>
-                                        </li>
-                                        <li>
-                                            <span class="ride-label">Maximum Luggage <span class="right-into">:</span></span>
-                                        </li>
-                                    </ul>
-                                    <button class="btn btn-info btn-offer" type="button" data-toggle="modal" data-target="#myModal4">Cancel Booking</button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <!-- single ride area -->
-                    <div class="col-md-12 col-lg-8 col-sm-12 col-xs-12 padding-left-o">
-                        <div class="single-booking-point">
-                            <div class="col-sm-5 padding-left-o">
-                                <div class="departure-to-arrival clearfix">
-                                    <div class="arrival-line">
-                                        <span class="my-location"></span>
-                                        <span class="arrival-lin-get"></span>
-                                        <span><i class="fas fa-map-marker-alt"></i></span>
-                                    </div>
-                                    <div class="get-area-details">
-                                        <div class="get-ride-departure-time">
-                                            <h3 class="departure-ride">Kuching</h3>
-                                            <h4 class="depature-time-get">Departure time: <span>13.00</span></h4>
+                                    <div class="col-sm-2">
+                                        <div class="total-fare-area">
+                                            <h3 class="total-fare-get-section">
+                                                Total Fare <span>${{ $book->ride_details->price_per_seat }}</span>
+                                            </h3>
+                                            <button class="btn btn-info btn-offer"><i class="fas fa-location-arrow"></i> <br> View <br> Distance</button>
                                         </div>
-                                        <div class="get-ride-departure-time">
-                                            <h3 class="departure-ride">Shibu</h3>
-                                            <h4 class="depature-time-get">Arrival time: <span>13.00</span></h4>
+                                    </div>
+                                    <div class="col-sm-5">
+                                        <div class="car-details-type-arrow">
+                                            <h3>Car Details</h3>
+                                            <ul>
+                                                <li><span class="ride-label">Car Type <span class="right-into">: {{ $book->vd->car_type }}</span></span>
+                                                </li>
+                                                <li>
+                                                    <span class="ride-label">Car Plate No <span class="right-into">: {{ $book->vd->car_plate_no }}</span></span>
+                                                </li>
+                                                <li>
+                                                    <span class="ride-label">Maximum Luggage <span class="right-into">: {{ $book->vd->luggage_limit }}</span></span>
+                                                </li>
+                                            </ul>
+                                            <button class="btn btn-info btn-offer" type="button" data-toggle="modal" data-target="#myModalCancel{{ $book->id }}">Cancel Booking</button>
                                         </div>
                                     </div>
                                 </div>
-                                <div class="ridemade-details-button">
-                                    <button class="btn btn-info btn-offer" type="button" data-toggle="modal" data-target="#myModal4">Ridemates Details</button>
-                                </div>
                             </div>
-                            <div class="col-sm-2">
-                                <div class="total-fare-area">
-                                    <h3 class="total-fare-get-section">
-                                        Total Fare <span>$20</span>
-                                    </h3>
-                                    <button class="btn btn-info btn-offer"><i class="fas fa-location-arrow"></i> <br> View <br> Distance</button>
-                                </div>
-                            </div>
-                            <div class="col-sm-5">
-                                <div class="car-details-type-arrow">
-                                    <h3>Car Details</h3>
-                                    <ul>
-                                        <li><span class="ride-label">Car Type <span class="right-into">:</span></span>
-                                        </li>
-                                        <li>
-                                            <span class="ride-label">Car Plate No <span class="right-into">:</span></span>
-                                        </li>
-                                        <li>
-                                            <span class="ride-label">Maximum Luggage <span class="right-into">:</span></span>
-                                        </li>
-                                    </ul>
-                                    <button class="btn btn-info btn-offer" type="button" data-toggle="modal" data-target="#myModal4">Cancel Booking</button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <!-- single ride ara -->
-                    <div class="col-md-12 col-lg-8 col-sm-12 col-xs-12 padding-left-o">
-                        <div class="single-booking-point">
-                            <div class="col-sm-5 padding-left-o">
-                                <div class="departure-to-arrival clearfix">
-                                    <div class="arrival-line">
-                                        <span class="my-location"></span>
-                                        <span class="arrival-lin-get"></span>
-                                        <span><i class="fas fa-map-marker-alt"></i></span>
-                                    </div>
-                                    <div class="get-area-details">
-                                        <div class="get-ride-departure-time">
-                                            <h3 class="departure-ride">Kuching</h3>
-                                            <h4 class="depature-time-get">Departure time: <span>13.00</span></h4>
-                                        </div>
-                                        <div class="get-ride-departure-time">
-                                            <h3 class="departure-ride">Shibu</h3>
-                                            <h4 class="depature-time-get">Arrival time: <span>13.00</span></h4>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="ridemade-details-button">
-                                    <button class="btn btn-info btn-offer">Ridemates Details</button>
-                                </div>
-                            </div>
-                            <div class="col-sm-2">
-                                <div class="total-fare-area">
-                                    <h3 class="total-fare-get-section">
-                                        Total Fare <span>$20</span>
-                                    </h3>
-                                    <button class="btn btn-info btn-offer"><i class="fas fa-location-arrow"></i> <br> View <br> Distance</button>
-                                </div>
-                            </div>
-                            <div class="col-sm-5">
-                                <div class="car-details-type-arrow">
-                                    <h3>Car Details</h3>
-                                    <ul>
-                                        <li><span class="ride-label">Car Type <span class="right-into">:</span></span>
-                                        </li>
-                                        <li>
-                                            <span class="ride-label">Car Plate No <span class="right-into">:</span></span>
-                                        </li>
-                                        <li>
-                                            <span class="ride-label">Maximum Luggage <span class="right-into">:</span></span>
-                                        </li>
-                                    </ul>
-                                    <button class="btn btn-info btn-offer" type="button" data-toggle="modal" data-target="#myModal4">Cancel Booking</button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                        @endif
+                    @endforeach
                 </div>
             </div>
 

@@ -19,7 +19,7 @@
                     @endif
                 </div>
 
-                @if(Auth::check() && Auth::user()->role == 'driver')
+                @if(Auth::check() && Auth::user()->role == 'driver' && Auth::id() == $data->offer_by)
                     @if(empty($ride_start))
                     @if(date('Y-m-d H:i', strtotime($data->departure_time)) <= date('Y-m-d H:i', strtotime('+1 Hour')))
                 <div class="get-form-control-button">
@@ -192,7 +192,7 @@
                     @if(Auth::check() && Auth::user()->role != 'driver')
                     <button class="btn btn-info btn-offer ride-final-ride-button" type="button" data-toggle="modal" data-target="#myModalx">Ridemate Details</button>
                         @endif
-                    @if(Auth::check() && Auth::user()->role == 'driver' && !isset($ride_start->start_time))
+                    @if(Auth::check() && Auth::user()->role == 'driver' && !isset($ride_start->start_time) && Auth::id() == $data->offer_by)
                         <button class="btn btn-info btn-offer ride-final-ride-button" type="button"><a style="color: #ffffff" href="{{ url('/d/edit-ride/'.$data->link) }}">Edit Ride Details</a></button>
                     @endif
                 </div>

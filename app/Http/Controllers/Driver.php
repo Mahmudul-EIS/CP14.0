@@ -500,6 +500,11 @@ class Driver extends Controller
     */
     public function editRide(Request $request, $link){
         $ro = RideOffers::where(['link' => $link])->first();
+        if(Auth::id() != $ro->offer_by){
+            return redirect()
+                ->to('/d/ride-details/'.$link)
+                ->with('error', 'You don\'t have authorization to access this page!');
+        }
         $rd = RideDescriptions::where('ride_offer_id', $ro->id)->get();
         $ro->rd = $rd;
         $vehicle = '';

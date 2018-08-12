@@ -25,18 +25,31 @@ class Customer extends Controller
     }
 
     public function viewProfile(){
-        if(Auth::user()){
-            $id = Auth::id();
-            $user = User::find($id);
-            $usd = User_data::where('user_id',$id)->first();
-            if($user->role != 'customer'){
-                return redirect()->back();
-            }
-            return view('frontend.pages.customer-profile',[
-                'usd' => $usd,
-                'user' => $user
-            ]);
+        $id = Auth::id();
+        $user = User::find($id);
+        $usd = User_data::where('user_id',$id)->first();
+        $bookings = RideBookings::where(['user_id' => Auth::id()])
+            ->where(function($q){
+                $q->where(['status' => 'booked'])
+                    ->orWhere(['status' => 'confirmed']);
+            })
+            ->get();
+        foreach($bookings as $book){
+            $ride_details = RideOffers::find($book->ride_id);
+            $book->ride_details = $ride_details;
+            $ride_desc = RideDescriptions::where(['ride_offer_id' => $book->ride_id])
+                ->where(['key' => 'vehicle_id'])
+                ->first();
+            $vd = VehiclesData::find($ride_desc->value);
+            $book->vd = $vd;
         }
+
+        return view('frontend.pages.customer-profile',[
+            'usd' => $usd,
+            'user' => $user,
+            'data' => $bookings,
+            'modals' => 'frontend.pages.modals.customer-profile-modals'
+        ]);
     }
 
     public function editProfile(Request $request,$id){
@@ -110,7 +123,12 @@ class Customer extends Controller
      * Bookings - shows the customer ride bookings
     */
     public function bookings(Request $request){
-        $bookings = RideBookings::where(['user_id' => Auth::id()])->where(['status' => 'booked'])->get();
+        $bookings = RideBookings::where(['user_id' => Auth::id()])
+            ->where(function($q){
+                $q->where(['status' => 'booked'])
+                    ->orWhere(['status' => 'confirmed']);
+            })
+            ->get();
         foreach($bookings as $book){
             $ride_details = RideOffers::find($book->ride_id);
             $book->ride_details = $ride_details;
@@ -121,7 +139,8 @@ class Customer extends Controller
             $book->vd = $vd;
         }
         return view('frontend.pages.bookings', [
-            'data' => $bookings
+            'data' => $bookings,
+            'modals' => 'frontend.pages.modals.bookings-modals'
         ]);
     }
 
@@ -187,11 +206,14 @@ class Customer extends Controller
             $book->status = 'canceled';
             $book->save();
             return redirect()
-                ->to($request->ride_url)
+                ->to($request->page_url)
                 ->with('success', 'Your ride booking was canceled!');
         }
     }
 
+    /**
+     * rideDetails - function to show the details of a particular ride
+    */
     public function rideDetails(Request $request, $link){
         $ro = RideOffers::where('link', $link)->first();
         $rd = RideDescriptions::where('ride_offer_id', $ro->id)->get();
@@ -227,6 +249,48 @@ class Customer extends Controller
             'js' => 'frontend.pages.js.ride-details-js',
             'modals' => 'frontend.pages.modals.ride-details-modals'
         ]);
+    }
+
+    /**
+     * rideRequests - show all active ride requests of a customer
+    */
+    public function rideRequests(Request $request){
+        $reqs = Ride_request::where(['user_id' => Auth::id()])
+            ->where('departure_date', '>=', date('Y-m-d H:i:s'))
+            ->where(['status' => 'requested'])
+            ->get();
+        foreach($reqs as $req){
+            $offer = RideOffers::where(['request_id' => $req->id])
+                ->where(['status' => 'active'])
+                ->get();
+            $req->offer = $offer;
+        }
+        $ex_reqs = Ride_request::where(['user_id' => Auth::id()])
+            ->where(['status' => 'expired'])
+            ->get();
+        return view('frontend.pages.requests', [
+            'data' => $reqs,
+            'ex_data' => $ex_reqs
+        ]);
+    }
+
+    /**
+     * deleteRequest - functions to delete one or multiple ride requests
+    */
+    public function deleteRequest(Request $request){
+        if($request->isMethod('post')){
+            if(empty($request->delete_req)){
+                return redirect()
+                    ->to('/c/requests')
+                    ->with('error', 'Please select requests to delete!');
+            }
+            foreach($request->delete_req as $del){
+                Ride_request::destroy($del);
+            }
+            return redirect()
+                ->to('/c/requests')
+                ->with('success', 'Selected requests were deleted!');
+        }
     }
 
     /**
@@ -298,29 +362,39 @@ class Customer extends Controller
     }
 
     /**
-     * Search - function for searching drivers
+     * cancelRequest - function for canceling a ride request
      */
-    public function rideRequest(Request $request){
-        if($request->isMethod('post')){
-            $ride_request = new Ride_request();
-            $ride_request->user_id = Auth::id();
-            $ride_request->from = $request->from;
-            $ride_request->to = $request->to;
-            $ride_request->departure_date = date('Y-m-d H:i:s', strtotime($request->departure_date));
-            if(isset($request->seat_required)){
-                $ride_request->seat_required = $request->seat_required;
-            }else{
-                $ride_request->seat_required = 1;
+    public function cancelRequest(Request $request){
+        if($request->isMethod('post')) {
+            $ride_request = Ride_request::find($request->req_id);
+            $ride_check = RideOffers::where(['request_id' => $request->req_id])
+                ->where(['status' => 'active'])
+                ->get();
+            if(!empty($ride_check)){
+                $book_check = RideBookings::where(['ride_id' => $ride_check->id])
+                    ->where(['user_id' => $ride_request->user_id])
+                    ->where(function($q){
+                        $q->where(['status' => 'booked'])
+                            ->orWhere(['status' => 'confirmed']);
+                    })
+                    ->get();
+                if(!empty($book_check)){
+                    return redirect()
+                        ->to($request->page_url)
+                        ->with('error', 'You have to cancel the ride booking/confirmation first! Here\'s the ride link '.url('c/ride-details/'.$ride_check->link));
+                }
             }
+            $ride_request->status = 'canceled';
             if($ride_request->save()){
-                return redirect($request->url())
-                    ->with('success', 'The ride request was created successfully!');
+                return redirect()
+                    ->to($request->page_url)
+                    ->with('success', 'Your ride request was deleted!');
             }else{
-                return redirect($request->url())
-                    ->with('error', 'The ride request couldn\'t created!');
+                return redirect()
+                    ->to($request->page_url)
+                    ->with('error', 'Your ride request couldn\'n deleted! Please try again!');
             }
         }
-            return view('frontend.pages.search');
     }
 
 }

@@ -9,7 +9,18 @@
 
                     <div class="my-bookings-area clearfix">
                         <h3 class="get-popular-list">My Bookings</h3>
+                        <div class="col-sm-12 clearfix">
+                            @include('frontend.includes.messages')
+                            @if(isset($errors))
+                                @foreach($errors as $error)
+                                    <p class="alert alert-danger">
+                                        {{ $error }}
+                                    </p>
+                                @endforeach
+                            @endif
+                        </div>
                         @foreach($data as $book)
+                            @if($book->ride_details->status == 'active')
                         <!-- single ride area -->
                         <div class="col-md-12 col-lg-12 col-sm-12 col-xs-12 padding-left-o">
                             <div class="single-booking-point">
@@ -56,11 +67,12 @@
                                                 <span class="ride-label">Maximum Luggage <span class="right-into">: {{ $book->vd->luggage_limit }}</span></span>
                                             </li>
                                         </ul>
-                                        <button class="btn btn-info btn-offer" type="button" data-toggle="modal" data-target="#myModal4">Cancel Booking</button>
+                                        <button class="btn btn-info btn-offer" type="button" data-toggle="modal" data-target="#myModalCancel{{ $book->id }}">Cancel Booking</button>
                                     </div>
                                 </div>
                             </div>
                         </div>
+                            @endif
                         @endforeach
                     </div>
                 </div>

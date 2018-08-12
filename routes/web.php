@@ -80,6 +80,8 @@ Route::prefix('c')->group(function(){
     Route::post('/book-ride', 'Customer@bookRide');
     Route::post('/cancel-book', 'Customer@cancelBooking');
     Route::post('/ride-request', 'Customer@rideRequest');
+    Route::get('/requests', 'Customer@rideRequests');
+    Route::post('/delete-request', 'Customer@deleteRequest');
 });
 
 /**
