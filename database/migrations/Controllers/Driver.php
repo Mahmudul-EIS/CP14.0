@@ -11,12 +11,9 @@ use App\RideOffers;
 use App\RideDescriptions;
 use App\VehiclesData;
 use App\RideComp;
-use DateTime;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Input;
-use Carbon\Carbon;
 
 class Driver extends Controller
 {
