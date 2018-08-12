@@ -54,7 +54,7 @@
                                 </div>
                                 <div class="form-group">
                                     <label for="ridemate-email">Address</label>
-                                    <input type="email" name="address" class="form-control" value="{{ $usd->address }}" placeholder="Your Address">
+                                    <input type="text" name="address" class="form-control" value="{{ $usd->address }}" placeholder="Your Address">
                                 </div>
                                 <div class="form-group get-sign-up-mate">
                                     <label for="ridemate-name">Age</label>
