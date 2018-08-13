@@ -136,6 +136,10 @@ class Customer extends Controller
         foreach($bookings as $book){
             $ride_details = RideOffers::find($book->ride_id);
             $book->ride_details = $ride_details;
+            $user = User::find($ride_details->offer_by);
+            $book->user = $user;
+            $ud = User_data::where(['user_id' => $user->id])->first();
+            $book->ud = $ud;
             $ride_desc = RideDescriptions::where(['ride_offer_id' => $book->ride_id])
                 ->where(['key' => 'vehicle_id'])
                 ->first();
@@ -160,14 +164,14 @@ class Customer extends Controller
                         ->orWhere(['status' => 'confirmed']);
                 })
                 ->get();
-            $book_count = $request->seat_booked;
+            $book_count = 0;
             foreach($bookings as $book){
                 $book_count += $book->seat_booked;
             }
-            if($book_count > $ride->total_seats){
+            if($request->seat_booked > ($ride->total_seats - $book_count)){
                 return redirect()
                     ->to($request->ride_url)
-                    ->with('error', 'This ride has reached the maximum bookings!');
+                    ->with('error', 'Your requested seats has exceeded the availability!');
             }
             $errors = array();
             $ride_book = new RideBookings();
@@ -180,19 +184,17 @@ class Customer extends Controller
                 }
             }
             if(empty($errors)){
-                $ride_book->user_id = Auth::id();
-                $ride_book->ride_id = $request->ride_id;
-                $ride_book->seat_booked = $request->seat_booked;
-                $ride_book->status = $request->status;
-                if($ride_book->save()){
-                    return redirect()
-                        ->to($request->ride_url)
-                        ->with('success', 'The ride booking was added!');
-                }else{
-                    return redirect()
-                        ->to($request->ride_url)
-                        ->with('errors', 'The ride booking couldn\'t added! Please try again!');
+                for($i = 1; $i <= $request->seat_booked; $i++){
+                    $ride_books = new RideBookings();
+                    $ride_books->user_id = Auth::id();
+                    $ride_books->ride_id = $request->ride_id;
+                    $ride_books->seat_booked = 1;
+                    $ride_books->status = $request->status;
+                    $ride_books->save();
                 }
+                return redirect()
+                    ->to($request->ride_url)
+                    ->with('success', 'The ride booking was added!');
             }else{
                 return redirect()
                     ->to($request->ride_url)
@@ -220,6 +222,11 @@ class Customer extends Controller
     */
     public function rideDetails(Request $request, $link){
         $ro = RideOffers::where('link', $link)->first();
+        if($ro->status == 'expired' || $ro->status == 'canceled'){
+            return redirect()
+                ->to('/')
+                ->with('error', 'This ride was canceled/expired!');
+        }
         $rd = RideDescriptions::where('ride_offer_id', $ro->id)->get();
         $ro->rd = $rd;
         $user = User::find($ro->offer_by);

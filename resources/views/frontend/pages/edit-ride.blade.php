@@ -23,16 +23,16 @@
                         <div class="col-sm-6 padding-left-o price-seat">
                             <div class="form-group">
                                 <label for="pickup-point">Pickup Point</label>
-                                <input name="origin" type="text" id="origin-input" class="form-control" value="{{ $data->origin }}">
+                                <input name="origin" type="text" id="origin-input" class="form-control" value="{{ $data->origin }}" @if($data->bookings->isNotEmpty()) readonly @endif>
                             </div>
                             <div class="form-group">
                                 <label for="pickup-point">Destination</label>
-                                <input name="destination" type="text" id="destination-input" class="form-control" value="{{ $data->destination }}">
+                                <input name="destination" type="text" id="destination-input" class="form-control" value="{{ $data->destination }}" @if($data->bookings->isNotEmpty()) readonly @endif>
                             </div>
                             <div class="col-sm-6 padding-left-o">
                                 <div class="form-group">
                                     <label for="price">Price Per seat</label>
-                                    <input name="price_per_seat" type="text" placeholder="$200" class="form-control form-control-placeholder" value="{{ $data->price_per_seat }}">
+                                    <input name="price_per_seat" type="text" placeholder="$200" class="form-control form-control-placeholder" value="{{ $data->price_per_seat }}" @if($data->bookings->isNotEmpty()) readonly @endif>
                                 </div>
                             </div>
                             <div class="col-sm-6">
@@ -51,25 +51,25 @@
                             <div class="form-group pick-get-time">
                                 <label for="departure-time">Departure Time</label>
                                 <div class="col-sm-6 padding-left-o">
-                                    <input name="d_date" type="text" class="form-control datepicker-f" placeholder="Pick a Date" value="{{ date('Y-m-d', strtotime($data->departure_time)) }}">
+                                    <input name="d_date" type="text" class="form-control datepicker-f" placeholder="Pick a Date" value="{{ date('Y-m-d', strtotime($data->departure_time)) }}" @if($data->bookings->isNotEmpty()) readonly @endif>
                                 </div>
                                 <div class="col-sm-3">
-                                    <input name="d_hour" type="text" class="form-control timepicker-hh" placeholder="Hrs:HH" value="{{ date('H', strtotime($data->departure_time)) }}">
+                                    <input name="d_hour" type="text" class="form-control timepicker-hh" placeholder="Hrs:HH" value="{{ date('H', strtotime($data->departure_time)) }}" @if($data->bookings->isNotEmpty()) readonly @endif>
                                 </div>
                                 <div class="col-sm-3 padding-right-o">
-                                    <input name="d_minute" type="text" class="form-control timepicker-mm" placeholder="Min:MM" value="{{ date('i A', strtotime($data->departure_time)) }}">
+                                    <input name="d_minute" type="text" class="form-control timepicker-mm" placeholder="Min:MM" value="{{ date('i A', strtotime($data->departure_time)) }}" @if($data->bookings->isNotEmpty()) readonly @endif>
                                 </div>
                             </div>
                             <div class="form-group pick-get-time">
                                 <label for="departure-time">Arrival Time(Optional)</label>
                                 <div class="col-sm-6 padding-left-o">
-                                    <input name="a_date" type="text" class="form-control datepicker-f" placeholder="Pick a Date" value="{{ date('Y-m-d', strtotime($data->arrival_time)) }}">
+                                    <input name="a_date" type="text" class="form-control datepicker-f" placeholder="Pick a Date" value="{{ date('Y-m-d', strtotime($data->arrival_time)) }}" @if($data->bookings->isNotEmpty()) readonly @endif>
                                 </div>
                                 <div class="col-sm-3">
-                                    <input name="a_hour" type="text" class="form-control timepicker-hh" placeholder="Hrs:HH" value="{{ date('H', strtotime($data->arrival_time)) }}">
+                                    <input name="a_hour" type="text" class="form-control timepicker-hh" placeholder="Hrs:HH" value="{{ date('H', strtotime($data->arrival_time)) }}" @if($data->bookings->isNotEmpty()) readonly @endif>
                                 </div>
                                 <div class="col-sm-3 padding-right-o">
-                                    <input name="a_minute" type="text" class="form-control timepicker-mm" placeholder="Min:MM" value="{{ date('i A', strtotime($data->arrival_time)) }}">
+                                    <input name="a_minute" type="text" class="form-control timepicker-mm" placeholder="Min:MM" value="{{ date('i A', strtotime($data->arrival_time)) }}" @if($data->bookings->isNotEmpty()) readonly @endif>
                                 </div>
                             </div>
                         </div>

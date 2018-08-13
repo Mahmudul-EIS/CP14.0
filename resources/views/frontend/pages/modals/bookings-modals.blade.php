@@ -26,5 +26,53 @@
         </div>
         <!-- end cancel booking popup -->
 
+        <!--Riders details -->
+        <div class="modal fade" id="myModalRD{{ $book->id }}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title" id="myModalLabel">Riders Details</h4>
+                    </div>
+                    <div class="modal-body rider-details-ridemate">
+                        <h3 class="rider-title">Rider</h3>
+                        <div class="ridemate-name-area">
+                            <div class="ridemate-name">
+                                Name <span class="ridemate-right">:</span>
+                            </div>
+                            <div class="ridemate-name-xs">
+                                <span>{{ $book->user->name }} {{ $book->ud->last_name }}</span>
+                            </div>
+                        </div>
+                        <div class="ridemate-name-area">
+                            <div class="ridemate-name">
+                                Email <span class="ridemate-right">:</span>
+                            </div>
+                            <div class="ridemate-name-xs">
+                                <span>{{ $book->user->email }}</span>
+                            </div>
+                        </div>
+
+                        <div class="ridemate-name-area">
+                            <div class="ridemate-name">
+                                Gender <span class="ridemate-right">:</span>
+                            </div>
+                            <div class="ridemate-name-xs">
+                                <span>{{ $book->ud->gender }}</span>
+                            </div>
+                        </div>
+                        <div class="ridemate-name-area">
+                            <div class="ridemate-name">
+                                Age <span class="ridemate-right">:</span>
+                            </div>
+                            <div class="ridemate-name-xs">
+                                <span>{{ date('Y') - date('Y',strtotime($book->ud->dob)) }}</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
     @endif
 @endforeach

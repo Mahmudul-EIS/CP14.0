@@ -20,6 +20,15 @@
 
                     @foreach($data as $offer)
 
+                        <?php $total = $booked = $confirmed = 0; ?>
+                                @if($offer->bookings->isNotEmpty())
+                                    @foreach($offer->bookings as $bb)
+                                        <?php $total += $bb->seat_booked; ?>
+                                        @if($bb->status == 'booked')
+                                            <?php $booked += $bb->seat_booked; ?>
+                                            @endif
+                                        @endforeach
+                                    @endif
                     <!-- single request area -->
 
                     <div class="col-md-8 col-md-offset-2  col-sm-12 col-xs-12 ridemate-details-offer padding-left-o">
@@ -46,7 +55,7 @@
                                     <span class="ride-label">Requested Seats <span class="right-into">:</span></span>
                                 </div>
                                 <div class="col-sm-6">
-                                    <span class="ride-label-badge"></span>
+                                    <span class="ride-label-badge">{{ $booked }}</span>
                                 </div>
                             </div>
                             <button class="btn btn-info btn-offer ride-final-ride-button" type="button"><a style="color: #ffffff" href="{{ url('/d/ride-details/'.$offer->link) }}">Ride Details</a></button>

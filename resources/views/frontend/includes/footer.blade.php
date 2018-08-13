@@ -35,6 +35,16 @@
 <script src="{{ asset('public/assets/frontend/js/bootstrap-select.js') }}"></script>
 <!-- main js file -->
 <script src="{{ asset('public/assets/frontend/js/custom.js') }}"></script>
+    <script>
+        $(document).ready(function(){
+            var lat = lan = '';
+            @if(session()->has('lat') && session()->has('lan'))
+            lat = '{{ session()->get('lat') }}';
+            lan = '{{ session()->get('lan') }}';
+            @endif
+            console.log('lat : '+lat+', lan : '+lan);
+        });
+    </script>
 
     @if(Auth::check())
 

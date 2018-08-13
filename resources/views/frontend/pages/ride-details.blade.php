@@ -21,7 +21,7 @@
 
                 @if(Auth::check() && Auth::user()->role == 'driver' && Auth::id() == $data->offer_by)
                     @if(empty($ride_start))
-                    @if(date('Y-m-d H:i', strtotime($data->departure_time)) <= date('Y-m-d H:i', strtotime('+1 Hour')))
+                    @if(date('Y-m-d H:i', strtotime($data->departure_time)) <= date('Y-m-d H:i', strtotime('+1 Hour')) && date('Y-m-d H:i', strtotime($data->departure_time)) >= date('Y-m-d H:i'))
                 <div class="get-form-control-button">
                     <button type="button" class="btn btn-info btn-offer" data-toggle="modal" data-target="#startRidePop">Start the Ride</button>
                 </div>

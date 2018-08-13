@@ -43,7 +43,7 @@
                                         </div>
                                     </div>
                                     <div class="ridemade-details-button">
-                                        <button class="btn btn-info btn-offer">Ridemates Details</button>
+                                        <button class="btn btn-info btn-offer" data-toggle="modal" data-target="#myModalRD{{ $book->id }}">Ridemates Details</button>
                                     </div>
                                 </div>
                                 <div class="col-sm-2">
@@ -51,7 +51,10 @@
                                         <h3 class="total-fare-get-section">
                                             Total Fare <span>${{ $book->ride_details->price_per_seat }}</span>
                                         </h3>
-                                        <button class="btn btn-info btn-offer"><i class="fas fa-location-arrow"></i> <br> View <br> Distance</button>
+                                        <h3 class="total-fare-get-section">
+                                            Status : <span>@if($book->status == 'booked') <i class="fa fa-exclamation-circle"></i> @elseif($book->status == 'confirmed') <i class="fa fa-check-circle"></i> @else {{ 'None' }} @endif</span>
+                                        </h3>
+                                        <a href="{{ url('/c/ride-details/'.$book->ride_details->link) }}"><button class="btn btn-info btn-offer"><i class="fas fa-location-arrow"></i> <br> View <br> Details</button></a>
                                     </div>
                                 </div>
                                 <div class="col-sm-5">

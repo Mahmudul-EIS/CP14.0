@@ -134,7 +134,7 @@
                     <div class="ridemate-name-area">
                         <form method="post" action="{{ url('/c/cancel-book') }}" id="cancel-book">
                             {{ csrf_field() }}
-                            <input type="hidden" name="ride_url" value="{{ url()->current() }}">
+                            <input type="hidden" name="page_url" value="{{ url()->current() }}">
                             <input type="hidden" name="book_id" value="{{ $b->id }}">
                             <input type="hidden" name="status" value="canceled">
                         </form>
