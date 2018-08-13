@@ -44,11 +44,11 @@
                                 <div class="get-time-depatrue">
                                     <div class="time-departure">
                                         <span>Time Departure:</span>
-                                        <p class="time">{{ date('h:i A',strtotime($d->departure_time)) }}</p>
+                                        <p class="time">{{ date('d-m-Y h:i A',strtotime($d->departure_time)) }}</p>
                                     </div>
                                     <div class="time-departure">
                                         <span>Time Arrival:</span>
-                                        <p class="time">{{ date('h:i A',strtotime($d->arrival_time)) }}</p>
+                                        <p class="time">{{ date('d-m-Y h:i A',strtotime($d->arrival_time)) }}</p>
                                     </div>
                                 </div>
                             </div>

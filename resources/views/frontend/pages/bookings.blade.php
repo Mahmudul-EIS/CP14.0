@@ -9,7 +9,18 @@
 
                     <div class="my-bookings-area clearfix">
                         <h3 class="get-popular-list">My Bookings</h3>
+                        <div class="col-sm-12 clearfix">
+                            @include('frontend.includes.messages')
+                            @if(isset($errors))
+                                @foreach($errors as $error)
+                                    <p class="alert alert-danger">
+                                        {{ $error }}
+                                    </p>
+                                @endforeach
+                            @endif
+                        </div>
                         @foreach($data as $book)
+                            @if($book->ride_details->status == 'active')
                         <!-- single ride area -->
                         <div class="col-md-12 col-lg-12 col-sm-12 col-xs-12 padding-left-o">
                             <div class="single-booking-point">
@@ -32,7 +43,7 @@
                                         </div>
                                     </div>
                                     <div class="ridemade-details-button">
-                                        <button class="btn btn-info btn-offer">Ridemates Details</button>
+                                        <button class="btn btn-info btn-offer" data-toggle="modal" data-target="#myModalRD{{ $book->id }}">Ridemates Details</button>
                                     </div>
                                 </div>
                                 <div class="col-sm-2">
@@ -40,7 +51,10 @@
                                         <h3 class="total-fare-get-section">
                                             Total Fare <span>${{ $book->ride_details->price_per_seat }}</span>
                                         </h3>
-                                        <button class="btn btn-info btn-offer"><i class="fas fa-location-arrow"></i> <br> View <br> Distance</button>
+                                        <h3 class="total-fare-get-section">
+                                            Status : <span>@if($book->status == 'booked') <i class="fa fa-exclamation-circle"></i> @elseif($book->status == 'confirmed') <i class="fa fa-check-circle"></i> @else {{ 'None' }} @endif</span>
+                                        </h3>
+                                        <a href="{{ url('/c/ride-details/'.$book->ride_details->link) }}"><button class="btn btn-info btn-offer"><i class="fas fa-location-arrow"></i> <br> View <br> Details</button></a>
                                     </div>
                                 </div>
                                 <div class="col-sm-5">
@@ -56,11 +70,12 @@
                                                 <span class="ride-label">Maximum Luggage <span class="right-into">: {{ $book->vd->luggage_limit }}</span></span>
                                             </li>
                                         </ul>
-                                        <button class="btn btn-info btn-offer" type="button" data-toggle="modal" data-target="#myModal4">Cancel Booking</button>
+                                        <button class="btn btn-info btn-offer" type="button" data-toggle="modal" data-target="#myModalCancel{{ $book->id }}">Cancel Booking</button>
                                     </div>
                                 </div>
                             </div>
                         </div>
+                            @endif
                         @endforeach
                     </div>
                 </div>

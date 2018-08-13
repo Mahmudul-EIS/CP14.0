@@ -36,6 +36,8 @@ Route::get('/contact-us', 'Frontend@contactUs');
 Route::get('/copyright', 'Frontend@copyright');
 Route::get('/non-discrimination', 'Frontend@nonDiscrimination');
 Route::get('/privacy-policy', 'Frontend@privacyPolicy');
+Route::get('/choose-country', 'Frontend@chooseCountry');
+Route::post('/choose-country', 'Frontend@chooseCountry');
 
 /* ------------------------------------------------------ */
 
@@ -80,6 +82,8 @@ Route::prefix('c')->group(function(){
     Route::post('/book-ride', 'Customer@bookRide');
     Route::post('/cancel-book', 'Customer@cancelBooking');
     Route::post('/ride-request', 'Customer@rideRequest');
+    Route::get('/requests', 'Customer@rideRequests');
+    Route::post('/delete-request', 'Customer@deleteRequest');
 });
 
 /**

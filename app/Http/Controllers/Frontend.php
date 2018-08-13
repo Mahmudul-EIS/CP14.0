@@ -18,11 +18,16 @@ use Auth;
 class Frontend extends Controller
 {
 
+    public function __construct(){
+        $this->middleware('Guest');
+    }
+
     /**
      * Home - homepage of the system
     */
     public function home(Request $request){
         $reqs = Ride_request::where('departure_date', '>=', date('Y-m-d'))
+            ->where(['status' => 'requested'])
             ->get();
         foreach($reqs as $req){
             $user = User::find($req->user_id);
@@ -63,6 +68,37 @@ class Frontend extends Controller
         ]);
     }
 
+    public function chooseCountry(Request $request){
+        $countries = array();
+        if(Auth::check() || $request->session()->has('area')){
+            return redirect()
+                ->to('/')
+                ->with('error', 'You can\'t access this page!');
+        }
+        $url = 'http://www.geognos.com/api/en/countries/info/all.json';
+
+        $options = [
+            'http' => [
+                'header'  => "Content-type: application/x-www-form-urlencoded\r\n",
+                'method'  => 'GET'
+            ]
+        ];
+        $context  = stream_context_create($options);
+        $result = file_get_contents($url, false, $context);
+        $countries = json_decode($result);
+        if($request->isMethod('post')){
+            $countries = explode(',', $request->country);
+            session(['area' => $countries[0]]);
+            session(['lat' => $countries[1]]);
+            session(['lan' => $countries[2]]);
+            return redirect()
+                ->to('/');
+        }
+        return view('frontend.pages.choose-country', [
+            'countries' => $countries
+        ]);
+    }
+
     public function popular(Request $request){
         $ro = RideOffers::where(['status' => 'active'])
             ->paginate(3);
@@ -80,7 +116,12 @@ class Frontend extends Controller
     }
 
     public function rideDetails(Request $request,$link){
-        $ro = RideOffers::where('link',$link)->first();
+        $ro = RideOffers::where('link', $link)->first();
+        if($ro->status == 'expired' || $ro->status == 'canceled'){
+            return redirect()
+                ->to('/')
+                ->with('error', 'This ride was canceled/expired!');
+        }
         $rd = RideDescriptions::where('ride_offer_id',$ro->id)->get();
         $ro->rd = $rd;
         $user = User::where('id', $ro->offer_by)->first();

@@ -21,7 +21,7 @@
                 <li><a href="{{ url('/d/profile') }}">My Profile</a></li>
             @endif
             @if(Auth::check() && Auth::user()->role == 'customer')
-                <li><a href="{{ url('/c/request-ride') }}">Request a Ride</a></li>
+                <li><a href="{{ url('/c/requests') }}">My Requests</a></li>
                 <li><a href="{{ url('/c/bookings') }}">My Bookings</a></li>
                 <li><a href="{{ url('/c/profile') }}">My Profile</a></li>
             @endif
@@ -38,7 +38,7 @@
                 </ul>
             </li>
             @if(Auth::check())
-            <li data-toggle="modal" data-target="#myModalxss"><a  class="disabled" href="#">Log Out</a></li>
+            <li data-toggle="modal" data-target="#myModalLogout"><a  class="disabled" href="#">Log Out</a></li>
             @endif
         </ul>
     </div>

@@ -294,7 +294,7 @@ class Driver extends Controller
                 }
 
                 return redirect()
-                    ->to('d/offer-ride')
+                    ->to('d/active-offers')
                     ->with('success', 'Ride Created Successfully !!');
             }else{
                 return redirect()
@@ -319,7 +319,18 @@ class Driver extends Controller
     public function myOffers(Request $request){
         $offers = RideOffers::where(['offer_by' => Auth::id()])
             ->where('departure_time', '>=', date('Y-m-d H:s'))
+            ->where(['status' => 'active'])
+            ->orderBy('created_at', 'desc')
             ->get();
+        foreach($offers as $of){
+            $bookings = RideBookings::where(['ride_id' => $of->id])
+                ->where(function($q){
+                    $q->where(['status' => 'booked'])
+                        ->orWhere(['status' => 'confirmed']);
+                })
+                ->get();
+            $of->bookings = $bookings;
+        }
         return view('frontend.pages.my-offers', [
             'data' => $offers
         ]);
@@ -332,6 +343,11 @@ class Driver extends Controller
     */
     public function rideDetails(Request $request, $link){
         $ro = RideOffers::where('link', $link)->first();
+        if($ro->status == 'expired' || $ro->status == 'canceled'){
+            return redirect()
+                ->to('/')
+                ->with('error', 'This ride was canceled/expired!');
+        }
         $rideStart = RideComp::where(['ride_id' => $ro->id])->first();
         $rd = RideDescriptions::where('ride_offer_id', $ro->id)->get();
         $ro->rd = $rd;
@@ -506,6 +522,11 @@ class Driver extends Controller
     */
     public function editRide(Request $request, $link){
         $ro = RideOffers::where(['link' => $link])->first();
+        if(Auth::id() != $ro->offer_by){
+            return redirect()
+                ->to('/d/ride-details/'.$link)
+                ->with('error', 'You don\'t have authorization to access this page!');
+        }
         $rd = RideDescriptions::where('ride_offer_id', $ro->id)->get();
         $ro->rd = $rd;
         $vehicle = '';
@@ -521,7 +542,10 @@ class Driver extends Controller
         $usd = User_data::where('user_id', $ro->offer_by)->first();
         $ro->usd = $usd;
         $bookings = RideBookings::where(['ride_id' => $ro->id])
-            ->where(['status' => 'booked'])
+            ->where(function($q){
+                $q->where(['status' => 'booked'])
+                    ->orWhere(['status' => 'confirmed']);
+            })
             ->get();
         $ro->bookings = $bookings;
 
@@ -539,6 +563,7 @@ class Driver extends Controller
                     ->with('error', 'Arrival time should be greater than the departure time!');
             }
             $ride_check = RideOffers::where(['offer_by' => Auth::id()])
+                ->where('id', '!=', $request->ride_id)
                 ->where('departure_time', '>=', $ro_edit->departure_time)
                 ->where('departure_time', '<=', $ro_edit->arrival_time)
                 ->first();

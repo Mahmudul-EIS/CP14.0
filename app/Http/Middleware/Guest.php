@@ -15,6 +15,11 @@ class Guest
      */
     public function handle($request, Closure $next)
     {
+        $sCheck = session('area');
+        if(!isset($sCheck) && $request->url() != url('/choose-country')){
+            return redirect()
+                ->to('/choose-country');
+        }
         return $next($request);
     }
 }
