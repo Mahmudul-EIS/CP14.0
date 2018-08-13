@@ -9,7 +9,7 @@
                 </div>
                 <div class="col-sm-8 col-xs-12 price-seat">
                     <!-- eidt ridemate profile -->
-                    <button class="btn btn-info btn-offer edit-badge-area">Edit Info <img src="img/file.png" alt=""></button>
+                    <button class="btn btn-info btn-offer edit-badge-area">Edit Info <img src="{{ url('/') }}/public/assets/frontend/img/file.png" alt=""></button>
                     <!-- notification popupbar -->
                     <div class="get-edit-profile">
                         <ul class="edit-profile-option">
@@ -36,11 +36,7 @@
                     <div class="col-sm-8 col-xs-12 ride--profile padding-left-o">
                         <div class="get-ridemate-user ">
                             <div class="user-edit-picture img-result user-icon" data-toggle="modal" data-target="#myModalimg">
-                                <img class="image-upload-hide" src="img/user/user-1.jpg" alt="">
-                                <img class="cropped" src="" alt="">
-                                <div class="image-hover open-popup-image">
-                                    <i class="fa fa-upload" aria-hidden="true"></i>
-                                </div>
+                                <img class="image-upload-hide" src="@if(isset($usd->picture)){{url('/')}}/public/uploads/drivers/{{$usd->picture}}@endif" alt="">
                             </div>
 
                             <div class="user-details">
@@ -113,12 +109,41 @@
                         </div>
                     </div>
                 </div>
-
+                <!-- ride description -->
+                <div class="get-ride-description clearfix">
+                    <h3 class="check-direction-title">Ride description</h3>
+                    <div class="col-md-6 col-sm-12 text-uppercase ride-own-car padding-left-o">
+                        <div class="form-group clearfix">
+                            <div class="col-sm-6 padding-left-o">
+                                <label for="car-type" class="ride-label">Car Type <span class="right-into">:</span></label>
+                            </div>
+                            <div class="col-sm-6 padding-ride-o">
+                                <input id="car-type" name="car_type" type="text" class="form-control" @if(isset($vd->car_type)) value="{{ $vd->car_type }}" @else value="{{ old('car_type') }}" @endif>
+                            </div>
+                        </div>
+                        <div class="form-group clearfix">
+                            <div class="col-sm-6 padding-left-o">
+                                <label for="car-plate" class="ride-label">Car Plate No <span class="right-into">:</span></label>
+                            </div>
+                            <div class="col-sm-6 padding-ride-o">
+                                <input name="car_plate_no" id="car-plate" type="text" class="form-control" @if(isset($vd->car_plate_no)) value="{{ $vd->car_plate_no }}" @else value="{{ old('car_plate_no') }}"  readonly @endif>
+                            </div>
+                        </div>
+                        <div class="form-group clearfix">
+                            <div class="col-sm-6 padding-left-o">
+                                <label for="car-luggage" class="ride-label">MAXIMUM LUGGAGE <span class="right-into">:</span></label>
+                            </div>
+                            <div class="col-sm-6 padding-ride-o">
+                                <input name="luggage_limit" id="car-luggage" type="text" class="form-control" @if(isset($vd->luggage_limit)) value="{{ $vd->luggage_limit }}" @else value="{{ old('luggage_limit') }}"  @endif>
+                            </div>
+                        </div>
+                    </div>
+                    </div>
                 <div class="ridemate-option-get text-center sign-in-option-get clearfix">
                     <button type="submit" class="btn btn-info btn-offer">Save</button>
                     <button type="button" class="btn btn-info btn-offer join-us-sign-in">Cancel</button>
                 </div>
-
+                <!--Ride description  -->
                 </form>
             </div>
         </div>

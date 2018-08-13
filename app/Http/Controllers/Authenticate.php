@@ -82,6 +82,7 @@ class Authenticate extends Controller
                 $dd->uploads = $request->uploads;
                 $dd->save();
                 $vd->user_id = $last_id->id;
+                $vd->own_vehicle = 1;
                 $vd->car_plate_no = $dd->car_reg = $request->car_reg;
                 $vd->save();
                 return redirect()
@@ -126,14 +127,6 @@ class Authenticate extends Controller
             if(!$usd->validate($data)){
                 $usd_e = $usd->errors();
                 foreach ($usd_e->messages() as $k => $v){
-                    foreach ($v as $e){
-                        $errors[] = $e;
-                    }
-                }
-            }
-            if(!$rrt->validate($data)){
-                $rrt_e = $rrt->errors();
-                foreach ($rrt_e->messages() as $k => $v){
                     foreach ($v as $e){
                         $errors[] = $e;
                     }

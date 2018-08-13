@@ -51,6 +51,7 @@ class Driver extends Controller
         $user = User::find($id);
         $usd = User_data::where('user_id',$id)->first();
         $dd = DriverData::where('user_id',$id)->first();
+        $vd = VehiclesData::where('user_id',$id)->first();
         if($request->isMethod('post')){
             $user->name = $request->name;
             $user->email = $request->email;
@@ -65,6 +66,10 @@ class Driver extends Controller
             $dd->driving_license = $request->driving_license;
             $dd->expiry = $request->expiry;
             $dd->save();
+            $vd->car_type = $request->car_type;
+            $vd->car_plate_no = $request->car_plate_no;
+            $vd->luggage_limit = $request->luggage_limit;
+            $vd->save();
             return redirect()
                 ->to('/d/profile/')
                 ->with('success', 'Your Profile Updated Successfully!!');
@@ -72,7 +77,8 @@ class Driver extends Controller
         return view('frontend.pages.driver-profile-edit',[
             'user' => $user,
             'usd' => $usd,
-            'dd' => $dd
+            'dd' => $dd,
+            'vd' => $vd
         ]);
     }
 

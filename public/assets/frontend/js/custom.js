@@ -31,7 +31,7 @@
     return $(".navi-trigger").removeClass("cross");
 	});
 
-  // menu icon toggole
+  // menu icon toggle
 
   $(".get-humber-icon").click(function() {
     return $(".navi-trigger").toggleClass("cross");
@@ -73,14 +73,14 @@
 	==========================--*/
 	$('.click-performance .fas').click(function() {
 	    $(this).toggleClass('active-color');
-	})
+	});
 
   /*--=========================
  available seats call
   ==========================--*/
   $('.first-ride .fas').click(function() {
       $(this).toggleClass('active-class');
-  })
+  });
 
   // clander js call
 
@@ -168,58 +168,58 @@ $('#datetimepicker4').datetimepicker({
 image upload js call
 ======================--*/
   // vars
-  var result = document.querySelector('.result'),
-      img_result = document.querySelector('.img-result'),
-      img_w = document.querySelector('.img-w'),
-      img_h = document.querySelector('.img-h'),
-      options = document.querySelector('.options'),
-      save = document.querySelector('.save'),
-      cropped = document.querySelector('.cropped'),
-      dwn = document.querySelector('.download'),
-      upload = document.querySelector('#file-input'),
-      cropper = '';
+  // var result = document.querySelector('.result'),
+  //     img_result = document.querySelector('.img-result'),
+  //     img_w = document.querySelector('.img-w'),
+  //     img_h = document.querySelector('.img-h'),
+  //     options = document.querySelector('.options'),
+  //     save = document.querySelector('.save'),
+  //     cropped = document.querySelector('.cropped'),
+  //     dwn = document.querySelector('.download'),
+  //     upload = document.querySelector('#file-input'),
+  //     cropper = '';
 
 
-  // on change show image with crop options
-    upload.addEventListener('change', function (e) {
-      aspectRatio: 16 / 9;
-      if (e.target.files.length) {
-        // start file reader
-        var reader = new FileReader();
-        reader.onload = function (e) {
-          if (e.target.result) {
-            // create new image
-            var img = document.createElement('img');
-            img.id = 'image';
-            img.src = e.target.result;
-            // clean result before
-            result.innerHTML = '';
-            // append new image
-            result.appendChild(img);
-            // show save btn and options
-            save.classList.remove('hide-x');
-            options.classList.remove('hide-x');
-            // init cropper
-            cropper = new Cropper(img);
-
-          }
-        };
-        reader.readAsDataURL(e.target.files[0]);
-    }
-  });
+  // // on change show image with crop options
+  //   upload.addEventListener('change', function (e) {
+  //     aspectRatio: 16 / 9;
+  //     if (e.target.files.length) {
+  //       // start file reader
+  //       var reader = new FileReader();
+  //       reader.onload = function (e) {
+  //         if (e.target.result) {
+  //           // create new image
+  //           var img = document.createElement('img');
+  //           img.id = 'image';
+  //           img.src = e.target.result;
+  //           // clean result before
+  //           result.innerHTML = '';
+  //           // append new image
+  //           result.appendChild(img);
+  //           // show save btn and options
+  //           save.classList.remove('hide-x');
+  //           options.classList.remove('hide-x');
+  //           // init cropper
+  //           cropper = new Cropper(img);
+  //
+  //         }
+  //       };
+  //       reader.readAsDataURL(e.target.files[0]);
+  //   }
+  // });
 
   // save on click
-  save.addEventListener('click', function (e) {
-    e.preventDefault();
-    // get result to data uri
-    var imgSrc = cropper.getCroppedCanvas({
-      width: img_w.value // input value
-    }).toDataURL();
-    // remove hide class of img
-    cropped.classList.remove('hide-x');
-    img_result.classList.remove('hide-x');
-    // show image cropped
-    cropped.src = imgSrc;
-    dwn.download = 'imagename.png';
-    dwn.setAttribute('href', imgSrc);
-  });
+  // save.addEventListener('click', function (e) {
+  //   e.preventDefault();
+  //   // get result to data uri
+  //   var imgSrc = cropper.getCroppedCanvas({
+  //     width: img_w.value // input value
+  //   }).toDataURL();
+  //   // remove hide class of img
+  //   cropped.classList.remove('hide-x');
+  //   img_result.classList.remove('hide-x');
+  //   // show image cropped
+  //   cropped.src = imgSrc;
+  //   dwn.download = 'imagename.png';
+  //   dwn.setAttribute('href', imgSrc);
+  // });

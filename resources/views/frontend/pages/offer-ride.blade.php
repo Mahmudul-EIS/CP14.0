@@ -124,7 +124,7 @@
                                     <label for="car-luggage" class="ride-label">MAXIMUM LUGGAGE <span class="right-into">:</span></label>
                                 </div>
                                 <div class="col-sm-6 padding-ride-o">
-                                    <input name="luggage_limit" id="car-luggage" type="text" class="form-control" @if(isset($vd->luggage_limit)) value="{{ $vd->luggage_limit }}" @else value="{{ old('car_plate_no') }}"  @endif>
+                                    <input name="luggage_limit" id="car-luggage" type="text" class="form-control" @if(isset($vd->luggage_limit)) value="{{ $vd->luggage_limit }}" @else value="{{ old('luggage_limit') }}"  @endif>
                                 </div>
                             </div>
                             @if(isset($vd))<input type="hidden" name="vd_action" id="vd_action" value="edit"><input type="hidden" name="vd_id" value="{{ $vd->id }}">@else <input type="hidden" id="vd_action" name="vd_action" value="add"> @endif
@@ -172,7 +172,9 @@
                             <input type="hidden" name="music" id="music" value="{{ old('music') }}">
                             <input type="hidden" name="smoking" id="smoking" value="{{ old('smoking') }}">
                             <input type="hidden" name="back_seat" id="back" value="{{ old('back_seat') }}">
-                            <button type="button" class="btn btn-info btn-offer">Add More <i class="fas fa-plus"></i></button>
+                            <p id="added-items"></p>
+                            <input type="hidden" name="total" id="total">
+                            <button type="button" id="add-more" data-toggle="modal" data-target="#myModalx" class="btn btn-info btn-offer">Add More <i class="fas fa-plus"></i></button>
                         </div>
                     </div>
                     <div class="get-ride-offer-button text-center clearfix">
@@ -185,5 +187,28 @@
        @if($req_id != '')<input type="hidden" name="req_id" value="{{ $req_id }}"><input type="hidden" name="req_user_id" value="{{ $data->user_id }}">@endif
     </form>
     <!-- end offer a ride -->
+    <div class="modal fade" id="myModalx" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="myModalLabel">Add More</h4>
+                </div>
+                <form id="item-save">
+                    <div class="modal-body">
+                        <div class="col-sm-12 padding-left-o padding-right-0">
+                            <div class="form-group">
+                                <input type="text" id="item-name" class="form-control" placeholder="Enter Name" required>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer login-modal-footer">
+                        <button type="submit" class="btn btn-info btn-offer">Save</button>
+                        <button type="button" class="btn btn-info btn-offer" data-dismiss="modal" aria-label="Close">Cancel</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
 
     @endsection
