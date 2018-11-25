@@ -68,7 +68,7 @@
                         <h3 class="price-per-seats">Price Per Seat: <span>${{ $data->price_per_seat }}</span></h3>
                     </div>
                     <ul class="get-ride-seat clearfix">
-                        <li>
+                        <li class="ridemate-seats">
                             <div class="ride-seat-icon">
                                 <i class="fas fa-user-times fixed-hover"></i>
                                 <span>Ridermate</span>
