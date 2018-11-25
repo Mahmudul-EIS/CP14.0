@@ -1358,7 +1358,7 @@
       color: #61108c;
     }
     .get-ride-seat li{
-      width: 19%;
+      width: 16%;
       float: left;
     }
     .get-ride-seat li .ride-seat-icon{
@@ -2587,7 +2587,15 @@
       .form-group label{
         font-size: 17px;
       }
-      
+      .get-ride-seat li .ride-seat-icon .fas {
+          width: 90px;
+          height: 90px;
+          line-height: 78px;
+          font-size: 2.4em;
+      }
+      .get-ride-seat li .ride-seat-icon span{
+      font-size:14px;
+      }
 
 
     }
@@ -2681,6 +2689,9 @@
         float: none;
         width: 30%;
         margin:20px auto;
+      }
+      .get-ride-seat li .ride-seat-icon span{
+          font-size:16px;
       }
       .ride-final-ride-button{
         margin:  20px;
